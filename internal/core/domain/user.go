@@ -27,4 +27,6 @@ type User struct {
 	Social     SocialType
 
 	Groups []*Group `gorm:"many2many:user_groups;"`
+
+	Posts []Post `gorm:"foreignKey:UserID"`
 }

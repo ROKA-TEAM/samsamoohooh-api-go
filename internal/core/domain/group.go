@@ -11,5 +11,8 @@ type Group struct {
 	Description string
 	Bookmark    int
 
+	// Back-Reference
 	Users []*User `gorm:"many2many:user_groups;"`
+
+	Posts []Post `gorm:"foreignKey:GroupID"`
 }
