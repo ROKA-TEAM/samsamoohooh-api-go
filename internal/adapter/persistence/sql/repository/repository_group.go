@@ -49,6 +49,25 @@ func (r *GroupRepository) GetUsersByID(ctx context.Context, id uint) ([]*domain.
 	return group.Users, nil
 }
 
+func (r *GroupRepository) GetPostsByID(ctx context.Context, id uint) ([]*domain.Post, error) {
+	posts := []*domain.Post{}
+	err := r.database.WithContext(ctx).Preload("Posts").First(&posts, id).Error
+	if err != nil {
+		return nil, utils.Wrap(err)
+	}
+
+	return posts, nil
+}
+func (r *GroupRepository) GetTasksByID(ctx context.Context, id uint) ([]*domain.Task, error) {
+	tasks := []*domain.Task{}
+	err := r.database.WithContext(ctx).Preload("Tasks").First(&tasks, id).Error
+	if err != nil {
+		return nil, utils.Wrap(err)
+	}
+
+	return tasks, nil
+}
+
 func (r *GroupRepository) GetAll(ctx context.Context, skip, limit int) ([]*domain.Group, error) {
 	groups := []*domain.Group{}
 	err := r.database.WithContext(ctx).Limit(limit).Offset((skip - 1) * limit).Find(&groups).Error
