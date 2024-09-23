@@ -6,7 +6,7 @@ import (
 )
 
 type UserRepository interface {
-	Create(user *domain.User) (*domain.User, error)
+	Create(ctx context.Context, user *domain.User) (*domain.User, error)
 
 	GetByUserID(ctx context.Context, id uint) (*domain.User, error)
 	GetGroupsByUserID(ctx context.Context, id int) ([]*domain.Group, error)
