@@ -30,4 +30,5 @@ type User struct {
 
 	Posts    []Post    `gorm:"foreignKey:UserID"`
 	Comments []Comment `gorm:"foreignKey:UserID"`
+	Subjects []Subject `gorm:"foreignKey:UserID"`
 }

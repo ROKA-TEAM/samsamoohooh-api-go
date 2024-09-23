@@ -15,4 +15,6 @@ type Group struct {
 	Users []*User `gorm:"many2many:user_groups;"`
 
 	Posts []Post `gorm:"foreignKey:GroupID"`
+
+	Tasks []Task `gorm:"foreignKey:GroupID"`
 }
