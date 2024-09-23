@@ -1,0 +1,14 @@
+[database]
+user = "root"
+password = "password"
+host = "localhost"
+port = "3306"
+database = "database"
+maxIdleConns = 10
+maxOpenConns = 100
+connMaxLifeTime = "3m"
+
+[token]
+key = "aea01bfce7b83da8a76e85a3e60bd419c036f34dead2235b16e0493873c2ecf9"
+accessDuration = "3h"
+refreshDuration = "30d"
