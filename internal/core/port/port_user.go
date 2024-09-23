@@ -10,7 +10,7 @@ type UserRepository interface {
 
 	GetByUserID(ctx context.Context, id uint) (*domain.User, error)
 	GetGroupsByUserID(ctx context.Context, id int) ([]*domain.Group, error)
-	GetAll(ctx context.Context, skip, limit int)
+	GetAll(ctx context.Context, skip, limit int) ([]*domain.User, error)
 
 	Update(ctx context.Context, id uint, user *domain.User) (*domain.User, error)
 
