@@ -29,7 +29,7 @@ func (r *UserRepository) Create(ctx context.Context, user *domain.User) (*domain
 	return user, nil
 }
 
-func (r *UserRepository) GetByUserID(ctx context.Context, id uint) (*domain.User, error) {
+func (r *UserRepository) GetByID(ctx context.Context, id uint) (*domain.User, error) {
 	user := domain.User{}
 	err := r.database.WithContext(ctx).First(&user, id).Error
 	if err != nil {
@@ -39,7 +39,7 @@ func (r *UserRepository) GetByUserID(ctx context.Context, id uint) (*domain.User
 	return &user, nil
 }
 
-func (r *UserRepository) GetGroupsByUserID(ctx context.Context, id int) ([]*domain.Group, error) {
+func (r *UserRepository) GetGroupsByID(ctx context.Context, id int) ([]*domain.Group, error) {
 	user := domain.User{}
 	err := r.database.WithContext(ctx).Preload("Groups").First(&user, id).Error
 	if err != nil {
@@ -51,7 +51,7 @@ func (r *UserRepository) GetGroupsByUserID(ctx context.Context, id int) ([]*doma
 
 func (r *UserRepository) GetAll(ctx context.Context, skip, limit int) ([]*domain.User, error) {
 	users := []*domain.User{}
-	err := r.database.Limit(limit).Offset((skip - 1) * limit).Find(&users).Error
+	err := r.database.WithContext(ctx).Limit(limit).Offset((skip - 1) * limit).Find(&users).Error
 	if err != nil {
 		return nil, utils.Wrap(err)
 	}
@@ -61,7 +61,7 @@ func (r *UserRepository) GetAll(ctx context.Context, skip, limit int) ([]*domain
 
 func (r *UserRepository) Update(ctx context.Context, id uint, user *domain.User) (*domain.User, error) {
 	user.Model.ID = id
-	err := r.database.Save(&user).Error
+	err := r.database.WithContext(ctx).Save(&user).Error
 	if err != nil {
 		return nil, utils.Wrap(err)
 	}
@@ -70,7 +70,7 @@ func (r *UserRepository) Update(ctx context.Context, id uint, user *domain.User)
 }
 
 func (r *UserRepository) Delete(ctx context.Context, id uint) error {
-	err := r.database.Delete(&domain.User{}, id).Error
+	err := r.database.WithContext(ctx).Delete(&domain.User{}, id).Error
 	if err != nil {
 		return utils.Wrap(err)
 	}

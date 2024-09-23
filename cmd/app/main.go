@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"samsamoohooh-go-api/internal/adapter/persistence/sql/database"
-	"samsamoohooh-go-api/internal/adapter/persistence/sql/repository"
 	"samsamoohooh-go-api/internal/infra/config"
 )
 
@@ -24,7 +23,4 @@ func main() {
 		log.Panicf("migrate에 실패하였습니다: %v", err)
 	}
 
-	userRepository := repository.NewUserRepository(db)
-
-	_ = userRepository
 }

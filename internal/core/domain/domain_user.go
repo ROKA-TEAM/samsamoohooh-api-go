@@ -20,11 +20,11 @@ const (
 
 type User struct {
 	gorm.Model
-	Name       string `gorm:"unique"`
-	Resolution string
-	Role       RoleType
-	Sub        string
-	Social     SocialType
+	Name       string     `gorm:"not null;unique"`
+	Resolution string     `gorm:"not null"`
+	Role       RoleType   `gorm:"not null"`
+	Sub        string     `gorm:"not null"`
+	Social     SocialType `gorm:"not null"`
 
 	Groups []*Group `gorm:"many2many:user_groups;"`
 
