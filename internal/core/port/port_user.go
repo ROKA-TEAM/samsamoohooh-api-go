@@ -1,0 +1,18 @@
+package port
+
+import (
+	"context"
+	"samsamoohooh-go-api/internal/core/domain"
+)
+
+type UserRepository interface {
+	Create(user *domain.User) (*domain.User, error)
+
+	GetByUserID(ctx context.Context, id uint) (*domain.User, error)
+	GetGroupsByUserID(ctx context.Context, id int) ([]*domain.Group, error)
+	GetAll(ctx context.Context, skip, limit int)
+
+	Update(ctx context.Context, id uint, user *domain.User) (*domain.User, error)
+
+	Delete(ctx context.Context, id uint) error
+}
