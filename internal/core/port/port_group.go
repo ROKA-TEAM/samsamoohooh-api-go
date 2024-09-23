@@ -12,7 +12,7 @@ type GroupRepository interface {
 	GetUsersByID(ctx context.Context, id uint) ([]*domain.User, error)
 	GetAll(ctx context.Context, skip, limit int) ([]*domain.Group, error)
 
-	Update(ctx context.Context, id uint, user *domain.Group) (*domain.Group, error)
+	Update(ctx context.Context, id uint, group *domain.Group) (*domain.Group, error)
 
 	Delete(ctx context.Context, id uint) error
 }

@@ -59,14 +59,14 @@ func (r *GroupRepository) GetAll(ctx context.Context, skip, limit int) ([]*domai
 	return groups, nil
 }
 
-func (r *GroupRepository) Update(ctx context.Context, id uint, user *domain.Group) (*domain.Group, error) {
-	user.Model.ID = id
-	err := r.database.WithContext(ctx).Save(user).Error
+func (r *GroupRepository) Update(ctx context.Context, id uint, group *domain.Group) (*domain.Group, error) {
+	group.Model.ID = id
+	err := r.database.WithContext(ctx).Save(group).Error
 	if err != nil {
 		return nil, utils.Wrap(err)
 	}
 
-	return user, nil
+	return group, nil
 }
 
 func (r *GroupRepository) Delete(ctx context.Context, id uint) error {

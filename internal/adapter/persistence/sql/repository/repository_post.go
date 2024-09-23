@@ -59,14 +59,14 @@ func (r *PostRepository) GetAll(ctx context.Context, skip, limit int) ([]*domain
 	return posts, nil
 }
 
-func (r *PostRepository) Update(ctx context.Context, id uint, user *domain.Post) (*domain.Post, error) {
-	user.Model.ID = id
-	err := r.database.WithContext(ctx).Save(user).Error
+func (r *PostRepository) Update(ctx context.Context, id uint, post *domain.Post) (*domain.Post, error) {
+	post.Model.ID = id
+	err := r.database.WithContext(ctx).Save(post).Error
 	if err != nil {
 		return nil, utils.Wrap(err)
 	}
 
-	return user, nil
+	return post, nil
 }
 
 func (r *PostRepository) Delete(ctx context.Context, id uint) error {
