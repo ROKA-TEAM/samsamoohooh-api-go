@@ -28,5 +28,6 @@ type User struct {
 
 	Groups []*Group `gorm:"many2many:user_groups;"`
 
-	Posts []Post `gorm:"foreignKey:UserID"`
+	Posts    []Post    `gorm:"foreignKey:UserID"`
+	Comments []Comment `gorm:"foreignKey:UserID"`
 }

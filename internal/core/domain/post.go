@@ -10,4 +10,6 @@ type Post struct {
 
 	UserID  uint
 	GroupID uint
+
+	Comments []Comment `gorm:"foreignKey:PostID"`
 }
