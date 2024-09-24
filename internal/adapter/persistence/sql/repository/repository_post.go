@@ -39,18 +39,18 @@ func (r *PostRepository) GetByID(ctx context.Context, id uint) (*domain.Post, er
 	return &post, nil
 }
 
-func (r *PostRepository) GetCommentsByID(ctx context.Context, id uint) ([]*domain.Comment, error) {
-	comments := []*domain.Comment{}
-	err := r.database.WithContext(ctx).Preload("Comments").First(comments, id).Error
+func (r *PostRepository) GetCommentsByID(ctx context.Context, id uint) ([]domain.Comment, error) {
+	post := domain.Post{}
+	err := r.database.WithContext(ctx).Preload("Comments").First(&post, id).Error
 	if err != nil {
 		return nil, utils.Wrap(err)
 	}
 
-	return comments, nil
+	return post.Comments, nil
 }
 
-func (r *PostRepository) GetAll(ctx context.Context, skip, limit int) ([]*domain.Post, error) {
-	posts := []*domain.Post{}
+func (r *PostRepository) GetAll(ctx context.Context, skip, limit int) ([]domain.Post, error) {
+	posts := []domain.Post{}
 	err := r.database.WithContext(ctx).Limit(limit).Offset((skip - 1) * limit).Find(&posts).Error
 	if err != nil {
 		return nil, utils.Wrap(err)
@@ -60,7 +60,7 @@ func (r *PostRepository) GetAll(ctx context.Context, skip, limit int) ([]*domain
 }
 
 func (r *PostRepository) Update(ctx context.Context, id uint, post *domain.Post) (*domain.Post, error) {
-	post.Model.ID = id
+	post.ID = id
 	err := r.database.WithContext(ctx).Save(post).Error
 	if err != nil {
 		return nil, utils.Wrap(err)

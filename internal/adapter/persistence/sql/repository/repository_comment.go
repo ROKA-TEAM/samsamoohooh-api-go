@@ -39,8 +39,8 @@ func (r *CommentRepository) GetByID(ctx context.Context, id uint) (*domain.Comme
 	return &comment, nil
 }
 
-func (r *CommentRepository) GetAll(ctx context.Context, skip, limit int) ([]*domain.Comment, error) {
-	comments := []*domain.Comment{}
+func (r *CommentRepository) GetAll(ctx context.Context, skip, limit int) ([]domain.Comment, error) {
+	comments := []domain.Comment{}
 	err := r.database.WithContext(ctx).Limit(limit).Offset((skip - 1) * limit).Find(&comments).Error
 	if err != nil {
 		return nil, utils.Wrap(err)
@@ -51,7 +51,7 @@ func (r *CommentRepository) GetAll(ctx context.Context, skip, limit int) ([]*dom
 }
 
 func (r *CommentRepository) Update(ctx context.Context, id uint, comment *domain.Comment) (*domain.Comment, error) {
-	comment.Model.ID = id
+	comment.ID = id
 	err := r.database.WithContext(ctx).Save(comment).Error
 	if err != nil {
 		return nil, utils.Wrap(err)
