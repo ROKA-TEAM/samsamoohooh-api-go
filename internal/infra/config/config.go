@@ -33,9 +33,13 @@ func New(path string) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer file.Close()
 
 	err = toml.NewDecoder(file).Decode(config)
+	if err != nil {
+		return nil, err
+	}
+
+	err = file.Close()
 	if err != nil {
 		return nil, err
 	}

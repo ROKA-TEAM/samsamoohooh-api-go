@@ -12,3 +12,13 @@ func AutoMigrate(d *Database) error {
 		&domain.Subject{},
 	)
 }
+
+func DropAllTable(d *Database) error {
+	return d.Migrator().DropTable(&domain.User{},
+		&domain.Group{},
+		&domain.Post{},
+		&domain.Comment{},
+		&domain.Task{},
+		&domain.Subject{},
+	)
+}

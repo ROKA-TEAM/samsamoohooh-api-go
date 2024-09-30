@@ -23,4 +23,7 @@ func main() {
 		log.Panicf("migrate에 실패하였습니다: %v", err)
 	}
 
+	// set persistence
+	// userRepository := repository.NewUserRepository(db)
+
 }
