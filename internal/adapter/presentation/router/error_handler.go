@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 	"net/http"
+	"samsamoohooh-go-api/internal/core/domain"
 )
 
 var customErrorHandler = func(c fiber.Ctx, err error) error {
@@ -15,8 +16,10 @@ var customErrorHandler = func(c fiber.Ctx, err error) error {
 	case isValidationError(err):
 		status = http.StatusBadRequest
 	// domain error
-	case errors.Is(err, validator.ValidationErrors{}):
-		status = fiber.StatusBadRequest
+	case errors.Is(err, domain.ErrUnauthorized):
+		status = http.StatusUnauthorized
+	case errors.Is(err, domain.ErrInternal):
+		status = http.StatusInternalServerError
 	// gorm error
 	case errors.Is(err, gorm.ErrRecordNotFound):
 		status = http.StatusNotFound

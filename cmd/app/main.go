@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"samsamoohooh-go-api/internal/adapter/auth/jwt"
 	"samsamoohooh-go-api/internal/adapter/persistence/sql/database"
 	"samsamoohooh-go-api/internal/adapter/persistence/sql/repository"
 	"samsamoohooh-go-api/internal/adapter/presentation/handler"
@@ -27,6 +28,15 @@ func main() {
 		log.Panicf("migrate에 실패하였습니다: %v", err)
 	}
 
+	// setting adapter
+	jwtService, err := jwt.New(c)
+	if err != nil {
+		log.Panicf("jwtService를 불러오는데 실패했습니다: %v", err)
+	}
+
+	_ = jwtService
+
+	// setting layers
 	userRepository := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepository)
 	userHandler := handler.NewUserHandler(userService)

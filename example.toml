@@ -9,9 +9,13 @@ maxOpenConns = 100
 connMaxLifeTime = "3m"
 
 [token]
-key = "aea01bfce7b83da8a76e85a3e60bd419c036f34dead2235b16e0493873c2ecf9"
-accessDuration = "3h"
-refreshDuration = "30d"
+key = "aea01Ibfce7b83da8a76e85a3e60bd419c036f34dead2235b16e0493873c2ecf9"
+audience = "test.com"
+issuer = "test.com"
+
+[token.duration]
+access = "3h"
+refresh = "1800h" # 30day
 
 
 [http]

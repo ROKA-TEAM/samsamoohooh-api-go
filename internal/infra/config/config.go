@@ -19,9 +19,15 @@ type Config struct {
 	}
 
 	Token struct {
-		Key             string
-		AccessDuration  string
-		RefreshDuration string
+		// token을 발급하는 서버의 URL
+		Key      string
+		Issuer   string
+		Audience string
+
+		Duration struct {
+			Access  string
+			Refresh string
+		}
 	}
 
 	HTTP struct {
