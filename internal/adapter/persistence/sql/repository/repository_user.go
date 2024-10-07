@@ -59,11 +59,11 @@ func (r *UserRepository) GetAll(ctx context.Context, skip, limit int) ([]domain.
 }
 
 func (r *UserRepository) Update(ctx context.Context, id uint, user *domain.User) (*domain.User, error) {
-	user.ID = id
-	err := r.database.WithContext(ctx).Save(&user).Error
-	if err != nil {
-		return nil, err
-	}
+	r.database.Model(&domain.User{}).Where("id = ?", id).Updates(user)
+	//err := r.database.WithContext(ctx).Save(&user).Error
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	return user, nil
 }

@@ -1,19 +1,21 @@
 package router
 
 import (
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 	"net/http"
-	"samsamoohooh-go-api/internal/core/domain"
 )
 
 var customErrorHandler = func(c fiber.Ctx, err error) error {
 
 	var status int
 	switch {
+	case isValidationError(err):
+		status = http.StatusBadRequest
 	// domain error
-	case errors.Is(err, domain.ErrBadParam):
+	case errors.Is(err, validator.ValidationErrors{}):
 		status = fiber.StatusBadRequest
 	// gorm error
 	case errors.Is(err, gorm.ErrRecordNotFound):
@@ -56,4 +58,9 @@ var customErrorHandler = func(c fiber.Ctx, err error) error {
 
 	// Return status code with error message
 	return c.Status(status).SendString(err.Error())
+}
+
+func isValidationError(err error) bool {
+	var validationErrors validator.ValidationErrors
+	return errors.As(err, &validationErrors)
 }

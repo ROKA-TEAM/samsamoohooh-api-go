@@ -2,8 +2,6 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"github.com/pkg/errors"
-	"samsamoohooh-go-api/internal/core/domain"
 	"samsamoohooh-go-api/internal/core/dto"
 	"samsamoohooh-go-api/internal/core/port"
 )
@@ -19,7 +17,7 @@ func NewUserHandler(userService port.UserService) *UserHandler {
 func (h *UserHandler) Create(c fiber.Ctx) error {
 	body := new(dto.UserCreateRequest)
 	if err := c.Bind().JSON(body); err != nil {
-		return errors.Wrap(domain.ErrBadParam, err.Error())
+		return err
 	}
 
 	u, err := h.userService.Create(c.Context(), body)
