@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"samsamoohooh-go-api/internal/adapter/persistence/sql/database"
-	"samsamoohooh-go-api/internal/adapter/persistence/sql/repository/utils"
 	"samsamoohooh-go-api/internal/core/domain"
 	"samsamoohooh-go-api/internal/core/port"
 )
@@ -23,7 +22,7 @@ func NewPostRepository(database *database.Database) *PostRepository {
 func (r *PostRepository) Create(ctx context.Context, post *domain.Post) (*domain.Post, error) {
 	err := r.database.WithContext(ctx).Create(post).Error
 	if err != nil {
-		return nil, utils.Wrap(err)
+		return nil, err
 	}
 
 	return post, nil
@@ -33,7 +32,7 @@ func (r *PostRepository) GetByID(ctx context.Context, id uint) (*domain.Post, er
 	post := domain.Post{}
 	err := r.database.WithContext(ctx).First(&post, id).Error
 	if err != nil {
-		return nil, utils.Wrap(err)
+		return nil, err
 	}
 
 	return &post, nil
@@ -43,17 +42,17 @@ func (r *PostRepository) GetCommentsByID(ctx context.Context, id uint) ([]domain
 	post := domain.Post{}
 	err := r.database.WithContext(ctx).Preload("Comments").First(&post, id).Error
 	if err != nil {
-		return nil, utils.Wrap(err)
+		return nil, err
 	}
 
 	return post.Comments, nil
 }
 
 func (r *PostRepository) GetAll(ctx context.Context, skip, limit int) ([]domain.Post, error) {
-	posts := []domain.Post{}
+	var posts []domain.Post
 	err := r.database.WithContext(ctx).Limit(limit).Offset((skip - 1) * limit).Find(&posts).Error
 	if err != nil {
-		return nil, utils.Wrap(err)
+		return nil, err
 	}
 
 	return posts, nil
@@ -63,7 +62,7 @@ func (r *PostRepository) Update(ctx context.Context, id uint, post *domain.Post)
 	post.ID = id
 	err := r.database.WithContext(ctx).Save(post).Error
 	if err != nil {
-		return nil, utils.Wrap(err)
+		return nil, err
 	}
 
 	return post, nil
@@ -72,7 +71,7 @@ func (r *PostRepository) Update(ctx context.Context, id uint, post *domain.Post)
 func (r *PostRepository) Delete(ctx context.Context, id uint) error {
 	err := r.database.WithContext(ctx).Delete(&domain.Post{}, id).Error
 	if err != nil {
-		return utils.Wrap(err)
+		return err
 	}
 
 	return nil

@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"samsamoohooh-go-api/internal/adapter/persistence/sql/database"
-	"samsamoohooh-go-api/internal/adapter/persistence/sql/repository/utils"
 	"samsamoohooh-go-api/internal/core/domain"
 	"samsamoohooh-go-api/internal/core/port"
 )
@@ -22,7 +21,7 @@ func NewTaskRepository(database *database.Database) *TaskRepository {
 func (r *TaskRepository) Create(ctx context.Context, task *domain.Task) (*domain.Task, error) {
 	err := r.database.WithContext(ctx).Create(task).Error
 	if err != nil {
-		return nil, utils.Wrap(err)
+		return nil, err
 	}
 
 	return task, nil
@@ -30,9 +29,9 @@ func (r *TaskRepository) Create(ctx context.Context, task *domain.Task) (*domain
 
 func (r *TaskRepository) GetByID(ctx context.Context, id uint) (*domain.Task, error) {
 	task := domain.Task{}
-	err := r.database.WithContext(ctx).First(&task).Error
+	err := r.database.WithContext(ctx).First(&task, id).Error
 	if err != nil {
-		return nil, utils.Wrap(err)
+		return nil, err
 	}
 
 	return &task, nil
@@ -41,17 +40,17 @@ func (r *TaskRepository) GetSubjectsByID(ctx context.Context, id uint) ([]domain
 	task := domain.Task{}
 	err := r.database.WithContext(ctx).Preload("Subjects").First(&task, id).Error
 	if err != nil {
-		return nil, utils.Wrap(err)
+		return nil, err
 	}
 
 	return task.Subjects, nil
 }
 
 func (r *TaskRepository) GetAll(ctx context.Context, skip, limit int) ([]domain.Task, error) {
-	tasks := []domain.Task{}
+	var tasks []domain.Task
 	err := r.database.WithContext(ctx).Limit(limit).Offset((skip - 1) * limit).Find(&tasks).Error
 	if err != nil {
-		return nil, utils.Wrap(err)
+		return nil, err
 	}
 
 	return tasks, nil
@@ -60,7 +59,7 @@ func (r *TaskRepository) Update(ctx context.Context, id uint, task *domain.Task)
 	task.ID = id
 	err := r.database.WithContext(ctx).Save(task).Error
 	if err != nil {
-		return nil, utils.Wrap(err)
+		return nil, err
 	}
 
 	return task, nil
@@ -69,7 +68,7 @@ func (r *TaskRepository) Update(ctx context.Context, id uint, task *domain.Task)
 func (r *TaskRepository) Delete(ctx context.Context, id uint) error {
 	err := r.database.WithContext(ctx).Delete(&domain.Task{}, id).Error
 	if err != nil {
-		return utils.Wrap(err)
+		return err
 	}
 
 	return nil

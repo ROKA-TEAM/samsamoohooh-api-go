@@ -2,9 +2,7 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"samsamoohooh-go-api/internal/adapter/persistence/sql/database"
-	"samsamoohooh-go-api/internal/adapter/persistence/sql/repository/utils"
 	"samsamoohooh-go-api/internal/core/domain"
 	"samsamoohooh-go-api/internal/core/port"
 )
@@ -24,7 +22,7 @@ func NewUserRepository(database *database.Database) *UserRepository {
 func (r *UserRepository) Create(ctx context.Context, user *domain.User) (*domain.User, error) {
 	err := r.database.WithContext(ctx).Create(user).Error
 	if err != nil {
-		return nil, utils.Wrap(err)
+		return nil, err
 	}
 
 	return user, nil
@@ -34,7 +32,7 @@ func (r *UserRepository) GetByID(ctx context.Context, id uint) (*domain.User, er
 	user := domain.User{}
 	err := r.database.WithContext(ctx).First(&user, id).Error
 	if err != nil {
-		return nil, utils.Wrap(err)
+		return nil, err
 	}
 
 	return &user, nil
@@ -44,17 +42,17 @@ func (r *UserRepository) GetGroupsByID(ctx context.Context, id uint) ([]*domain.
 	user := domain.User{}
 	err := r.database.WithContext(ctx).Preload("Groups").First(&user, id).Error
 	if err != nil {
-		return nil, utils.Wrap(err)
+		return nil, err
 	}
 
 	return user.Groups, nil
 }
 
 func (r *UserRepository) GetAll(ctx context.Context, skip, limit int) ([]domain.User, error) {
-	users := []domain.User{}
+	var users []domain.User
 	err := r.database.WithContext(ctx).Limit(limit).Offset((skip - 1) * limit).Find(&users).Error
 	if err != nil {
-		return nil, utils.Wrap(err)
+		return nil, err
 	}
 
 	return users, nil
@@ -64,7 +62,7 @@ func (r *UserRepository) Update(ctx context.Context, id uint, user *domain.User)
 	user.ID = id
 	err := r.database.WithContext(ctx).Save(&user).Error
 	if err != nil {
-		return nil, utils.Wrap(err)
+		return nil, err
 	}
 
 	return user, nil
@@ -73,12 +71,12 @@ func (r *UserRepository) Update(ctx context.Context, id uint, user *domain.User)
 func (r *UserRepository) Delete(ctx context.Context, id uint) (*domain.User, error) {
 	err := r.database.WithContext(ctx).Delete(&domain.User{}, id).Error
 	if err != nil {
-		return nil, utils.Wrap(err)
+		return nil, err
 	}
 
 	deletedUser := &domain.User{}
 	if err := r.database.WithContext(ctx).Unscoped().Where("id = ? AND deleted_at IS NOT NULL", id).First(deletedUser).Error; err != nil {
-		return nil, fmt.Errorf("failed to verify deleted user: %w", err)
+		return nil, err
 	}
 
 	return deletedUser, nil
