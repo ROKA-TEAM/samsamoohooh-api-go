@@ -6,6 +6,8 @@ import (
 	"samsamoohooh-go-api/internal/core/port"
 )
 
+var _ port.UserService = (*UserService)(nil)
+
 type UserService struct {
 	userRepository port.UserRepository
 }

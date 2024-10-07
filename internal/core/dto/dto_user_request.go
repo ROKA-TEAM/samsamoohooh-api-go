@@ -12,7 +12,7 @@ type UserCreateRequest struct {
 	Social     string `json:"social"`
 }
 
-func (r UserCreateRequest) ToDomain() *domain.User {
+func (r *UserCreateRequest) ToDomain() *domain.User {
 	return &domain.User{
 		Name:       r.Name,
 		Resolution: r.Resolution,

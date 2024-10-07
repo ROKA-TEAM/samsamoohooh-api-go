@@ -16,3 +16,4 @@ refreshDuration = "30d"
 
 [http]
 port = ":8080"
+name = "samsamoohooh"

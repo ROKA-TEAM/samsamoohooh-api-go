@@ -26,6 +26,7 @@ type Config struct {
 
 	HTTP struct {
 		Port string
+		Name string
 	}
 }
 
