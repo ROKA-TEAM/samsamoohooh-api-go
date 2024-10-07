@@ -23,6 +23,10 @@ type Config struct {
 		AccessDuration  string
 		RefreshDuration string
 	}
+
+	HTTP struct {
+		Port string
+	}
 }
 
 func New(path string) (*Config, error) {

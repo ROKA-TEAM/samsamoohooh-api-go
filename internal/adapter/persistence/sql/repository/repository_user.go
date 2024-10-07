@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"samsamoohooh-go-api/internal/adapter/persistence/sql/database"
 	"samsamoohooh-go-api/internal/adapter/persistence/sql/repository/utils"
 	"samsamoohooh-go-api/internal/core/domain"
@@ -69,11 +70,16 @@ func (r *UserRepository) Update(ctx context.Context, id uint, user *domain.User)
 	return user, nil
 }
 
-func (r *UserRepository) Delete(ctx context.Context, id uint) error {
+func (r *UserRepository) Delete(ctx context.Context, id uint) (*domain.User, error) {
 	err := r.database.WithContext(ctx).Delete(&domain.User{}, id).Error
 	if err != nil {
-		return utils.Wrap(err)
+		return nil, utils.Wrap(err)
 	}
 
-	return nil
+	deletedUser := &domain.User{}
+	if err := r.database.WithContext(ctx).Unscoped().Where("id = ? AND deleted_at IS NOT NULL", id).First(deletedUser).Error; err != nil {
+		return nil, fmt.Errorf("failed to verify deleted user: %w", err)
+	}
+
+	return deletedUser, nil
 }

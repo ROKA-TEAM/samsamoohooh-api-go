@@ -8,12 +8,12 @@ import (
 
 func main() {
 
-	config, err := config.New(".toml")
+	c, err := config.New(".toml")
 	if err != nil {
 		log.Panicf("config 생성에 실패하였습니다: %v\n", err)
 	}
 
-	db, err := database.NewDatabase(config)
+	db, err := database.NewDatabase(c)
 	if err != nil {
 		log.Panicf("database 생성에 실패하였습니다: %v", err)
 	}
