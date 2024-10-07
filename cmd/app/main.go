@@ -31,8 +31,13 @@ func main() {
 	userService := service.NewUserService(userRepository)
 	userHandler := handler.NewUserHandler(userService)
 
+	groupRepository := repository.NewGroupRepository(db)
+	groupService := service.NewGroupService(groupRepository, userRepository)
+	groupHandler := handler.NewGroupHandler(groupService)
+
 	r := router.New(c, router.HandlerSet{
-		UserHandler: userHandler,
+		UserHandler:  userHandler,
+		GroupHandler: groupHandler,
 	})
 
 	if err := r.Start(); err != nil {

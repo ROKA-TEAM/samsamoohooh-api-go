@@ -49,6 +49,13 @@ func (r *Router) route() {
 				users.Put("/:id", r.handlerSet.UserHandler.Update)
 				users.Delete("/:id", r.handlerSet.UserHandler.Delete)
 			}
+
+			groups := v1.Group("/groups")
+			{
+				groups.Post("/", r.handlerSet.GroupHandler.Create)
+				groups.Get("/:id", r.handlerSet.GroupHandler.GetByID)
+				groups.Get("/:id/users", r.handlerSet.GroupHandler.GetUsersByID)
+			}
 		}
 	}
 }

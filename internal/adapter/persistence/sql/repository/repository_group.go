@@ -40,7 +40,7 @@ func (r *GroupRepository) GetByID(ctx context.Context, id uint) (*domain.Group, 
 
 func (r *GroupRepository) GetUsersByID(ctx context.Context, id uint) ([]*domain.User, error) {
 	group := domain.Group{}
-	err := r.database.WithContext(ctx).Preload("Users").First(group, id).Error
+	err := r.database.WithContext(ctx).Preload("Users").First(&group, id).Error
 	if err != nil {
 		return nil, err
 	}
