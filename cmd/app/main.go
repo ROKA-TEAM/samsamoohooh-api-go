@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"samsamoohooh-go-api/internal/adapter/auth/jwt"
+	"samsamoohooh-go-api/internal/adapter/auth/oauth/google"
 	"samsamoohooh-go-api/internal/adapter/persistence/sql/database"
 	"samsamoohooh-go-api/internal/adapter/persistence/sql/repository"
 	"samsamoohooh-go-api/internal/adapter/presentation/handler"
@@ -29,12 +30,17 @@ func main() {
 	}
 
 	// setting adapter
+
+	// jwt service
 	jwtService, err := jwt.New(c)
 	if err != nil {
 		log.Panicf("jwtService를 불러오는데 실패했습니다: %v", err)
 	}
 
 	_ = jwtService
+
+	// google oauth
+	googleOauth := google.New(c)
 
 	// setting layers
 	userRepository := repository.NewUserRepository(db)
@@ -45,9 +51,12 @@ func main() {
 	groupService := service.NewGroupService(groupRepository, userRepository)
 	groupHandler := handler.NewGroupHandler(groupService)
 
+	authHandler := handler.NewAuthHandler(googleOauth)
+
 	r := router.New(c, router.HandlerSet{
 		UserHandler:  userHandler,
 		GroupHandler: groupHandler,
+		AuthHandler:  authHandler,
 	})
 
 	if err := r.Start(); err != nil {

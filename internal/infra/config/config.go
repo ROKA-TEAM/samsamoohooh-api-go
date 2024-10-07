@@ -34,6 +34,15 @@ type Config struct {
 		Port string
 		Name string
 	}
+
+	Oauth struct {
+		Google struct {
+			ClientID     string
+			ClientSecret string
+			CallbackURL  string
+			UserInfoURL  string
+		}
+	}
 }
 
 func New(path string) (*Config, error) {

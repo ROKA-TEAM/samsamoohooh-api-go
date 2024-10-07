@@ -40,6 +40,15 @@ func (r *Router) route() {
 	{
 		v1 := api.Group("/v1")
 		{
+			auth := v1.Group("/auth")
+			{
+				google := auth.Group("/google")
+				{
+					google.Get("/", r.handlerSet.AuthHandler.GoogleLogin)
+					google.Get("/callback", r.handlerSet.AuthHandler.GoogleCallback)
+				}
+			}
+
 			users := v1.Group("/users")
 			{
 				users.Post("/", r.handlerSet.UserHandler.Create)
