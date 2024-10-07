@@ -19,6 +19,7 @@ func New(config *config.Config, handlerSet HandlerSet) *Router {
 	r := &Router{config: config, handlerSet: handlerSet, App: fiber.New(fiber.Config{
 		AppName:         config.HTTP.Name,
 		StructValidator: validator.New(),
+		ErrorHandler:    customErrorHandler,
 	})}
 
 	r.setMiddleware()
