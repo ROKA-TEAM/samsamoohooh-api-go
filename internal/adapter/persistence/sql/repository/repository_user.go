@@ -38,6 +38,16 @@ func (r *UserRepository) GetByID(ctx context.Context, id uint) (*domain.User, er
 	return &user, nil
 }
 
+func (r *UserRepository) GetBySub(ctx context.Context, sub string) (*domain.User, error) {
+	var user domain.User
+	err := r.database.WithContext(ctx).First(&user, "sub = ?", sub).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
 func (r *UserRepository) GetGroupsByID(ctx context.Context, id uint) ([]*domain.Group, error) {
 	user := domain.User{}
 	err := r.database.WithContext(ctx).Preload("Groups").First(&user, id).Error

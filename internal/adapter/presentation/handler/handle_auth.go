@@ -1,13 +1,12 @@
 package handler
 
 import (
-	"crypto/rand"
-	"encoding/base64"
-	"fmt"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/session"
 	"github.com/pkg/errors"
+	"gorm.io/gorm"
 	"samsamoohooh-go-api/internal/core/domain"
+	"samsamoohooh-go-api/internal/core/dto"
 	"samsamoohooh-go-api/internal/core/port"
 	"time"
 )
@@ -18,13 +17,15 @@ var store = session.New(session.Config{
 
 type AuthHandler struct {
 	googleOauthService port.OauthService
+	userRepository     port.UserRepository
+	jwtService         port.JWTService
+	authService        port.AuthService
 }
 
-func NewAuthHandler(googleOauthService port.OauthService) *AuthHandler {
-	return &AuthHandler{googleOauthService: googleOauthService}
+func NewAuthHandler(googleOauthService port.OauthService, userRepository port.UserRepository, jwtService port.JWTService, authService port.AuthService) *AuthHandler {
+	return &AuthHandler{googleOauthService: googleOauthService, userRepository: userRepository, jwtService: jwtService, authService: authService}
 }
 
-// 인증 (사용자에게 로그인 화면을 보여준다)
 func (h *AuthHandler) GoogleLogin(c fiber.Ctx) error {
 	// session 설정
 	sess, err := store.Get(c)
@@ -32,7 +33,7 @@ func (h *AuthHandler) GoogleLogin(c fiber.Ctx) error {
 		return err
 	}
 
-	state, err := generateSecureToken(16)
+	state, err := h.authService.GenerateSecureToken(12)
 	if err != nil {
 		return err
 	}
@@ -48,7 +49,6 @@ func (h *AuthHandler) GoogleLogin(c fiber.Ctx) error {
 	return c.Redirect().Status(fiber.StatusTemporaryRedirect).To(redirectURL)
 }
 
-// 인가 (사용자의 정보를 가져옴)
 func (h *AuthHandler) GoogleCallback(c fiber.Ctx) error {
 	sess, err := store.Get(c)
 	if err != nil {
@@ -64,27 +64,70 @@ func (h *AuthHandler) GoogleCallback(c fiber.Ctx) error {
 		return errors.Wrap(domain.ErrUnauthorized, "invalid state, not match req state and session state")
 	}
 
+	sess.Delete("state")
+
 	sub, err := h.googleOauthService.GetSub(c.Context(), c.FormValue("code"))
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("sub: ", sub)
-	return c.SendString(sub)
-}
+	// 이미 존재하는 sub인지 확인하기 위해, 사용자 조회
+	queriedUser, err := h.userRepository.GetBySub(c.Context(), sub)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		// 사용자 만들기
+		createdUser, err := h.userRepository.Create(c.Context(), &domain.User{
+			Role:   domain.Guest,
+			Social: domain.Google,
+			Sub:    sub,
+		})
+		if err != nil {
+			return err
+		}
 
-func generateSecureToken(length int) (string, error) {
-	// length가 0보다 작으면 에러 반환
-	if length < 1 {
-		return "", errors.Wrap(domain.ErrInternal, fmt.Sprintf("invalid token length: %d", length))
+		// temporary token 만들기
+		tokenString, err := h.jwtService.CreateTempToken(createdUser.ID, createdUser.Sub, string(createdUser.Social))
+		if err != nil {
+			return err
+		}
+
+		// 임시 토큰 발급해 반환해주기
+		return c.Status(fiber.StatusOK).JSON(&dto.AuthGoogleCallbackResponse{
+			TempToken: tokenString,
+		})
+
+	} else if err != nil {
+		return err
 	}
 
-	bytes := make([]byte, length)
+	// 만약 query한 사용자의 정보 중 name와 Resolution이 비워져 있다면
+	if len(queriedUser.Name) == 0 || len(queriedUser.Resolution) == 0 {
+		// 	임시토큰 발급
+		tokenString, err := h.jwtService.CreateTempToken(queriedUser.ID, queriedUser.Sub, string(queriedUser.Social))
+		if err != nil {
+			return err
+		}
 
-	_, err := rand.Read(bytes)
+		// 임시 토큰 발급해 반환해주기
+		return c.Status(fiber.StatusOK).JSON(&dto.AuthGoogleCallbackResponse{
+			TempToken: tokenString,
+		})
+
+	}
+
+	// 아니라면 정식 토큰 발급
+
+	accessTokenString, err := h.jwtService.CreateAccessToken(queriedUser)
 	if err != nil {
-		return "", fmt.Errorf("failed to generate random bytes: %v", err)
+		return err
 	}
 
-	return base64.URLEncoding.WithPadding(base64.NoPadding).EncodeToString(bytes), nil
+	refreshTokenString, err := h.jwtService.CreateRefreshToken(queriedUser)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(&dto.AuthGoogleCallbackResponse{
+		AccessToken:  accessTokenString,
+		RefreshToken: refreshTokenString,
+	})
 }

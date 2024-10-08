@@ -29,8 +29,6 @@ func main() {
 		log.Panicf("migrate에 실패하였습니다: %v", err)
 	}
 
-	// setting adapter
-
 	// jwt service
 	jwtService, err := jwt.New(c)
 	if err != nil {
@@ -40,7 +38,7 @@ func main() {
 	_ = jwtService
 
 	// google oauth
-	googleOauth := google.New(c)
+	googleOauthService := google.New(c)
 
 	// setting layers
 	userRepository := repository.NewUserRepository(db)
@@ -51,7 +49,8 @@ func main() {
 	groupService := service.NewGroupService(groupRepository, userRepository)
 	groupHandler := handler.NewGroupHandler(groupService)
 
-	authHandler := handler.NewAuthHandler(googleOauth)
+	authService := service.NewAuthService()
+	authHandler := handler.NewAuthHandler(googleOauthService, userRepository, jwtService, authService)
 
 	r := router.New(c, router.HandlerSet{
 		UserHandler:  userHandler,

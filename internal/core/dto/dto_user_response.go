@@ -57,6 +57,32 @@ func NewUserGetByIDResponse(user *domain.User) *UserGetByIDResponse {
 	}
 }
 
+type UserGetBySubResponse struct {
+	ID         uint      `json:"id"`
+	Name       string    `json:"name"`
+	Resolution string    `json:"resolution"`
+	Role       string    `json:"role"`
+	Sub        string    `json:"sub"`
+	Social     string    `json:"social"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
+	DeletedAt  time.Time `json:"deleted_at,omitempty"`
+}
+
+func NewUserGetBySub(user *domain.User) *UserGetBySubResponse {
+	return &UserGetBySubResponse{
+		ID:         user.ID,
+		Name:       user.Name,
+		Resolution: user.Resolution,
+		Role:       string(user.Role),
+		Sub:        user.Sub,
+		Social:     string(user.Social),
+		CreatedAt:  user.CreatedAt,
+		UpdatedAt:  user.UpdatedAt,
+		DeletedAt:  user.DeletedAt.Time,
+	}
+}
+
 type UserGetGroupsByIDResponse struct {
 	ID          uint   `json:"id"`
 	BookTitle   string `json:"bookTitle"`

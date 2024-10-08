@@ -102,6 +102,28 @@ func (j *JWT) CreateRefreshToken(user *domain.User) (string, error) {
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(j.config.Token.Key))
 }
 
+func (j *JWT) CreateTempToken(userID uint, sub, social string) (string, error) {
+	now := time.Now()
+
+	var claims = struct {
+		jwt.RegisteredClaims
+		Social string
+		Type   string
+	}{
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer:    strconv.Itoa(int(userID)),
+			Audience:  jwt.ClaimStrings{j.config.Token.Audience},
+			ExpiresAt: jwt.NewNumericDate(now.Add(time.Hour * 24 * 3 /*3 day*/)),
+			NotBefore: jwt.NewNumericDate(now),
+			IssuedAt:  jwt.NewNumericDate(now),
+		},
+		Social: social,
+		Type:   "temp",
+	}
+
+	return jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(j.config.Token.Key))
+}
+
 func (j *JWT) VerifyToken(tokenString string) (*domain.TokenPayload, error) {
 	myCustomClaims := customClaims{}
 
@@ -118,8 +140,6 @@ func (j *JWT) VerifyToken(tokenString string) (*domain.TokenPayload, error) {
 		}
 		return nil, errors.Wrap(domain.ErrInternal, err.Error())
 	}
-
-	fmt.Printf("parsed token: %+v", myCustomClaims)
 
 	// check Audience field
 	var check bool = false
@@ -143,6 +163,13 @@ func (j *JWT) VerifyToken(tokenString string) (*domain.TokenPayload, error) {
 		// 토큰이 만료되었음!
 		return nil, errors.Wrap(domain.ErrUnauthorized, "token has expired.")
 
+	}
+
+	// TODO: not before
+
+	// is temp token?
+	if strings.Compare(myCustomClaims.Type, "temp") == 0 {
+		return nil, domain.ErrTokenTemporary
 	}
 
 	return myCustomClaims.toDomain(), nil

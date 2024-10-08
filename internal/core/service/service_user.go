@@ -34,6 +34,15 @@ func (s *UserService) GetByID(ctx context.Context, id uint) (*dto.UserGetByIDRes
 	return dto.NewUserGetByIDResponse(u), nil
 }
 
+func (s *UserService) GetBySub(ctx context.Context, sub string) (*dto.UserGetBySubResponse, error) {
+	queriedUser, err := s.userRepository.GetBySub(ctx, sub)
+	if err != nil {
+		return nil, err
+	}
+
+	return dto.NewUserGetBySub(queriedUser), nil
+}
+
 func (s *UserService) GetGroupsByID(ctx context.Context, id uint) ([]*dto.UserGetGroupsByIDResponse, error) {
 	groups, err := s.userRepository.GetGroupsByID(ctx, id)
 	if err != nil {
