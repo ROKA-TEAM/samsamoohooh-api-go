@@ -10,13 +10,14 @@ const DefaultStartPort = ":8080"
 
 type Router struct {
 	*fiber.App
-	config     *config.Config
-	handlerSet HandlerSet
+	config        *config.Config
+	handlerSet    HandlerSet
+	middlewareSet MiddlewareSet
 }
 
-func New(config *config.Config, handlerSet HandlerSet) *Router {
+func New(config *config.Config, handlerSet HandlerSet, middlewareSet MiddlewareSet) *Router {
 
-	r := &Router{config: config, handlerSet: handlerSet, App: fiber.New(fiber.Config{
+	r := &Router{config: config, handlerSet: handlerSet, middlewareSet: middlewareSet, App: fiber.New(fiber.Config{
 		AppName:         config.HTTP.Name,
 		StructValidator: validator.New(),
 		ErrorHandler:    customErrorHandler,
@@ -42,6 +43,7 @@ func (r *Router) route() {
 		{
 			auth := v1.Group("/auth")
 			{
+
 				google := auth.Group("/google")
 				{
 					google.Get("/", r.handlerSet.AuthHandler.GoogleLogin)
@@ -49,7 +51,7 @@ func (r *Router) route() {
 				}
 			}
 
-			users := v1.Group("/users")
+			users := v1.Group("/users", r.middlewareSet.GuardMiddleware.ProtectFromTempToken)
 			{
 				users.Post("/", r.handlerSet.UserHandler.Create)
 				users.Get("/:id", r.handlerSet.UserHandler.GetByID)

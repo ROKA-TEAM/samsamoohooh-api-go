@@ -27,6 +27,7 @@ type Config struct {
 		Duration struct {
 			Access  string
 			Refresh string
+			Temp    string
 		}
 	}
 

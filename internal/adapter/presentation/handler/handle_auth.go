@@ -8,6 +8,7 @@ import (
 	"samsamoohooh-go-api/internal/core/domain"
 	"samsamoohooh-go-api/internal/core/dto"
 	"samsamoohooh-go-api/internal/core/port"
+	"strconv"
 	"time"
 )
 
@@ -24,6 +25,41 @@ type AuthHandler struct {
 
 func NewAuthHandler(googleOauthService port.OauthService, userRepository port.UserRepository, jwtService port.JWTService, authService port.AuthService) *AuthHandler {
 	return &AuthHandler{googleOauthService: googleOauthService, userRepository: userRepository, jwtService: jwtService, authService: authService}
+}
+
+func (h *AuthHandler) MoreInfo(c fiber.Ctx) error {
+	//  -> AllowEntryOnlyTempTokenMiddleware -> call this func
+	body := new(dto.AuthMoreInfoRequest)
+
+	if err := c.Bind().JSON(body); err != nil {
+		return err
+	}
+
+	payload := fiber.Locals[domain.TempTokenPayload](c, domain.Temp)
+	id, err := strconv.Atoi(payload.Subject)
+	if err != nil {
+		return errors.Wrap(domain.ErrInternal, err.Error())
+	}
+
+	updatedUser, err := h.userRepository.Update(c.Context(), uint(id), body.ToDomain())
+	if err != nil {
+		return err
+	}
+
+	accessTokenString, err := h.jwtService.CreateAccessToken(updatedUser)
+	if err != nil {
+		return err
+	}
+
+	refreshTokenString, err := h.jwtService.CreateRefreshToken(updatedUser)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(&dto.AuthMoreInfoResponse{
+		AccessToken:  accessTokenString,
+		RefreshToken: refreshTokenString,
+	})
 }
 
 func (h *AuthHandler) GoogleLogin(c fiber.Ctx) error {

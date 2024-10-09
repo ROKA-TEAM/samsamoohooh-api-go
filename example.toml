@@ -16,7 +16,7 @@ issuer = "test.com"
 [token.duration]
 access = "3h"
 refresh = "1800h" # 30day
-
+temp = "72h" # 3d
 
 [http]
 port = ":8080"

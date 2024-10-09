@@ -25,3 +25,22 @@ func (c *customClaims) toDomain() *domain.TokenPayload {
 		Type:      domain.TokenType(c.Type),
 	}
 }
+
+type tempTokenClaims struct {
+	jwt.RegisteredClaims
+	Social string `json:"social,omitempty"`
+	Type   string `json:"type,omitempty"`
+}
+
+func (c *tempTokenClaims) toDomain() *domain.TempTokenPayload {
+	return &domain.TempTokenPayload{
+		Issuer:    c.Issuer,
+		Subject:   c.Subject,
+		Audience:  c.Audience[0],
+		ExpiresAt: c.ExpiresAt.Time,
+		NotBefore: c.NotBefore.Time,
+		IssuedAt:  c.IssuedAt.Time,
+		Social:    domain.SocialType(c.Social),
+		Type:      domain.TokenType(c.Type),
+	}
+}

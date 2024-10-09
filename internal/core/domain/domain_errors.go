@@ -8,5 +8,6 @@ var (
 	ErrInternal     = errors.New("internal error")
 
 	// token error
-	ErrTokenTemporary = errors.New("token is temporary")
+	ErrTokenTemporary    = errors.New("token is temporary")
+	ErrTokenNotTemporary = errors.New("token is not temporary")
 )

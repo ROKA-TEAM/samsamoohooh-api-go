@@ -8,6 +8,7 @@ import (
 	"samsamoohooh-go-api/internal/adapter/persistence/sql/repository"
 	"samsamoohooh-go-api/internal/adapter/presentation/handler"
 	"samsamoohooh-go-api/internal/adapter/presentation/router"
+	"samsamoohooh-go-api/internal/adapter/presentation/router/middleware"
 	"samsamoohooh-go-api/internal/core/service"
 	"samsamoohooh-go-api/internal/infra/config"
 )
@@ -35,8 +36,6 @@ func main() {
 		log.Panicf("jwtService를 불러오는데 실패했습니다: %v", err)
 	}
 
-	_ = jwtService
-
 	// google oauth
 	googleOauthService := google.New(c)
 
@@ -52,11 +51,17 @@ func main() {
 	authService := service.NewAuthService()
 	authHandler := handler.NewAuthHandler(googleOauthService, userRepository, jwtService, authService)
 
+	// middleware
+	guardMiddleware := middleware.NewGuardMiddleware(jwtService)
+
 	r := router.New(c, router.HandlerSet{
 		UserHandler:  userHandler,
 		GroupHandler: groupHandler,
 		AuthHandler:  authHandler,
-	})
+	}, router.MiddlewareSet{
+		GuardMiddleware: guardMiddleware,
+	},
+	)
 
 	if err := r.Start(); err != nil {
 		log.Panicf("server 시작 중(후)에 실패했습니다: %v\n", err)
