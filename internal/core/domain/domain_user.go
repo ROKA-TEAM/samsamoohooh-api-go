@@ -1,34 +1,38 @@
 package domain
 
-import "gorm.io/gorm"
+import "time"
 
 type RoleType string
 
 const (
-	Admin  RoleType = "ADMIN"
-	Member RoleType = "MEMBER"
-	Guest  RoleType = "GUEST"
+	RoleAdmin  RoleType = "ADMIN"
+	RoleMember RoleType = "MEMBER"
+	RoleGuest  RoleType = "GUEST"
 )
 
 type SocialType string
 
 const (
-	Google SocialType = "GOOGLE"
-	Kakao  SocialType = "KAKAO"
-	Apple  SocialType = "APPLE"
+	SocialGoogle SocialType = "GOOGLE"
+	SocialKakao  SocialType = "KAKAO"
+	SocialApple  SocialType = "APPLE"
 )
 
 type User struct {
-	gorm.Model
-	Name       string     `gorm:"not null;unique"`
-	Resolution string     `gorm:"not null"`
-	Role       RoleType   `gorm:"not null"`
-	Sub        string     `gorm:"not null"`
-	Social     SocialType `gorm:"not null"`
+	ID         int
+	Name       string
+	Resolution string
+	Role       RoleType
+	Social     SocialType
 
-	Groups []*Group `gorm:"many2many:user_groups;"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt time.Time
 
-	Posts    []Post    `gorm:"foreignKey:UserID"`
-	Comments []Comment `gorm:"foreignKey:UserID"`
-	Subjects []Subject `gorm:"foreignKey:UserID"`
+	Groups   []Group
+	Posts    []Post
+	Comments []Comment
+	Subjects []Subject
 }
+
+// domain 정의 -> router, dto 정의 -> Repository 정의 -> service 정의 -> handler 구현

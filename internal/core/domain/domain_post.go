@@ -1,15 +1,18 @@
 package domain
 
-import "gorm.io/gorm"
+import "time"
 
 type Post struct {
-	gorm.Model
-
+	ID      int
 	Title   string
 	Content string
 
-	UserID  uint
-	GroupID uint
+	UserID  int
+	GroupID int
 
-	Comments []Comment `gorm:"foreignKey:PostID"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt time.Time
+
+	Comments []Comment
 }

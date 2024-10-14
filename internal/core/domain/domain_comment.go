@@ -1,11 +1,15 @@
 package domain
 
-import "gorm.io/gorm"
+import "time"
 
 type Comment struct {
-	gorm.Model
-	UserID uint
-	PostID uint
+	ID      int
+	Content string
 
-	Content string `json:"content"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt time.Time
+
+	UserID int
+	PostID int
 }

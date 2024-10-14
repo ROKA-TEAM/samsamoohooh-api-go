@@ -2,15 +2,17 @@ package domain
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type Task struct {
-	gorm.Model
-	GroupID  uint
+	ID       int
+	GroupID  int
 	Deadline time.Time
 	Range    int
 
-	Subjects []Subject `gorm:"foreignKey:TaskID"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt time.Time
+
+	Subjects []Subject
 }

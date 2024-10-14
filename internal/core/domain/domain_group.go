@@ -1,9 +1,9 @@
 package domain
 
-import "gorm.io/gorm"
+import "time"
 
 type Group struct {
-	gorm.Model
+	ID          int
 	BookTitle   string
 	Author      string
 	MaxPage     int
@@ -11,10 +11,11 @@ type Group struct {
 	Description string
 	Bookmark    int
 
-	// Back-Reference
-	Users []*User `gorm:"many2many:user_groups;"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt time.Time
 
-	Posts []Post `gorm:"foreignKey:GroupID"`
-
-	Tasks []Task `gorm:"foreignKey:GroupID"`
+	Users []User
+	Posts []Post
+	Tasks []Task
 }

@@ -1,11 +1,16 @@
 package domain
 
-import "gorm.io/gorm"
+import "time"
 
 type Subject struct {
-	gorm.Model
-	UserID  uint
-	TaskID  uint
+	ID      int
 	Content string
 	Feeling string
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt time.Time
+
+	UserID int
+	TaskID int
 }
