@@ -8,6 +8,8 @@ import (
 	"samsamoohooh-go-api/internal/repository/database/utils"
 )
 
+var _ domain.UserRepository = (*UserRepository)(nil)
+
 type UserRepository struct {
 	database *database.Database
 }
