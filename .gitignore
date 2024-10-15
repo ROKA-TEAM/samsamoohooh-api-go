@@ -23,6 +23,10 @@ go.work.sum
 
 # utils
 tmp_app
+tmp
 
 # erd
 *.erd.json
+
+# IDE
+.idea

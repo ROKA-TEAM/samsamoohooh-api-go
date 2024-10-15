@@ -1,0 +1,42 @@
+# [Air](https://github.com/cosmtrek/air)를 위한 설정 파일 (TOML 형식)
+
+# 작업 디렉토리
+# . 또는 절대 경로, 주의: 이후의 모든 경로는 root 아래에 있어야 함
+root = "."
+tmp_dir = "tmp"
+
+[build]
+# 애플리케이션을 빌드하기 위한 셸 명령어
+cmd = "go build -o ./tmp/main ./cmd/app/."
+# cmd에서 생성되는 바이너리 파일
+bin = "tmp/main"
+# 바이너리 실행을 위한 사용자 정의 명령어
+full_bin = "./tmp/main"
+# 이 로그 파일은 tmp_dir에 저장됨
+log = "air_errors.log"
+# 감시할 파일 확장자들
+include_ext = ["go", "yaml", "toml"]
+# 제외할 정규 표현식 패턴
+exclude_regex = ["_test\\.go"]
+# 무시할 파일 확장자나 디렉토리
+exclude_dir = ["tmp", "vendor"]
+# 파일 변경이 너무 빈번할 경우 매번 빌드를 트리거하지 않음
+delay = 1000 # 밀리초 단위
+
+# 빌드 전에 실행할 go lint 명령어
+pre_cmd = ["golangci-lint run"]
+
+[log]
+# 로그에 시간 표시
+time = true
+
+[color]
+# 각 부분의 색상 사용자 정의. 색상이 지정되지 않으면 원시 앱 로그 사용
+main = "magenta"
+watcher = "cyan"
+build = "yellow"
+runner = "green"
+
+[misc]
+# 종료 시 tmp 디렉토리 삭제
+clean_on_exit = true

@@ -1,0 +1,84 @@
+# golangci-lint 설정 파일
+
+# 각 linter의 세부 설정
+linters-settings:
+  errcheck:
+    # 타입 단언에 대한 오류 체크 활성화
+    check-type-assertions: true
+  govet:
+    # 변수 shadowing 체크 활성화
+    shadow: true
+  gocyclo:
+    # 함수의 순환 복잡도 임계값 설정 (이 값 이상이면 경고)
+    min-complexity: 15
+  dupl:
+    # 중복 코드로 간주할 토큰 수 임계값
+    threshold: 100
+  goconst:
+    # 상수화 대상 문자열의 최소 길이
+    min-len: 2
+    # 상수화 대상 문자열의 최소 발생 횟수
+    min-occurrences: 3
+  lll:
+    # 한 줄의 최대 길이 설정
+    line-length: 120
+  revive:
+    # revive 규칙 설정
+    rules:
+      - name: exported
+        arguments: ["checkPrivateReceivers"]
+
+# 활성화할 linter 목록
+linters:
+  enable:
+    - errcheck # 처리되지 않은 오류를 확인
+    - gosec # 보안 문제를 검사
+    - gosimple # 코드 단순화 제안
+    - govet # 다양한 코드 문제 검사
+    - ineffassign # 사용되지 않는 변수 할당 감지
+    - staticcheck # 광범위한 Go 코드 문제 검사
+    - typecheck # 타입 검사 수행
+    - unused # 사용되지 않는 코드 검사
+    - bodyclose # HTTP 응답 본문 닫힘 확인
+    - dupl # 코드 중복 검사
+    - errname # 오류 이름 규칙 확인
+    - errorlint # 오류 처리 관련 문제 검사
+    - exhaustive # switch 문 완전성 검사
+    - copyloopvar # 루프 변수 복사 문제 검사 (exportloopref의 개선된 버전)
+    - gochecknoinits # init() 함수 사용 방지
+    - gocritic # 다양한 코딩 스타일 및 논리 오류 감지
+    - nilerr # nil 오류 반환 패턴 확인
+    - nolintlint # nolint 주석 형식 확인
+    - revive # 다양한 코딩 관행 검사
+    - tparallel # 테스트 병렬 실행 확인
+    - unparam # 사용되지 않는 함수 매개변수 검출
+    - wrapcheck # 오류 래핑 확인
+
+  # 비활성화할 linter 목록
+  disable:
+    - funlen # 함수 길이 제한 (때로는 과도한 제약이 될 수 있음)
+    - gocyclo # 복잡도 검사 (설정을 통해 임계값 조정 가능)
+    - goimports # 자동으로 실행되는 경우가 많아 lint 단계에서는 비활성화 가능
+    - lll # 라인 길이 제한 (때로 불필요한 제약이 될 수 있음)
+    - stylecheck # staticcheck가 대부분의 스타일 문제를 커버함
+    - nlreturn # 코딩 스타일의 개인 선호도에 따라 선택적으로 사용
+    - gochecknoglobals # 전역 변수가 필요한 경우가 있을 수 있음
+    - godot # 주석 스타일은 팀의 선호도에 따라 다를 수 있음
+    - godox # TODO, FIXME 등의 주석이 유용할 수 있음
+    - misspell # 영어가 주 언어가 아닌 팀에서는 불필요할 수 있음
+    - prealloc # 컴파일러 최적화로 대부분 해결됨
+    - promlinter # Prometheus를 사용하지 않는 프로젝트에서는 불필요
+
+# 특정 상황에서 lint 규칙 예외 처리
+issues:
+  exclude-rules:
+    # 테스트 파일에 대해 일부 linter 비활성화
+    - path: _test\.go
+      linters:
+        - dupl
+        - gosec
+
+# lint 실행 관련 설정
+run:
+  # lint 실행 시간 제한
+  timeout: 5m
