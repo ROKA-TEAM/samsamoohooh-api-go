@@ -9,7 +9,7 @@ type Group struct {
 	MaxPage     int
 	Publisher   string
 	Description string
-	Bookmark    string
+	Bookmark    int
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   time.Time
