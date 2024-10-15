@@ -50,16 +50,16 @@ func (tc *TaskCreate) SetNillableUpdatedAt(t *time.Time) *TaskCreate {
 	return tc
 }
 
-// SetDeleteTime sets the "delete_time" field.
-func (tc *TaskCreate) SetDeleteTime(t time.Time) *TaskCreate {
-	tc.mutation.SetDeleteTime(t)
+// SetDeleteAt sets the "delete_at" field.
+func (tc *TaskCreate) SetDeleteAt(t time.Time) *TaskCreate {
+	tc.mutation.SetDeleteAt(t)
 	return tc
 }
 
-// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
-func (tc *TaskCreate) SetNillableDeleteTime(t *time.Time) *TaskCreate {
+// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
+func (tc *TaskCreate) SetNillableDeleteAt(t *time.Time) *TaskCreate {
 	if t != nil {
-		tc.SetDeleteTime(*t)
+		tc.SetDeleteAt(*t)
 	}
 	return tc
 }
@@ -212,9 +212,9 @@ func (tc *TaskCreate) createSpec() (*Task, *sqlgraph.CreateSpec) {
 		_spec.SetField(task.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
 	}
-	if value, ok := tc.mutation.DeleteTime(); ok {
-		_spec.SetField(task.FieldDeleteTime, field.TypeTime, value)
-		_node.DeleteTime = value
+	if value, ok := tc.mutation.DeleteAt(); ok {
+		_spec.SetField(task.FieldDeleteAt, field.TypeTime, value)
+		_node.DeleteAt = value
 	}
 	if value, ok := tc.mutation.Deadline(); ok {
 		_spec.SetField(task.FieldDeadline, field.TypeTime, value)

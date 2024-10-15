@@ -36,23 +36,23 @@ func (tu *TopicUpdate) SetUpdatedAt(t time.Time) *TopicUpdate {
 	return tu
 }
 
-// SetDeleteTime sets the "delete_time" field.
-func (tu *TopicUpdate) SetDeleteTime(t time.Time) *TopicUpdate {
-	tu.mutation.SetDeleteTime(t)
+// SetDeleteAt sets the "delete_at" field.
+func (tu *TopicUpdate) SetDeleteAt(t time.Time) *TopicUpdate {
+	tu.mutation.SetDeleteAt(t)
 	return tu
 }
 
-// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
-func (tu *TopicUpdate) SetNillableDeleteTime(t *time.Time) *TopicUpdate {
+// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
+func (tu *TopicUpdate) SetNillableDeleteAt(t *time.Time) *TopicUpdate {
 	if t != nil {
-		tu.SetDeleteTime(*t)
+		tu.SetDeleteAt(*t)
 	}
 	return tu
 }
 
-// ClearDeleteTime clears the value of the "delete_time" field.
-func (tu *TopicUpdate) ClearDeleteTime() *TopicUpdate {
-	tu.mutation.ClearDeleteTime()
+// ClearDeleteAt clears the value of the "delete_at" field.
+func (tu *TopicUpdate) ClearDeleteAt() *TopicUpdate {
+	tu.mutation.ClearDeleteAt()
 	return tu
 }
 
@@ -193,11 +193,11 @@ func (tu *TopicUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := tu.mutation.UpdatedAt(); ok {
 		_spec.SetField(topic.FieldUpdatedAt, field.TypeTime, value)
 	}
-	if value, ok := tu.mutation.DeleteTime(); ok {
-		_spec.SetField(topic.FieldDeleteTime, field.TypeTime, value)
+	if value, ok := tu.mutation.DeleteAt(); ok {
+		_spec.SetField(topic.FieldDeleteAt, field.TypeTime, value)
 	}
-	if tu.mutation.DeleteTimeCleared() {
-		_spec.ClearField(topic.FieldDeleteTime, field.TypeTime)
+	if tu.mutation.DeleteAtCleared() {
+		_spec.ClearField(topic.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := tu.mutation.GetField(); ok {
 		_spec.SetField(topic.FieldField, field.TypeString, value)
@@ -289,23 +289,23 @@ func (tuo *TopicUpdateOne) SetUpdatedAt(t time.Time) *TopicUpdateOne {
 	return tuo
 }
 
-// SetDeleteTime sets the "delete_time" field.
-func (tuo *TopicUpdateOne) SetDeleteTime(t time.Time) *TopicUpdateOne {
-	tuo.mutation.SetDeleteTime(t)
+// SetDeleteAt sets the "delete_at" field.
+func (tuo *TopicUpdateOne) SetDeleteAt(t time.Time) *TopicUpdateOne {
+	tuo.mutation.SetDeleteAt(t)
 	return tuo
 }
 
-// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
-func (tuo *TopicUpdateOne) SetNillableDeleteTime(t *time.Time) *TopicUpdateOne {
+// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
+func (tuo *TopicUpdateOne) SetNillableDeleteAt(t *time.Time) *TopicUpdateOne {
 	if t != nil {
-		tuo.SetDeleteTime(*t)
+		tuo.SetDeleteAt(*t)
 	}
 	return tuo
 }
 
-// ClearDeleteTime clears the value of the "delete_time" field.
-func (tuo *TopicUpdateOne) ClearDeleteTime() *TopicUpdateOne {
-	tuo.mutation.ClearDeleteTime()
+// ClearDeleteAt clears the value of the "delete_at" field.
+func (tuo *TopicUpdateOne) ClearDeleteAt() *TopicUpdateOne {
+	tuo.mutation.ClearDeleteAt()
 	return tuo
 }
 
@@ -476,11 +476,11 @@ func (tuo *TopicUpdateOne) sqlSave(ctx context.Context) (_node *Topic, err error
 	if value, ok := tuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(topic.FieldUpdatedAt, field.TypeTime, value)
 	}
-	if value, ok := tuo.mutation.DeleteTime(); ok {
-		_spec.SetField(topic.FieldDeleteTime, field.TypeTime, value)
+	if value, ok := tuo.mutation.DeleteAt(); ok {
+		_spec.SetField(topic.FieldDeleteAt, field.TypeTime, value)
 	}
-	if tuo.mutation.DeleteTimeCleared() {
-		_spec.ClearField(topic.FieldDeleteTime, field.TypeTime)
+	if tuo.mutation.DeleteAtCleared() {
+		_spec.ClearField(topic.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := tuo.mutation.GetField(); ok {
 		_spec.SetField(topic.FieldField, field.TypeString, value)

@@ -50,16 +50,16 @@ func (tc *TopicCreate) SetNillableUpdatedAt(t *time.Time) *TopicCreate {
 	return tc
 }
 
-// SetDeleteTime sets the "delete_time" field.
-func (tc *TopicCreate) SetDeleteTime(t time.Time) *TopicCreate {
-	tc.mutation.SetDeleteTime(t)
+// SetDeleteAt sets the "delete_at" field.
+func (tc *TopicCreate) SetDeleteAt(t time.Time) *TopicCreate {
+	tc.mutation.SetDeleteAt(t)
 	return tc
 }
 
-// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
-func (tc *TopicCreate) SetNillableDeleteTime(t *time.Time) *TopicCreate {
+// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
+func (tc *TopicCreate) SetNillableDeleteAt(t *time.Time) *TopicCreate {
 	if t != nil {
-		tc.SetDeleteTime(*t)
+		tc.SetDeleteAt(*t)
 	}
 	return tc
 }
@@ -216,9 +216,9 @@ func (tc *TopicCreate) createSpec() (*Topic, *sqlgraph.CreateSpec) {
 		_spec.SetField(topic.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
 	}
-	if value, ok := tc.mutation.DeleteTime(); ok {
-		_spec.SetField(topic.FieldDeleteTime, field.TypeTime, value)
-		_node.DeleteTime = value
+	if value, ok := tc.mutation.DeleteAt(); ok {
+		_spec.SetField(topic.FieldDeleteAt, field.TypeTime, value)
+		_node.DeleteAt = value
 	}
 	if value, ok := tc.mutation.GetField(); ok {
 		_spec.SetField(topic.FieldField, field.TypeString, value)

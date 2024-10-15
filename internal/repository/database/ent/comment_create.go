@@ -50,16 +50,16 @@ func (cc *CommentCreate) SetNillableUpdatedAt(t *time.Time) *CommentCreate {
 	return cc
 }
 
-// SetDeleteTime sets the "delete_time" field.
-func (cc *CommentCreate) SetDeleteTime(t time.Time) *CommentCreate {
-	cc.mutation.SetDeleteTime(t)
+// SetDeleteAt sets the "delete_at" field.
+func (cc *CommentCreate) SetDeleteAt(t time.Time) *CommentCreate {
+	cc.mutation.SetDeleteAt(t)
 	return cc
 }
 
-// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
-func (cc *CommentCreate) SetNillableDeleteTime(t *time.Time) *CommentCreate {
+// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
+func (cc *CommentCreate) SetNillableDeleteAt(t *time.Time) *CommentCreate {
 	if t != nil {
-		cc.SetDeleteTime(*t)
+		cc.SetDeleteAt(*t)
 	}
 	return cc
 }
@@ -207,9 +207,9 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 		_spec.SetField(comment.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
 	}
-	if value, ok := cc.mutation.DeleteTime(); ok {
-		_spec.SetField(comment.FieldDeleteTime, field.TypeTime, value)
-		_node.DeleteTime = value
+	if value, ok := cc.mutation.DeleteAt(); ok {
+		_spec.SetField(comment.FieldDeleteAt, field.TypeTime, value)
+		_node.DeleteAt = value
 	}
 	if value, ok := cc.mutation.Content(); ok {
 		_spec.SetField(comment.FieldContent, field.TypeString, value)

@@ -23,8 +23,8 @@ type Comment struct {
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	// DeleteTime holds the value of the "delete_time" field.
-	DeleteTime time.Time `json:"delete_time,omitempty"`
+	// DeleteAt holds the value of the "delete_at" field.
+	DeleteAt time.Time `json:"delete_at,omitempty"`
 	// Content holds the value of the "content" field.
 	Content string `json:"content,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -77,7 +77,7 @@ func (*Comment) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullInt64)
 		case comment.FieldContent:
 			values[i] = new(sql.NullString)
-		case comment.FieldCreatedAt, comment.FieldUpdatedAt, comment.FieldDeleteTime:
+		case comment.FieldCreatedAt, comment.FieldUpdatedAt, comment.FieldDeleteAt:
 			values[i] = new(sql.NullTime)
 		case comment.ForeignKeys[0]: // post_comments
 			values[i] = new(sql.NullInt64)
@@ -116,11 +116,11 @@ func (c *Comment) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				c.UpdatedAt = value.Time
 			}
-		case comment.FieldDeleteTime:
+		case comment.FieldDeleteAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field delete_time", values[i])
+				return fmt.Errorf("unexpected type %T for field delete_at", values[i])
 			} else if value.Valid {
-				c.DeleteTime = value.Time
+				c.DeleteAt = value.Time
 			}
 		case comment.FieldContent:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -194,8 +194,8 @@ func (c *Comment) String() string {
 	builder.WriteString("updated_at=")
 	builder.WriteString(c.UpdatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("delete_time=")
-	builder.WriteString(c.DeleteTime.Format(time.ANSIC))
+	builder.WriteString("delete_at=")
+	builder.WriteString(c.DeleteAt.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("content=")
 	builder.WriteString(c.Content)

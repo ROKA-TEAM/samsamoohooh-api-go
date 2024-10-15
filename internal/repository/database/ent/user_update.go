@@ -38,23 +38,23 @@ func (uu *UserUpdate) SetUpdatedAt(t time.Time) *UserUpdate {
 	return uu
 }
 
-// SetDeleteTime sets the "delete_time" field.
-func (uu *UserUpdate) SetDeleteTime(t time.Time) *UserUpdate {
-	uu.mutation.SetDeleteTime(t)
+// SetDeleteAt sets the "delete_at" field.
+func (uu *UserUpdate) SetDeleteAt(t time.Time) *UserUpdate {
+	uu.mutation.SetDeleteAt(t)
 	return uu
 }
 
-// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableDeleteTime(t *time.Time) *UserUpdate {
+// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableDeleteAt(t *time.Time) *UserUpdate {
 	if t != nil {
-		uu.SetDeleteTime(*t)
+		uu.SetDeleteAt(*t)
 	}
 	return uu
 }
 
-// ClearDeleteTime clears the value of the "delete_time" field.
-func (uu *UserUpdate) ClearDeleteTime() *UserUpdate {
-	uu.mutation.ClearDeleteTime()
+// ClearDeleteAt clears the value of the "delete_at" field.
+func (uu *UserUpdate) ClearDeleteAt() *UserUpdate {
+	uu.mutation.ClearDeleteAt()
 	return uu
 }
 
@@ -349,11 +349,11 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := uu.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
 	}
-	if value, ok := uu.mutation.DeleteTime(); ok {
-		_spec.SetField(user.FieldDeleteTime, field.TypeTime, value)
+	if value, ok := uu.mutation.DeleteAt(); ok {
+		_spec.SetField(user.FieldDeleteAt, field.TypeTime, value)
 	}
-	if uu.mutation.DeleteTimeCleared() {
-		_spec.ClearField(user.FieldDeleteTime, field.TypeTime)
+	if uu.mutation.DeleteAtCleared() {
+		_spec.ClearField(user.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := uu.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
@@ -576,23 +576,23 @@ func (uuo *UserUpdateOne) SetUpdatedAt(t time.Time) *UserUpdateOne {
 	return uuo
 }
 
-// SetDeleteTime sets the "delete_time" field.
-func (uuo *UserUpdateOne) SetDeleteTime(t time.Time) *UserUpdateOne {
-	uuo.mutation.SetDeleteTime(t)
+// SetDeleteAt sets the "delete_at" field.
+func (uuo *UserUpdateOne) SetDeleteAt(t time.Time) *UserUpdateOne {
+	uuo.mutation.SetDeleteAt(t)
 	return uuo
 }
 
-// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableDeleteTime(t *time.Time) *UserUpdateOne {
+// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableDeleteAt(t *time.Time) *UserUpdateOne {
 	if t != nil {
-		uuo.SetDeleteTime(*t)
+		uuo.SetDeleteAt(*t)
 	}
 	return uuo
 }
 
-// ClearDeleteTime clears the value of the "delete_time" field.
-func (uuo *UserUpdateOne) ClearDeleteTime() *UserUpdateOne {
-	uuo.mutation.ClearDeleteTime()
+// ClearDeleteAt clears the value of the "delete_at" field.
+func (uuo *UserUpdateOne) ClearDeleteAt() *UserUpdateOne {
+	uuo.mutation.ClearDeleteAt()
 	return uuo
 }
 
@@ -917,11 +917,11 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	if value, ok := uuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
 	}
-	if value, ok := uuo.mutation.DeleteTime(); ok {
-		_spec.SetField(user.FieldDeleteTime, field.TypeTime, value)
+	if value, ok := uuo.mutation.DeleteAt(); ok {
+		_spec.SetField(user.FieldDeleteAt, field.TypeTime, value)
 	}
-	if uuo.mutation.DeleteTimeCleared() {
-		_spec.ClearField(user.FieldDeleteTime, field.TypeTime)
+	if uuo.mutation.DeleteAtCleared() {
+		_spec.ClearField(user.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := uuo.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)

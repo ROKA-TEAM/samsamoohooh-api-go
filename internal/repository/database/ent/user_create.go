@@ -52,16 +52,16 @@ func (uc *UserCreate) SetNillableUpdatedAt(t *time.Time) *UserCreate {
 	return uc
 }
 
-// SetDeleteTime sets the "delete_time" field.
-func (uc *UserCreate) SetDeleteTime(t time.Time) *UserCreate {
-	uc.mutation.SetDeleteTime(t)
+// SetDeleteAt sets the "delete_at" field.
+func (uc *UserCreate) SetDeleteAt(t time.Time) *UserCreate {
+	uc.mutation.SetDeleteAt(t)
 	return uc
 }
 
-// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
-func (uc *UserCreate) SetNillableDeleteTime(t *time.Time) *UserCreate {
+// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
+func (uc *UserCreate) SetNillableDeleteAt(t *time.Time) *UserCreate {
 	if t != nil {
-		uc.SetDeleteTime(*t)
+		uc.SetDeleteAt(*t)
 	}
 	return uc
 }
@@ -277,9 +277,9 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
 	}
-	if value, ok := uc.mutation.DeleteTime(); ok {
-		_spec.SetField(user.FieldDeleteTime, field.TypeTime, value)
-		_node.DeleteTime = value
+	if value, ok := uc.mutation.DeleteAt(); ok {
+		_spec.SetField(user.FieldDeleteAt, field.TypeTime, value)
+		_node.DeleteAt = value
 	}
 	if value, ok := uc.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)

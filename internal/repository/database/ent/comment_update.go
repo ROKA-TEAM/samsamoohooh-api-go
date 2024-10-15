@@ -36,23 +36,23 @@ func (cu *CommentUpdate) SetUpdatedAt(t time.Time) *CommentUpdate {
 	return cu
 }
 
-// SetDeleteTime sets the "delete_time" field.
-func (cu *CommentUpdate) SetDeleteTime(t time.Time) *CommentUpdate {
-	cu.mutation.SetDeleteTime(t)
+// SetDeleteAt sets the "delete_at" field.
+func (cu *CommentUpdate) SetDeleteAt(t time.Time) *CommentUpdate {
+	cu.mutation.SetDeleteAt(t)
 	return cu
 }
 
-// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
-func (cu *CommentUpdate) SetNillableDeleteTime(t *time.Time) *CommentUpdate {
+// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
+func (cu *CommentUpdate) SetNillableDeleteAt(t *time.Time) *CommentUpdate {
 	if t != nil {
-		cu.SetDeleteTime(*t)
+		cu.SetDeleteAt(*t)
 	}
 	return cu
 }
 
-// ClearDeleteTime clears the value of the "delete_time" field.
-func (cu *CommentUpdate) ClearDeleteTime() *CommentUpdate {
-	cu.mutation.ClearDeleteTime()
+// ClearDeleteAt clears the value of the "delete_at" field.
+func (cu *CommentUpdate) ClearDeleteAt() *CommentUpdate {
+	cu.mutation.ClearDeleteAt()
 	return cu
 }
 
@@ -179,11 +179,11 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := cu.mutation.UpdatedAt(); ok {
 		_spec.SetField(comment.FieldUpdatedAt, field.TypeTime, value)
 	}
-	if value, ok := cu.mutation.DeleteTime(); ok {
-		_spec.SetField(comment.FieldDeleteTime, field.TypeTime, value)
+	if value, ok := cu.mutation.DeleteAt(); ok {
+		_spec.SetField(comment.FieldDeleteAt, field.TypeTime, value)
 	}
-	if cu.mutation.DeleteTimeCleared() {
-		_spec.ClearField(comment.FieldDeleteTime, field.TypeTime)
+	if cu.mutation.DeleteAtCleared() {
+		_spec.ClearField(comment.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := cu.mutation.Content(); ok {
 		_spec.SetField(comment.FieldContent, field.TypeString, value)
@@ -272,23 +272,23 @@ func (cuo *CommentUpdateOne) SetUpdatedAt(t time.Time) *CommentUpdateOne {
 	return cuo
 }
 
-// SetDeleteTime sets the "delete_time" field.
-func (cuo *CommentUpdateOne) SetDeleteTime(t time.Time) *CommentUpdateOne {
-	cuo.mutation.SetDeleteTime(t)
+// SetDeleteAt sets the "delete_at" field.
+func (cuo *CommentUpdateOne) SetDeleteAt(t time.Time) *CommentUpdateOne {
+	cuo.mutation.SetDeleteAt(t)
 	return cuo
 }
 
-// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
-func (cuo *CommentUpdateOne) SetNillableDeleteTime(t *time.Time) *CommentUpdateOne {
+// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
+func (cuo *CommentUpdateOne) SetNillableDeleteAt(t *time.Time) *CommentUpdateOne {
 	if t != nil {
-		cuo.SetDeleteTime(*t)
+		cuo.SetDeleteAt(*t)
 	}
 	return cuo
 }
 
-// ClearDeleteTime clears the value of the "delete_time" field.
-func (cuo *CommentUpdateOne) ClearDeleteTime() *CommentUpdateOne {
-	cuo.mutation.ClearDeleteTime()
+// ClearDeleteAt clears the value of the "delete_at" field.
+func (cuo *CommentUpdateOne) ClearDeleteAt() *CommentUpdateOne {
+	cuo.mutation.ClearDeleteAt()
 	return cuo
 }
 
@@ -445,11 +445,11 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 	if value, ok := cuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(comment.FieldUpdatedAt, field.TypeTime, value)
 	}
-	if value, ok := cuo.mutation.DeleteTime(); ok {
-		_spec.SetField(comment.FieldDeleteTime, field.TypeTime, value)
+	if value, ok := cuo.mutation.DeleteAt(); ok {
+		_spec.SetField(comment.FieldDeleteAt, field.TypeTime, value)
 	}
-	if cuo.mutation.DeleteTimeCleared() {
-		_spec.ClearField(comment.FieldDeleteTime, field.TypeTime)
+	if cuo.mutation.DeleteAtCleared() {
+		_spec.ClearField(comment.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := cuo.mutation.Content(); ok {
 		_spec.SetField(comment.FieldContent, field.TypeString, value)

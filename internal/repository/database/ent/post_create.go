@@ -51,16 +51,16 @@ func (pc *PostCreate) SetNillableUpdatedAt(t *time.Time) *PostCreate {
 	return pc
 }
 
-// SetDeleteTime sets the "delete_time" field.
-func (pc *PostCreate) SetDeleteTime(t time.Time) *PostCreate {
-	pc.mutation.SetDeleteTime(t)
+// SetDeleteAt sets the "delete_at" field.
+func (pc *PostCreate) SetDeleteAt(t time.Time) *PostCreate {
+	pc.mutation.SetDeleteAt(t)
 	return pc
 }
 
-// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
-func (pc *PostCreate) SetNillableDeleteTime(t *time.Time) *PostCreate {
+// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
+func (pc *PostCreate) SetNillableDeleteAt(t *time.Time) *PostCreate {
 	if t != nil {
-		pc.SetDeleteTime(*t)
+		pc.SetDeleteAt(*t)
 	}
 	return pc
 }
@@ -232,9 +232,9 @@ func (pc *PostCreate) createSpec() (*Post, *sqlgraph.CreateSpec) {
 		_spec.SetField(post.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
 	}
-	if value, ok := pc.mutation.DeleteTime(); ok {
-		_spec.SetField(post.FieldDeleteTime, field.TypeTime, value)
-		_node.DeleteTime = value
+	if value, ok := pc.mutation.DeleteAt(); ok {
+		_spec.SetField(post.FieldDeleteAt, field.TypeTime, value)
+		_node.DeleteAt = value
 	}
 	if value, ok := pc.mutation.Title(); ok {
 		_spec.SetField(post.FieldTitle, field.TypeString, value)

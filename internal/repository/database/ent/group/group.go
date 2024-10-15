@@ -19,8 +19,8 @@ const (
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
 	FieldUpdatedAt = "updated_at"
-	// FieldDeleteTime holds the string denoting the delete_time field in the database.
-	FieldDeleteTime = "delete_time"
+	// FieldDeleteAt holds the string denoting the delete_at field in the database.
+	FieldDeleteAt = "delete_at"
 	// FieldBookTitle holds the string denoting the book_title field in the database.
 	FieldBookTitle = "book_title"
 	// FieldAuthor holds the string denoting the author field in the database.
@@ -67,7 +67,7 @@ var Columns = []string{
 	FieldID,
 	FieldCreatedAt,
 	FieldUpdatedAt,
-	FieldDeleteTime,
+	FieldDeleteAt,
 	FieldBookTitle,
 	FieldAuthor,
 	FieldMaxPage,
@@ -126,9 +126,9 @@ func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
 }
 
-// ByDeleteTime orders the results by the delete_time field.
-func ByDeleteTime(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldDeleteTime, opts...).ToFunc()
+// ByDeleteAt orders the results by the delete_at field.
+func ByDeleteAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDeleteAt, opts...).ToFunc()
 }
 
 // ByBookTitle orders the results by the book_title field.

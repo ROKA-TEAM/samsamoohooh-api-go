@@ -37,23 +37,23 @@ func (pu *PostUpdate) SetUpdatedAt(t time.Time) *PostUpdate {
 	return pu
 }
 
-// SetDeleteTime sets the "delete_time" field.
-func (pu *PostUpdate) SetDeleteTime(t time.Time) *PostUpdate {
-	pu.mutation.SetDeleteTime(t)
+// SetDeleteAt sets the "delete_at" field.
+func (pu *PostUpdate) SetDeleteAt(t time.Time) *PostUpdate {
+	pu.mutation.SetDeleteAt(t)
 	return pu
 }
 
-// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
-func (pu *PostUpdate) SetNillableDeleteTime(t *time.Time) *PostUpdate {
+// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
+func (pu *PostUpdate) SetNillableDeleteAt(t *time.Time) *PostUpdate {
 	if t != nil {
-		pu.SetDeleteTime(*t)
+		pu.SetDeleteAt(*t)
 	}
 	return pu
 }
 
-// ClearDeleteTime clears the value of the "delete_time" field.
-func (pu *PostUpdate) ClearDeleteTime() *PostUpdate {
-	pu.mutation.ClearDeleteTime()
+// ClearDeleteAt clears the value of the "delete_at" field.
+func (pu *PostUpdate) ClearDeleteAt() *PostUpdate {
+	pu.mutation.ClearDeleteAt()
 	return pu
 }
 
@@ -230,11 +230,11 @@ func (pu *PostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := pu.mutation.UpdatedAt(); ok {
 		_spec.SetField(post.FieldUpdatedAt, field.TypeTime, value)
 	}
-	if value, ok := pu.mutation.DeleteTime(); ok {
-		_spec.SetField(post.FieldDeleteTime, field.TypeTime, value)
+	if value, ok := pu.mutation.DeleteAt(); ok {
+		_spec.SetField(post.FieldDeleteAt, field.TypeTime, value)
 	}
-	if pu.mutation.DeleteTimeCleared() {
-		_spec.ClearField(post.FieldDeleteTime, field.TypeTime)
+	if pu.mutation.DeleteAtCleared() {
+		_spec.ClearField(post.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := pu.mutation.Title(); ok {
 		_spec.SetField(post.FieldTitle, field.TypeString, value)
@@ -371,23 +371,23 @@ func (puo *PostUpdateOne) SetUpdatedAt(t time.Time) *PostUpdateOne {
 	return puo
 }
 
-// SetDeleteTime sets the "delete_time" field.
-func (puo *PostUpdateOne) SetDeleteTime(t time.Time) *PostUpdateOne {
-	puo.mutation.SetDeleteTime(t)
+// SetDeleteAt sets the "delete_at" field.
+func (puo *PostUpdateOne) SetDeleteAt(t time.Time) *PostUpdateOne {
+	puo.mutation.SetDeleteAt(t)
 	return puo
 }
 
-// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
-func (puo *PostUpdateOne) SetNillableDeleteTime(t *time.Time) *PostUpdateOne {
+// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
+func (puo *PostUpdateOne) SetNillableDeleteAt(t *time.Time) *PostUpdateOne {
 	if t != nil {
-		puo.SetDeleteTime(*t)
+		puo.SetDeleteAt(*t)
 	}
 	return puo
 }
 
-// ClearDeleteTime clears the value of the "delete_time" field.
-func (puo *PostUpdateOne) ClearDeleteTime() *PostUpdateOne {
-	puo.mutation.ClearDeleteTime()
+// ClearDeleteAt clears the value of the "delete_at" field.
+func (puo *PostUpdateOne) ClearDeleteAt() *PostUpdateOne {
+	puo.mutation.ClearDeleteAt()
 	return puo
 }
 
@@ -594,11 +594,11 @@ func (puo *PostUpdateOne) sqlSave(ctx context.Context) (_node *Post, err error) 
 	if value, ok := puo.mutation.UpdatedAt(); ok {
 		_spec.SetField(post.FieldUpdatedAt, field.TypeTime, value)
 	}
-	if value, ok := puo.mutation.DeleteTime(); ok {
-		_spec.SetField(post.FieldDeleteTime, field.TypeTime, value)
+	if value, ok := puo.mutation.DeleteAt(); ok {
+		_spec.SetField(post.FieldDeleteAt, field.TypeTime, value)
 	}
-	if puo.mutation.DeleteTimeCleared() {
-		_spec.ClearField(post.FieldDeleteTime, field.TypeTime)
+	if puo.mutation.DeleteAtCleared() {
+		_spec.ClearField(post.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := puo.mutation.Title(); ok {
 		_spec.SetField(post.FieldTitle, field.TypeString, value)

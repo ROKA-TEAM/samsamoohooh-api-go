@@ -37,23 +37,23 @@ func (gu *GroupUpdate) SetUpdatedAt(t time.Time) *GroupUpdate {
 	return gu
 }
 
-// SetDeleteTime sets the "delete_time" field.
-func (gu *GroupUpdate) SetDeleteTime(t time.Time) *GroupUpdate {
-	gu.mutation.SetDeleteTime(t)
+// SetDeleteAt sets the "delete_at" field.
+func (gu *GroupUpdate) SetDeleteAt(t time.Time) *GroupUpdate {
+	gu.mutation.SetDeleteAt(t)
 	return gu
 }
 
-// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
-func (gu *GroupUpdate) SetNillableDeleteTime(t *time.Time) *GroupUpdate {
+// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
+func (gu *GroupUpdate) SetNillableDeleteAt(t *time.Time) *GroupUpdate {
 	if t != nil {
-		gu.SetDeleteTime(*t)
+		gu.SetDeleteAt(*t)
 	}
 	return gu
 }
 
-// ClearDeleteTime clears the value of the "delete_time" field.
-func (gu *GroupUpdate) ClearDeleteTime() *GroupUpdate {
-	gu.mutation.ClearDeleteTime()
+// ClearDeleteAt clears the value of the "delete_at" field.
+func (gu *GroupUpdate) ClearDeleteAt() *GroupUpdate {
+	gu.mutation.ClearDeleteAt()
 	return gu
 }
 
@@ -322,11 +322,11 @@ func (gu *GroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := gu.mutation.UpdatedAt(); ok {
 		_spec.SetField(group.FieldUpdatedAt, field.TypeTime, value)
 	}
-	if value, ok := gu.mutation.DeleteTime(); ok {
-		_spec.SetField(group.FieldDeleteTime, field.TypeTime, value)
+	if value, ok := gu.mutation.DeleteAt(); ok {
+		_spec.SetField(group.FieldDeleteAt, field.TypeTime, value)
 	}
-	if gu.mutation.DeleteTimeCleared() {
-		_spec.ClearField(group.FieldDeleteTime, field.TypeTime)
+	if gu.mutation.DeleteAtCleared() {
+		_spec.ClearField(group.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := gu.mutation.BookTitle(); ok {
 		_spec.SetField(group.FieldBookTitle, field.TypeString, value)
@@ -513,23 +513,23 @@ func (guo *GroupUpdateOne) SetUpdatedAt(t time.Time) *GroupUpdateOne {
 	return guo
 }
 
-// SetDeleteTime sets the "delete_time" field.
-func (guo *GroupUpdateOne) SetDeleteTime(t time.Time) *GroupUpdateOne {
-	guo.mutation.SetDeleteTime(t)
+// SetDeleteAt sets the "delete_at" field.
+func (guo *GroupUpdateOne) SetDeleteAt(t time.Time) *GroupUpdateOne {
+	guo.mutation.SetDeleteAt(t)
 	return guo
 }
 
-// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
-func (guo *GroupUpdateOne) SetNillableDeleteTime(t *time.Time) *GroupUpdateOne {
+// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
+func (guo *GroupUpdateOne) SetNillableDeleteAt(t *time.Time) *GroupUpdateOne {
 	if t != nil {
-		guo.SetDeleteTime(*t)
+		guo.SetDeleteAt(*t)
 	}
 	return guo
 }
 
-// ClearDeleteTime clears the value of the "delete_time" field.
-func (guo *GroupUpdateOne) ClearDeleteTime() *GroupUpdateOne {
-	guo.mutation.ClearDeleteTime()
+// ClearDeleteAt clears the value of the "delete_at" field.
+func (guo *GroupUpdateOne) ClearDeleteAt() *GroupUpdateOne {
+	guo.mutation.ClearDeleteAt()
 	return guo
 }
 
@@ -828,11 +828,11 @@ func (guo *GroupUpdateOne) sqlSave(ctx context.Context) (_node *Group, err error
 	if value, ok := guo.mutation.UpdatedAt(); ok {
 		_spec.SetField(group.FieldUpdatedAt, field.TypeTime, value)
 	}
-	if value, ok := guo.mutation.DeleteTime(); ok {
-		_spec.SetField(group.FieldDeleteTime, field.TypeTime, value)
+	if value, ok := guo.mutation.DeleteAt(); ok {
+		_spec.SetField(group.FieldDeleteAt, field.TypeTime, value)
 	}
-	if guo.mutation.DeleteTimeCleared() {
-		_spec.ClearField(group.FieldDeleteTime, field.TypeTime)
+	if guo.mutation.DeleteAtCleared() {
+		_spec.ClearField(group.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := guo.mutation.BookTitle(); ok {
 		_spec.SetField(group.FieldBookTitle, field.TypeString, value)
