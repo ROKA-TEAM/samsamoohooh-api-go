@@ -2,6 +2,7 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
@@ -24,8 +25,7 @@ func (User) Fields() []ent.Field {
 			Values(
 				"KAKAO", "APPLE", "GOOGLE",
 			),
-		field.String("socialSub").
-			Unique(),
+		field.String("socialSub"),
 	}
 }
 
@@ -34,12 +34,16 @@ func (User) Edges() []ent.Edge {
 	return []ent.Edge{
 
 		// many to many
-		edge.To("groups", Group.Type),
+		edge.To("groups", Group.Type).
+			Annotations(entsql.OnDelete(entsql.Cascade)),
 
 		// one to many
-		edge.To("comments", Comment.Type),
-		edge.To("posts", Post.Type),
-		edge.To("topics", Topic.Type),
+		edge.To("comments", Comment.Type).
+			Annotations(entsql.OnDelete(entsql.Cascade)),
+		edge.To("posts", Post.Type).
+			Annotations(entsql.OnDelete(entsql.Cascade)),
+		edge.To("topics", Topic.Type).
+			Annotations(entsql.OnDelete(entsql.Cascade)),
 	}
 }
 

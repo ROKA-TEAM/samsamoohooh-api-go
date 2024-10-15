@@ -3,6 +3,7 @@
 package migrate
 
 import (
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/dialect/sql/schema"
 	"entgo.io/ent/schema/field"
 )
@@ -28,13 +29,13 @@ var (
 				Symbol:     "comments_posts_comments",
 				Columns:    []*schema.Column{CommentsColumns[5]},
 				RefColumns: []*schema.Column{PostsColumns[0]},
-				OnDelete:   schema.SetNull,
+				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "comments_users_comments",
 				Columns:    []*schema.Column{CommentsColumns[6]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.SetNull,
+				OnDelete:   schema.Cascade,
 			},
 		},
 	}
@@ -78,13 +79,13 @@ var (
 				Symbol:     "posts_groups_posts",
 				Columns:    []*schema.Column{PostsColumns[6]},
 				RefColumns: []*schema.Column{GroupsColumns[0]},
-				OnDelete:   schema.SetNull,
+				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "posts_users_posts",
 				Columns:    []*schema.Column{PostsColumns[7]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.SetNull,
+				OnDelete:   schema.Cascade,
 			},
 		},
 	}
@@ -108,7 +109,7 @@ var (
 				Symbol:     "tasks_groups_tasks",
 				Columns:    []*schema.Column{TasksColumns[6]},
 				RefColumns: []*schema.Column{GroupsColumns[0]},
-				OnDelete:   schema.SetNull,
+				OnDelete:   schema.Cascade,
 			},
 		},
 	}
@@ -133,13 +134,13 @@ var (
 				Symbol:     "topics_tasks_topics",
 				Columns:    []*schema.Column{TopicsColumns[6]},
 				RefColumns: []*schema.Column{TasksColumns[0]},
-				OnDelete:   schema.SetNull,
+				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "topics_users_topics",
 				Columns:    []*schema.Column{TopicsColumns[7]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.SetNull,
+				OnDelete:   schema.Cascade,
 			},
 		},
 	}
@@ -153,7 +154,7 @@ var (
 		{Name: "resolution", Type: field.TypeString},
 		{Name: "role", Type: field.TypeEnum, Enums: []string{"ADMIN", "GUEST"}},
 		{Name: "social", Type: field.TypeEnum, Enums: []string{"KAKAO", "APPLE", "GOOGLE"}},
-		{Name: "social_sub", Type: field.TypeString, Unique: true},
+		{Name: "social_sub", Type: field.TypeString},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{
@@ -208,4 +209,5 @@ func init() {
 	TopicsTable.ForeignKeys[1].RefTable = UsersTable
 	UserGroupsTable.ForeignKeys[0].RefTable = UsersTable
 	UserGroupsTable.ForeignKeys[1].RefTable = GroupsTable
+	UserGroupsTable.Annotation = &entsql.Annotation{}
 }

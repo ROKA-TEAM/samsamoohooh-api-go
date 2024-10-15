@@ -2,6 +2,7 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
@@ -23,15 +24,18 @@ func (Post) Fields() []ent.Field {
 func (Post) Edges() []ent.Edge {
 	return []ent.Edge{
 		// many to one
-		edge.To("comments", Comment.Type),
+		edge.To("comments", Comment.Type).
+			Annotations(entsql.OnDelete(entsql.Cascade)),
 
 		edge.From("user", User.Type).
 			Ref("posts").
-			Unique(),
+			Unique().
+			Annotations(entsql.OnDelete(entsql.SetNull)),
 
 		edge.From("group", Group.Type).
 			Ref("posts").Unique().
-			Unique(),
+			Unique().
+			Annotations(entsql.OnDelete(entsql.SetNull)),
 	}
 }
 

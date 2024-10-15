@@ -2,6 +2,7 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
@@ -29,11 +30,15 @@ func (Group) Edges() []ent.Edge {
 
 		// many to many
 		edge.From("users", User.Type).
-			Ref("groups"),
+			Ref("groups").
+			// Group과 User 사이의 연결만 삭제되고, User는 그대로 유지됩니다.
+			Annotations(entsql.Annotation{OnDelete: entsql.Cascade}),
 
 		// many to one
-		edge.To("posts", Post.Type),
-		edge.To("tasks", Task.Type),
+		edge.To("posts", Post.Type).
+			Annotations(entsql.OnDelete(entsql.Cascade)),
+		edge.To("tasks", Task.Type).
+			Annotations(entsql.OnDelete(entsql.Cascade)),
 	}
 }
 
