@@ -70,9 +70,9 @@ func DeleteAt(v time.Time) predicate.Topic {
 	return predicate.Topic(sql.FieldEQ(FieldDeleteAt, v))
 }
 
-// Field applies equality check predicate on the "field" field. It's identical to FieldEQ.
-func Field(v string) predicate.Topic {
-	return predicate.Topic(sql.FieldEQ(FieldField, v))
+// Topic applies equality check predicate on the "topic" field. It's identical to TopicEQ.
+func Topic(v string) predicate.Topic {
+	return predicate.Topic(sql.FieldEQ(FieldTopic, v))
 }
 
 // Feeling applies equality check predicate on the "feeling" field. It's identical to FeelingEQ.
@@ -210,69 +210,69 @@ func DeleteAtNotNil() predicate.Topic {
 	return predicate.Topic(sql.FieldNotNull(FieldDeleteAt))
 }
 
-// FieldEQ applies the EQ predicate on the "field" field.
-func FieldEQ(v string) predicate.Topic {
-	return predicate.Topic(sql.FieldEQ(FieldField, v))
+// TopicEQ applies the EQ predicate on the "topic" field.
+func TopicEQ(v string) predicate.Topic {
+	return predicate.Topic(sql.FieldEQ(FieldTopic, v))
 }
 
-// FieldNEQ applies the NEQ predicate on the "field" field.
-func FieldNEQ(v string) predicate.Topic {
-	return predicate.Topic(sql.FieldNEQ(FieldField, v))
+// TopicNEQ applies the NEQ predicate on the "topic" field.
+func TopicNEQ(v string) predicate.Topic {
+	return predicate.Topic(sql.FieldNEQ(FieldTopic, v))
 }
 
-// FieldIn applies the In predicate on the "field" field.
-func FieldIn(vs ...string) predicate.Topic {
-	return predicate.Topic(sql.FieldIn(FieldField, vs...))
+// TopicIn applies the In predicate on the "topic" field.
+func TopicIn(vs ...string) predicate.Topic {
+	return predicate.Topic(sql.FieldIn(FieldTopic, vs...))
 }
 
-// FieldNotIn applies the NotIn predicate on the "field" field.
-func FieldNotIn(vs ...string) predicate.Topic {
-	return predicate.Topic(sql.FieldNotIn(FieldField, vs...))
+// TopicNotIn applies the NotIn predicate on the "topic" field.
+func TopicNotIn(vs ...string) predicate.Topic {
+	return predicate.Topic(sql.FieldNotIn(FieldTopic, vs...))
 }
 
-// FieldGT applies the GT predicate on the "field" field.
-func FieldGT(v string) predicate.Topic {
-	return predicate.Topic(sql.FieldGT(FieldField, v))
+// TopicGT applies the GT predicate on the "topic" field.
+func TopicGT(v string) predicate.Topic {
+	return predicate.Topic(sql.FieldGT(FieldTopic, v))
 }
 
-// FieldGTE applies the GTE predicate on the "field" field.
-func FieldGTE(v string) predicate.Topic {
-	return predicate.Topic(sql.FieldGTE(FieldField, v))
+// TopicGTE applies the GTE predicate on the "topic" field.
+func TopicGTE(v string) predicate.Topic {
+	return predicate.Topic(sql.FieldGTE(FieldTopic, v))
 }
 
-// FieldLT applies the LT predicate on the "field" field.
-func FieldLT(v string) predicate.Topic {
-	return predicate.Topic(sql.FieldLT(FieldField, v))
+// TopicLT applies the LT predicate on the "topic" field.
+func TopicLT(v string) predicate.Topic {
+	return predicate.Topic(sql.FieldLT(FieldTopic, v))
 }
 
-// FieldLTE applies the LTE predicate on the "field" field.
-func FieldLTE(v string) predicate.Topic {
-	return predicate.Topic(sql.FieldLTE(FieldField, v))
+// TopicLTE applies the LTE predicate on the "topic" field.
+func TopicLTE(v string) predicate.Topic {
+	return predicate.Topic(sql.FieldLTE(FieldTopic, v))
 }
 
-// FieldContains applies the Contains predicate on the "field" field.
-func FieldContains(v string) predicate.Topic {
-	return predicate.Topic(sql.FieldContains(FieldField, v))
+// TopicContains applies the Contains predicate on the "topic" field.
+func TopicContains(v string) predicate.Topic {
+	return predicate.Topic(sql.FieldContains(FieldTopic, v))
 }
 
-// FieldHasPrefix applies the HasPrefix predicate on the "field" field.
-func FieldHasPrefix(v string) predicate.Topic {
-	return predicate.Topic(sql.FieldHasPrefix(FieldField, v))
+// TopicHasPrefix applies the HasPrefix predicate on the "topic" field.
+func TopicHasPrefix(v string) predicate.Topic {
+	return predicate.Topic(sql.FieldHasPrefix(FieldTopic, v))
 }
 
-// FieldHasSuffix applies the HasSuffix predicate on the "field" field.
-func FieldHasSuffix(v string) predicate.Topic {
-	return predicate.Topic(sql.FieldHasSuffix(FieldField, v))
+// TopicHasSuffix applies the HasSuffix predicate on the "topic" field.
+func TopicHasSuffix(v string) predicate.Topic {
+	return predicate.Topic(sql.FieldHasSuffix(FieldTopic, v))
 }
 
-// FieldEqualFold applies the EqualFold predicate on the "field" field.
-func FieldEqualFold(v string) predicate.Topic {
-	return predicate.Topic(sql.FieldEqualFold(FieldField, v))
+// TopicEqualFold applies the EqualFold predicate on the "topic" field.
+func TopicEqualFold(v string) predicate.Topic {
+	return predicate.Topic(sql.FieldEqualFold(FieldTopic, v))
 }
 
-// FieldContainsFold applies the ContainsFold predicate on the "field" field.
-func FieldContainsFold(v string) predicate.Topic {
-	return predicate.Topic(sql.FieldContainsFold(FieldField, v))
+// TopicContainsFold applies the ContainsFold predicate on the "topic" field.
+func TopicContainsFold(v string) predicate.Topic {
+	return predicate.Topic(sql.FieldContainsFold(FieldTopic, v))
 }
 
 // FeelingEQ applies the EQ predicate on the "feeling" field.

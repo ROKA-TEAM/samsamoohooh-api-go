@@ -25,8 +25,8 @@ type Topic struct {
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	// DeleteAt holds the value of the "delete_at" field.
 	DeleteAt time.Time `json:"delete_at,omitempty"`
-	// Field holds the value of the "field" field.
-	Field string `json:"field,omitempty"`
+	// Topic holds the value of the "topic" field.
+	Topic string `json:"topic,omitempty"`
 	// Feeling holds the value of the "feeling" field.
 	Feeling string `json:"feeling,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -77,7 +77,7 @@ func (*Topic) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case topic.FieldID:
 			values[i] = new(sql.NullInt64)
-		case topic.FieldField, topic.FieldFeeling:
+		case topic.FieldTopic, topic.FieldFeeling:
 			values[i] = new(sql.NullString)
 		case topic.FieldCreatedAt, topic.FieldUpdatedAt, topic.FieldDeleteAt:
 			values[i] = new(sql.NullTime)
@@ -124,11 +124,11 @@ func (t *Topic) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				t.DeleteAt = value.Time
 			}
-		case topic.FieldField:
+		case topic.FieldTopic:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field field", values[i])
+				return fmt.Errorf("unexpected type %T for field topic", values[i])
 			} else if value.Valid {
-				t.Field = value.String
+				t.Topic = value.String
 			}
 		case topic.FieldFeeling:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -205,8 +205,8 @@ func (t *Topic) String() string {
 	builder.WriteString("delete_at=")
 	builder.WriteString(t.DeleteAt.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("field=")
-	builder.WriteString(t.Field)
+	builder.WriteString("topic=")
+	builder.WriteString(t.Topic)
 	builder.WriteString(", ")
 	builder.WriteString("feeling=")
 	builder.WriteString(t.Feeling)

@@ -3317,7 +3317,7 @@ type TopicMutation struct {
 	created_at    *time.Time
 	updated_at    *time.Time
 	delete_at     *time.Time
-	field         *string
+	topic         *string
 	feeling       *string
 	clearedFields map[string]struct{}
 	user          *int
@@ -3548,40 +3548,40 @@ func (m *TopicMutation) ResetDeleteAt() {
 	delete(m.clearedFields, topic.FieldDeleteAt)
 }
 
-// SetFieldField sets the "field" field.
-func (m *TopicMutation) SetFieldField(s string) {
-	m.field = &s
+// SetTopic sets the "topic" field.
+func (m *TopicMutation) SetTopic(s string) {
+	m.topic = &s
 }
 
-// GetField returns the value of the "field" field in the mutation.
-func (m *TopicMutation) GetField() (r string, exists bool) {
-	v := m.field
+// Topic returns the value of the "topic" field in the mutation.
+func (m *TopicMutation) Topic() (r string, exists bool) {
+	v := m.topic
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// GetOldField returns the old "field" field's value of the Topic entity.
+// OldTopic returns the old "topic" field's value of the Topic entity.
 // If the Topic object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TopicMutation) GetOldField(ctx context.Context) (v string, err error) {
+func (m *TopicMutation) OldTopic(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("GetOldField is only allowed on UpdateOne operations")
+		return v, errors.New("OldTopic is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("GetOldField requires an ID field in the mutation")
+		return v, errors.New("OldTopic requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for GetOldField: %w", err)
+		return v, fmt.Errorf("querying old value for OldTopic: %w", err)
 	}
-	return oldValue.Field, nil
+	return oldValue.Topic, nil
 }
 
-// ResetFieldField resets all changes to the "field" field.
-func (m *TopicMutation) ResetFieldField() {
-	m.field = nil
+// ResetTopic resets all changes to the "topic" field.
+func (m *TopicMutation) ResetTopic() {
+	m.topic = nil
 }
 
 // SetFeeling sets the "feeling" field.
@@ -3742,8 +3742,8 @@ func (m *TopicMutation) Fields() []string {
 	if m.delete_at != nil {
 		fields = append(fields, topic.FieldDeleteAt)
 	}
-	if m.field != nil {
-		fields = append(fields, topic.FieldField)
+	if m.topic != nil {
+		fields = append(fields, topic.FieldTopic)
 	}
 	if m.feeling != nil {
 		fields = append(fields, topic.FieldFeeling)
@@ -3762,8 +3762,8 @@ func (m *TopicMutation) Field(name string) (ent.Value, bool) {
 		return m.UpdatedAt()
 	case topic.FieldDeleteAt:
 		return m.DeleteAt()
-	case topic.FieldField:
-		return m.GetField()
+	case topic.FieldTopic:
+		return m.Topic()
 	case topic.FieldFeeling:
 		return m.Feeling()
 	}
@@ -3781,8 +3781,8 @@ func (m *TopicMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldUpdatedAt(ctx)
 	case topic.FieldDeleteAt:
 		return m.OldDeleteAt(ctx)
-	case topic.FieldField:
-		return m.GetOldField(ctx)
+	case topic.FieldTopic:
+		return m.OldTopic(ctx)
 	case topic.FieldFeeling:
 		return m.OldFeeling(ctx)
 	}
@@ -3815,12 +3815,12 @@ func (m *TopicMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDeleteAt(v)
 		return nil
-	case topic.FieldField:
+	case topic.FieldTopic:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetFieldField(v)
+		m.SetTopic(v)
 		return nil
 	case topic.FieldFeeling:
 		v, ok := value.(string)
@@ -3896,8 +3896,8 @@ func (m *TopicMutation) ResetField(name string) error {
 	case topic.FieldDeleteAt:
 		m.ResetDeleteAt()
 		return nil
-	case topic.FieldField:
-		m.ResetFieldField()
+	case topic.FieldTopic:
+		m.ResetTopic()
 		return nil
 	case topic.FieldFeeling:
 		m.ResetFeeling()

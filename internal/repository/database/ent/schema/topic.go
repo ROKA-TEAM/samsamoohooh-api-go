@@ -15,7 +15,7 @@ type Topic struct {
 // Fields of the Topic.
 func (Topic) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("field"),
+		field.String("topic"),
 		field.String("feeling"),
 	}
 }

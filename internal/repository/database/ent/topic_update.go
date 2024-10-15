@@ -56,16 +56,16 @@ func (tu *TopicUpdate) ClearDeleteAt() *TopicUpdate {
 	return tu
 }
 
-// SetField sets the "field" field.
-func (tu *TopicUpdate) SetField(s string) *TopicUpdate {
-	tu.mutation.SetFieldField(s)
+// SetTopic sets the "topic" field.
+func (tu *TopicUpdate) SetTopic(s string) *TopicUpdate {
+	tu.mutation.SetTopic(s)
 	return tu
 }
 
-// SetNillableField sets the "field" field if the given value is not nil.
-func (tu *TopicUpdate) SetNillableField(s *string) *TopicUpdate {
+// SetNillableTopic sets the "topic" field if the given value is not nil.
+func (tu *TopicUpdate) SetNillableTopic(s *string) *TopicUpdate {
 	if s != nil {
-		tu.SetField(*s)
+		tu.SetTopic(*s)
 	}
 	return tu
 }
@@ -199,8 +199,8 @@ func (tu *TopicUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if tu.mutation.DeleteAtCleared() {
 		_spec.ClearField(topic.FieldDeleteAt, field.TypeTime)
 	}
-	if value, ok := tu.mutation.GetField(); ok {
-		_spec.SetField(topic.FieldField, field.TypeString, value)
+	if value, ok := tu.mutation.Topic(); ok {
+		_spec.SetField(topic.FieldTopic, field.TypeString, value)
 	}
 	if value, ok := tu.mutation.Feeling(); ok {
 		_spec.SetField(topic.FieldFeeling, field.TypeString, value)
@@ -309,16 +309,16 @@ func (tuo *TopicUpdateOne) ClearDeleteAt() *TopicUpdateOne {
 	return tuo
 }
 
-// SetField sets the "field" field.
-func (tuo *TopicUpdateOne) SetField(s string) *TopicUpdateOne {
-	tuo.mutation.SetFieldField(s)
+// SetTopic sets the "topic" field.
+func (tuo *TopicUpdateOne) SetTopic(s string) *TopicUpdateOne {
+	tuo.mutation.SetTopic(s)
 	return tuo
 }
 
-// SetNillableField sets the "field" field if the given value is not nil.
-func (tuo *TopicUpdateOne) SetNillableField(s *string) *TopicUpdateOne {
+// SetNillableTopic sets the "topic" field if the given value is not nil.
+func (tuo *TopicUpdateOne) SetNillableTopic(s *string) *TopicUpdateOne {
 	if s != nil {
-		tuo.SetField(*s)
+		tuo.SetTopic(*s)
 	}
 	return tuo
 }
@@ -482,8 +482,8 @@ func (tuo *TopicUpdateOne) sqlSave(ctx context.Context) (_node *Topic, err error
 	if tuo.mutation.DeleteAtCleared() {
 		_spec.ClearField(topic.FieldDeleteAt, field.TypeTime)
 	}
-	if value, ok := tuo.mutation.GetField(); ok {
-		_spec.SetField(topic.FieldField, field.TypeString, value)
+	if value, ok := tuo.mutation.Topic(); ok {
+		_spec.SetField(topic.FieldTopic, field.TypeString, value)
 	}
 	if value, ok := tuo.mutation.Feeling(); ok {
 		_spec.SetField(topic.FieldFeeling, field.TypeString, value)

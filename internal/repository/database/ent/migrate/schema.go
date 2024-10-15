@@ -119,7 +119,7 @@ var (
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "delete_at", Type: field.TypeTime, Nullable: true},
-		{Name: "field", Type: field.TypeString},
+		{Name: "topic", Type: field.TypeString},
 		{Name: "feeling", Type: field.TypeString},
 		{Name: "task_topics", Type: field.TypeInt, Nullable: true},
 		{Name: "user_topics", Type: field.TypeInt, Nullable: true},

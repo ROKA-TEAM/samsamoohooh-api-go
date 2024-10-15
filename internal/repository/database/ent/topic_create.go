@@ -64,9 +64,9 @@ func (tc *TopicCreate) SetNillableDeleteAt(t *time.Time) *TopicCreate {
 	return tc
 }
 
-// SetField sets the "field" field.
-func (tc *TopicCreate) SetField(s string) *TopicCreate {
-	tc.mutation.SetFieldField(s)
+// SetTopic sets the "topic" field.
+func (tc *TopicCreate) SetTopic(s string) *TopicCreate {
+	tc.mutation.SetTopic(s)
 	return tc
 }
 
@@ -176,8 +176,8 @@ func (tc *TopicCreate) check() error {
 	if _, ok := tc.mutation.UpdatedAt(); !ok {
 		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "Topic.updated_at"`)}
 	}
-	if _, ok := tc.mutation.GetField(); !ok {
-		return &ValidationError{Name: "field", err: errors.New(`ent: missing required field "Topic.field"`)}
+	if _, ok := tc.mutation.Topic(); !ok {
+		return &ValidationError{Name: "topic", err: errors.New(`ent: missing required field "Topic.topic"`)}
 	}
 	if _, ok := tc.mutation.Feeling(); !ok {
 		return &ValidationError{Name: "feeling", err: errors.New(`ent: missing required field "Topic.feeling"`)}
@@ -220,9 +220,9 @@ func (tc *TopicCreate) createSpec() (*Topic, *sqlgraph.CreateSpec) {
 		_spec.SetField(topic.FieldDeleteAt, field.TypeTime, value)
 		_node.DeleteAt = value
 	}
-	if value, ok := tc.mutation.GetField(); ok {
-		_spec.SetField(topic.FieldField, field.TypeString, value)
-		_node.Field = value
+	if value, ok := tc.mutation.Topic(); ok {
+		_spec.SetField(topic.FieldTopic, field.TypeString, value)
+		_node.Topic = value
 	}
 	if value, ok := tc.mutation.Feeling(); ok {
 		_spec.SetField(topic.FieldFeeling, field.TypeString, value)

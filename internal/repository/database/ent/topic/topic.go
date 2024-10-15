@@ -21,8 +21,8 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeleteAt holds the string denoting the delete_at field in the database.
 	FieldDeleteAt = "delete_at"
-	// FieldField holds the string denoting the field field in the database.
-	FieldField = "field"
+	// FieldTopic holds the string denoting the topic field in the database.
+	FieldTopic = "topic"
 	// FieldFeeling holds the string denoting the feeling field in the database.
 	FieldFeeling = "feeling"
 	// EdgeUser holds the string denoting the user edge name in mutations.
@@ -53,7 +53,7 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeleteAt,
-	FieldField,
+	FieldTopic,
 	FieldFeeling,
 }
 
@@ -118,9 +118,9 @@ func ByDeleteAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDeleteAt, opts...).ToFunc()
 }
 
-// ByField orders the results by the field field.
-func ByField(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldField, opts...).ToFunc()
+// ByTopic orders the results by the topic field.
+func ByTopic(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTopic, opts...).ToFunc()
 }
 
 // ByFeeling orders the results by the feeling field.
