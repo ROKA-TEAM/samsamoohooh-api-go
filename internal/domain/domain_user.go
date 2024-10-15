@@ -25,11 +25,17 @@ type User struct {
 	Name       string
 	Resolution string
 	Role       UserRoleType
-	SocialType UserSocialType
+	Social     UserSocialType
 	SocialSub  string
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 	DeletedAt  time.Time
+
+	// relation
+	Groups   []*Group
+	Topics   []*Topic
+	Posts    []*Post
+	Comments []*Comment
 }
 
 type UserRepository interface {
