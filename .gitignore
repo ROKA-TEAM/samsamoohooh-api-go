@@ -19,7 +19,7 @@ go.work.sum
 
 # env file
 .env
-.toml
+.env.toml
 
 # utils
 tmp_app
