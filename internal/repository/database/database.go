@@ -1,15 +1,15 @@
 package database
 
 import (
+	"context"
 	"fmt"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-	"samsamoohooh-go-api/internal/domain"
+	_ "github.com/go-sql-driver/mysql"
 	"samsamoohooh-go-api/internal/infra/config"
+	"samsamoohooh-go-api/internal/repository/database/ent"
 )
 
 type Database struct {
-	*gorm.DB
+	*ent.Client
 }
 
 func NewDatabase(config *config.Config) (*Database, error) {
@@ -21,23 +21,23 @@ func NewDatabase(config *config.Config) (*Database, error) {
 		config.Database.Database,
 	)
 
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	client, err := ent.Open("mysql", dsn)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Database{db}, nil
+	return &Database{client}, nil
 }
 
-func (d Database) AutoMigration() error {
-	return d.AutoMigrate(&domain.User{}, &domain.Group{})
-}
-
-func (d Database) Close() error {
-	sqlDB, err := d.DB.DB()
+func (d Database) AutoMigration(ctx context.Context) error {
+	err := d.Client.Schema.Create(ctx)
 	if err != nil {
 		return err
 	}
 
-	return sqlDB.Close()
+	return nil
+}
+
+func (d Database) Close() error {
+	return d.Client.Close()
 }
