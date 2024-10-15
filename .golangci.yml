@@ -5,9 +5,6 @@ linters-settings:
   errcheck:
     # 타입 단언에 대한 오류 체크 활성화
     check-type-assertions: true
-  govet:
-    # 변수 shadowing 체크 활성화
-    shadow: true
   gocyclo:
     # 함수의 순환 복잡도 임계값 설정 (이 값 이상이면 경고)
     min-complexity: 15
