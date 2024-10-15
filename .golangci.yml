@@ -37,7 +37,6 @@ linters:
     - typecheck # 타입 검사 수행
     - unused # 사용되지 않는 코드 검사
     - bodyclose # HTTP 응답 본문 닫힘 확인
-    - dupl # 코드 중복 검사
     - errname # 오류 이름 규칙 확인
     - errorlint # 오류 처리 관련 문제 검사
     - exhaustive # switch 문 완전성 검사
@@ -65,6 +64,7 @@ linters:
     - prealloc # 컴파일러 최적화로 대부분 해결됨
     - promlinter # Prometheus를 사용하지 않는 프로젝트에서는 불필요
     - wrapcheck # 오류 래핑 확인
+    - dupl # 코드 중복 검사
 
 # 특정 상황에서 lint 규칙 예외 처리
 issues:
