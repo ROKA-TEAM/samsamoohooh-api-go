@@ -1,6 +1,9 @@
 package domain
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 type UserRoleType string
 
@@ -27,4 +30,22 @@ type User struct {
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 	DeletedAt  time.Time
+}
+
+type UserRepository interface {
+	Create(ctx context.Context, user *User) (*User, error)
+	GetByID(ctx context.Context, id int) (*User, error)
+	GetGroupsByID(ctx context.Context, id int) ([]*Group, error)
+	List(ctx context.Context, limit, offset int) ([]*User, error)
+	Update(ctx context.Context, id int, user *User) (*User, error)
+	Delete(ctx context.Context, id int) error
+}
+
+type UserService interface {
+	Create(ctx context.Context, user *User) (*User, error)
+	GetByID(ctx context.Context, id int) (*User, error)
+	GetGroupsByID(ctx context.Context, id int) ([]*Group, error)
+	List(ctx context.Context, limit, offset int) ([]*User, error)
+	Update(ctx context.Context, id int, user *User) (*User, error)
+	Delete(ctx context.Context, id int) error
 }
