@@ -1,7 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+	"samsamoohooh-go-api/internal/infra/config"
+)
 
 func main() {
-	fmt.Println("hi")
+	cfg, err := config.NewConfig(".toml")
+	if err != nil {
+		log.Panicf("failed to load config: %v\n", err)
+	}
+
+	fmt.Printf("cfg: %+v\n", cfg)
 }
