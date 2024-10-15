@@ -25,7 +25,7 @@ type User struct {
 	Name       string
 	Resolution string
 	Role       UserRoleType
-	SocialType UserSocialType
+	Social     UserSocialType
 	SocialSub  string
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
