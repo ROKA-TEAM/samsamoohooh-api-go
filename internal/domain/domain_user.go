@@ -30,6 +30,12 @@ type User struct {
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 	DeletedAt  time.Time
+
+	// relation
+	Groups   []*Group
+	Topics   []*Topic
+	Posts    []*Post
+	Comments []*Comment
 }
 
 type UserRepository interface {
