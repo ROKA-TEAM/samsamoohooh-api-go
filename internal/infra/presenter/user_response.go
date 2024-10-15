@@ -25,7 +25,7 @@ func NewUserCreateResponse(user *domain.User) *UserCreateResponse {
 	}
 }
 
-type ListUserResponse struct {
+type UserListResponse struct {
 	ID         int                   `json:"id"`
 	Name       string                `json:"name"`
 	Resolution string                `json:"resolution"`
@@ -36,10 +36,10 @@ type ListUserResponse struct {
 	UpdatedAt  time.Time             `json:"updatedAt"`
 }
 
-func NewListUserResponse(users []*domain.User) []*ListUserResponse {
-	var listUser []*ListUserResponse
+func NewListUserResponse(users []*domain.User) []*UserListResponse {
+	var listUser []*UserListResponse
 	for _, user := range users {
-		listUser = append(listUser, &ListUserResponse{
+		listUser = append(listUser, &UserListResponse{
 			ID:         user.ID,
 			Name:       user.Name,
 			Resolution: user.Resolution,
