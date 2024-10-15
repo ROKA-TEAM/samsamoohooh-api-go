@@ -52,7 +52,6 @@ linters:
     - revive # 다양한 코딩 관행 검사
     - tparallel # 테스트 병렬 실행 확인
     - unparam # 사용되지 않는 함수 매개변수 검출
-    - wrapcheck # 오류 래핑 확인
 
   # 비활성화할 linter 목록
   disable:
@@ -68,6 +67,7 @@ linters:
     - misspell # 영어가 주 언어가 아닌 팀에서는 불필요할 수 있음
     - prealloc # 컴파일러 최적화로 대부분 해결됨
     - promlinter # Prometheus를 사용하지 않는 프로젝트에서는 불필요
+    - wrapcheck # 오류 래핑 확인
 
 # 특정 상황에서 lint 규칙 예외 처리
 issues:
