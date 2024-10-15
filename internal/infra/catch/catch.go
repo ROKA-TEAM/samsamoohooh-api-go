@@ -7,7 +7,7 @@ import (
 )
 
 var ErrorHandler = func(c *fiber.Ctx, caughtErr error) error {
-	var status = fiber.StatusInternalServerError
+	var status int
 
 	switch {
 	case errors.Is(domain.ErrTokenGenerate, caughtErr):
