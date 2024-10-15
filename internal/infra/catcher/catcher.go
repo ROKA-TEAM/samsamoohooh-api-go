@@ -37,6 +37,8 @@ var ErrorHandler = func(c *fiber.Ctx, caughtErr error) error {
 	case errors.Is(domain.ErrValidation, caughtErr):
 		status = fiber.StatusBadRequest
 
+	case errors.Is(domain.ErrMissingAuthorizationHeader, caughtErr):
+		status = fiber.StatusUnauthorized
 	default:
 		return fiber.DefaultErrorHandler(c, caughtErr)
 	}
