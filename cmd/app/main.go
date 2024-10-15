@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	cfg, err := config.NewConfig(".toml")
+	cfg, err := config.NewConfig(".env.toml")
 	if err != nil {
 		log.Panicf("failed to load config: %v\n", err)
 	}
