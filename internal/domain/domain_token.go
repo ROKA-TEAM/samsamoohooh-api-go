@@ -26,3 +26,13 @@ type Token struct {
 	Role TokenRoleType // 사용자에게 할당된 역할 (예: 관리자, 일반 사용자)
 	Type TokenType     // 사용자에게 할당된 타입 (예: ACCESS, REFRESH)
 }
+
+type TokenService interface {
+	GenerateAccessToken(subject string, role TokenRoleType) (*Token, error)
+	GenerateAccessTokenString(subject string, role TokenRoleType) (string, error)
+	GenerateRefreshToken(subject string) (*Token, error)
+	GenerateRefreshTokenString(subject string) (string, error)
+	ValidateToken(tokenString string) (bool, error)
+	ParseToken(tokenString string) (*Token, error)
+	RevokeToken(tokenString string) error
+}
