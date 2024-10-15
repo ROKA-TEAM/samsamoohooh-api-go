@@ -19,6 +19,12 @@ func (d *customDuration) UnmarshalText(b []byte) error {
 	return nil
 }
 
+// TokenValidity defines the validity period and activation delay for tokens
+type Duration struct {
+	ValidityPeriod  customDuration // 토큰의 유효 기간
+	ActivationDelay customDuration // 토큰이 유효해지기까지의 지연 시간
+}
+
 type Config struct {
 	Database struct {
 		User     string
@@ -29,10 +35,11 @@ type Config struct {
 	}
 
 	Token struct {
+		Issuer    string
 		SecretKey string
 		Duration  struct {
-			Access  customDuration
-			Refresh customDuration
+			Access  Duration
+			Refresh Duration
 		}
 	}
 }
