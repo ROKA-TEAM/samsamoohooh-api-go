@@ -1,7 +1,7 @@
 package token
 
 import (
-	"errors"
+	"github.com/pkg/errors"
 	"samsamoohooh-go-api/internal/domain"
 	"samsamoohooh-go-api/internal/infra/config"
 	"time"
@@ -41,8 +41,7 @@ func (s *JWTService) GenerateAccessTokenString(subject int, role domain.TokenRol
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(s.config.Token.SecretKey))
 	if err != nil {
-		// TODO: wrap error
-		return "", err
+		return "", errors.Wrap(domain.ErrTokenGenerate, err.Error())
 	}
 
 	return tokenString, nil
@@ -69,8 +68,7 @@ func (s *JWTService) GenerateRefreshTokenString(subject int, role domain.TokenRo
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(s.config.Token.SecretKey))
 	if err != nil {
-		// TODO: warp error
-		return "", err
+		return "", errors.Wrap(domain.ErrTokenGenerate, err.Error())
 	}
 
 	return tokenString, nil
@@ -89,20 +87,18 @@ func (s *JWTService) ValidateToken(tokenString string) (bool, error) {
 
 	// 해석한 토큰의 issure가 일치하는가?
 	if customClaims.Issuer != s.config.Token.Issuer {
-		// TODO: warp error
-		return false, errors.New("invalid token issuer")
+		return false, domain.ErrInvalidTokenIssuer
 	}
 
 	// 해석한 토큰의 expiresAt이 유효한가? (현재 시간이 expiresAt보다 앞서 있다면)
 	if now.After(customClaims.ExpiresAt.Time) {
 		// TODO: warp error
-		return false, errors.New("token is expired")
+		return false, domain.ErrTokenExpired
 	}
 
 	// 해석한 토큰의 notBefore가 유효한가? (현재 시간이 notBefore보다 않다면)
 	if now.Before(customClaims.NotBefore.Time) {
-		// TODO: warp error
-		return false, errors.New("token is not active yet")
+		return false, domain.ErrTokenNotActiveYet
 	}
 
 	// 해석한 토큰의 subject가 유효한가? (이건 일단 보류)
@@ -116,8 +112,7 @@ func (s *JWTService) ParseToken(tokenString string) (*domain.Token, error) {
 	})
 
 	if err != nil {
-		// TODO: warp error
-		return nil, err
+		return nil, errors.Wrap(domain.ErrTokenParse, err.Error())
 	}
 
 	return customClaims.toDomain(), nil
