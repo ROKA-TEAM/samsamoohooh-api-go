@@ -3,6 +3,7 @@ package google
 import (
 	"context"
 	"encoding/json"
+	"github.com/pkg/errors"
 	"samsamoohooh-go-api/internal/domain"
 	"samsamoohooh-go-api/internal/infra/config"
 
@@ -43,20 +44,23 @@ func (s OauthGoogleService) GetLoginURL(state string) string {
 func (s OauthGoogleService) Exchange(ctx context.Context, code string) (*domain.OauthPayload, error) {
 	token, err := s.oauthConfig.Exchange(ctx, code)
 	if err != nil {
-		// TODO: 에러 처리
-		return nil, err
+		return nil, errors.Wrap(domain.ErrInternal, err.Error())
 	}
 
 	client := s.oauthConfig.Client(ctx, token)
 	resp, err := client.Get(userInfoAPI)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(domain.ErrInternal, err.Error())
 	}
-	defer resp.Body.Close()
 
 	var respBody exchangeResponseBody
 	if err := json.NewDecoder(resp.Body).Decode(&respBody); err != nil {
-		return nil, err
+		return nil, errors.Wrap(domain.ErrInternal, err.Error())
+	}
+
+	err = resp.Body.Close()
+	if err != nil {
+		return nil, errors.Wrap(domain.ErrInternal, err.Error())
 	}
 
 	return respBody.ToDomain(), nil

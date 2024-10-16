@@ -15,4 +15,7 @@ var (
 	ErrConstraint  = errors.New("constraint error")
 	ErrNotSingular = errors.New("singular error")
 	ErrValidation  = errors.New("validation error")
+
+	ErrInternal      = errors.New("internal error")
+	ErrNotMatchState = errors.New("not match state")
 )

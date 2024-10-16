@@ -1,8 +1,7 @@
 package handler
 
 import (
-	"errors"
-	"fmt"
+	"github.com/pkg/errors"
 	"samsamoohooh-go-api/internal/domain"
 	"samsamoohooh-go-api/internal/handler/utils"
 	"samsamoohooh-go-api/internal/infra/oauth/google"
@@ -72,8 +71,7 @@ func (h *AuthHandler) GoogleCallback(c *fiber.Ctx) error {
 	}
 
 	if state != c.FormValue("state") {
-		// TODO: errors 패키지를 이용하여 에러 처리
-		return errors.New("invalid state")
+		return errors.Wrap(domain.ErrNotMatchState, "invalid state")
 	}
 
 	payload, err := h.oauthGoogleService.Exchange(c.Context(), c.FormValue("code"))
@@ -95,16 +93,12 @@ func (h *AuthHandler) GoogleCallback(c *fiber.Ctx) error {
 		if err != nil {
 			return err
 		}
-		fmt.Println("createdUser: ", createdUser)
-		
 
 		user = createdUser
 
 	} else if err != nil {
 		return err
 	}
-
-	fmt.Println("User: ", user)
 
 	// 전에 등록한 사용자이다.
 	// 토큰을 발급한다.
