@@ -3,9 +3,11 @@ package database
 import (
 	"context"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
 	"samsamoohooh-go-api/internal/infra/config"
 	"samsamoohooh-go-api/internal/repository/database/ent"
+	_ "samsamoohooh-go-api/internal/repository/database/ent/runtime"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type Database struct {

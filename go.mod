@@ -10,10 +10,12 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/pelletier/go-toml/v2 v2.2.3
 	github.com/pkg/errors v0.9.1
+	golang.org/x/oauth2 v0.23.0
 )
 
 require (
 	ariga.io/atlas v0.19.1-0.20240203083654-5948b60a8e43 // indirect
+	cloud.google.com/go/compute/metadata v0.3.0 // indirect
 	github.com/agext/levenshtein v1.2.1 // indirect
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect

@@ -44,6 +44,17 @@ func (r *UserRepository) GetByID(ctx context.Context, id int) (*domain.User, err
 
 	return utils.ConvertDomainUser(gotUser), nil
 }
+func (r *UserRepository) GetBySub(ctx context.Context, sub string) (*domain.User, error) {
+	gotUser, err := r.database.User.
+		Query().
+		Where(entuser.SocialSubEQ(sub)).
+		First(ctx)
+	if err != nil {
+		return nil, utils.Wrap(err)
+	}
+
+	return utils.ConvertDomainUser(gotUser), nil
+}
 
 func (r *UserRepository) GetGroupsByID(ctx context.Context, id int) ([]*domain.Group, error) {
 	gotGroups, err := r.database.User.
