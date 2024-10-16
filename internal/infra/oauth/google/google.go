@@ -7,6 +7,7 @@ import (
 	"samsamoohooh-go-api/internal/infra/config"
 
 	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
 )
 
 const (
@@ -30,6 +31,7 @@ func NewOauthGoogleService(config *config.Config) *OauthGoogleService {
 			ClientSecret: config.Oauth.Google.ClientSecret,
 			RedirectURL:  config.Oauth.Google.CallbackURL,
 			Scopes:       []string{scopeProfile},
+			Endpoint:     google.Endpoint,
 		},
 	}
 }
