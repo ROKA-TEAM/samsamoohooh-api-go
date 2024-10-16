@@ -42,6 +42,14 @@ type Config struct {
 			Refresh Duration
 		}
 	}
+
+	Oauth struct {
+		Google struct {
+			ClientID     string
+			ClientSecret string
+			CallbackURL  string
+		}
+	}
 }
 
 func NewConfig(path string) (*Config, error) {
