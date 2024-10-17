@@ -2,12 +2,14 @@ package main
 
 import (
 	"context"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"log"
 	"samsamoohooh-go-api/internal/handler"
 	"samsamoohooh-go-api/internal/infra/catcher"
 	"samsamoohooh-go-api/internal/infra/config"
 	"samsamoohooh-go-api/internal/infra/middleware"
 	"samsamoohooh-go-api/internal/infra/oauth/google"
+	"samsamoohooh-go-api/internal/infra/oauth/kakao"
 	"samsamoohooh-go-api/internal/infra/token"
 	"samsamoohooh-go-api/internal/repository"
 	"samsamoohooh-go-api/internal/repository/database"
@@ -46,11 +48,21 @@ func main() {
 	_ = tokenMiddleware
 
 	oauthGoogleService := google.NewOauthGoogleService(cfg)
-	authHandler := handler.NewAuthHandler(userService, jwtService, oauthGoogleService)
+	oauthKaKaoService := kakao.NewOauthKakaoService(cfg, userService, jwtService)
+
+	authHandler := handler.NewAuthHandler(userService, jwtService, oauthGoogleService, oauthKaKaoService)
 
 	app := fiber.New(fiber.Config{
 		ErrorHandler: catcher.ErrorHandler,
 	})
+
+	// Changing TimeZone & TimeFormat
+	app.Use(logger.New(logger.Config{
+		Format:     "${pid} ${status} - ${method} ${path}\n",
+		TimeFormat: "02-Jan-2006",
+		TimeZone:   "America/New_York",
+	}))
+
 	v1 := app.Group("/v1")
 	{
 		api := v1.Group("/api")
