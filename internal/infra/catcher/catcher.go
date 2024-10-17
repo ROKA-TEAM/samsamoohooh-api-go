@@ -1,8 +1,10 @@
 package catcher
 
 import (
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
+	"reflect"
 	"samsamoohooh-go-api/internal/domain"
 )
 
@@ -50,7 +52,7 @@ var ErrorHandler = func(c *fiber.Ctx, caughtErr error) error {
 		return fiber.DefaultErrorHandler(c, caughtErr)
 	}
 
+	fmt.Println("refelct: ", reflect.TypeOf(caughtErr), "err: ", caughtErr)
 	c.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
-
 	return c.Status(status).SendString(caughtErr.Error())
 }
