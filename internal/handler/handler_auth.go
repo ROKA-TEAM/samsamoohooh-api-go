@@ -1,12 +1,12 @@
 package handler
 
 import (
-	"github.com/pkg/errors"
 	"samsamoohooh-go-api/internal/domain"
 	"samsamoohooh-go-api/internal/handler/utils"
-	"samsamoohooh-go-api/internal/infra/oauth/google"
 	"samsamoohooh-go-api/internal/infra/presenter"
 	"time"
+
+	"github.com/pkg/errors"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
@@ -17,24 +17,16 @@ var store = session.New(session.Config{
 })
 
 type AuthHandler struct {
-	userService       domain.UserService
-	tokenService      domain.TokenService
-	kakaoOauthService domain.OauthAuthorizationGrantService
-
-	// 직접 의존하는 방식을 이용
-	oauthGoogleService *google.OauthGoogleService
+	kakaoOauthService  domain.OauthAuthorizationGrantService
+	googleOauthService domain.OauthAuthorizationGrantService
 }
 
 func NewAuthHandler(
-	userService domain.UserService,
-	tokenService domain.TokenService,
-	oauthGoogleService *google.OauthGoogleService,
+	googleOauthService domain.OauthAuthorizationGrantService,
 	kakaoOauthService domain.OauthAuthorizationGrantService,
 ) *AuthHandler {
 	return &AuthHandler{
-		userService:        userService,
-		tokenService:       tokenService,
-		oauthGoogleService: oauthGoogleService,
+		googleOauthService: googleOauthService,
 		kakaoOauthService:  kakaoOauthService,
 	}
 }
@@ -60,7 +52,7 @@ func (h *AuthHandler) GetLoginURLOfGoogle(c *fiber.Ctx) error {
 		return err
 	}
 
-	redirectURL := h.oauthGoogleService.GetLoginURL(state)
+	redirectURL := h.googleOauthService.GetLoginURL(state)
 	return c.Redirect(redirectURL, fiber.StatusTemporaryRedirect)
 }
 
@@ -81,40 +73,7 @@ func (h *AuthHandler) GoogleCallback(c *fiber.Ctx) error {
 		return errors.Wrap(domain.ErrNotMatchState, "invalid state")
 	}
 
-	payload, err := h.oauthGoogleService.Exchange(c.Context(), c.FormValue("code"))
-	if err != nil {
-		return err
-	}
-
-	// 전에 등록했던 사용자인가
-	user, err := h.userService.GetBySub(c.Context(), payload.Sub)
-
-	if errors.Is(err, domain.ErrNotFound) {
-		// 전에 등록하지 않은 사용자이다.
-		createdUser, err := h.userService.Create(c.Context(), &domain.User{
-			Name:      payload.Name,
-			Role:      domain.UserRoleGuest,
-			Social:    domain.UserSocialGoogle,
-			SocialSub: payload.Sub,
-		})
-		if err != nil {
-			return err
-		}
-
-		user = createdUser
-
-	} else if err != nil {
-		return err
-	}
-
-	// 전에 등록한 사용자이다.
-	// 토큰을 발급한다.
-	accessToken, err := h.tokenService.GenerateAccessTokenString(user.ID, domain.TokenRoleType(user.Role))
-	if err != nil {
-		return err
-	}
-
-	refreshToken, err := h.tokenService.GenerateRefreshTokenString(user.ID, domain.TokenRoleType(user.Role))
+	accessToken, refreshToken, err := h.googleOauthService.AuthenticateOrRegister(c.Context(), c.FormValue("code"))
 	if err != nil {
 		return err
 	}
