@@ -10,7 +10,7 @@ type exchangeResponseBody struct {
 	Picture    string `json:"picture"`
 }
 
-func (r exchangeResponseBody) ToDomain() *domain.OauthPayload {
+func (r exchangeResponseBody) toDomain() *domain.OauthPayload {
 	return &domain.OauthPayload{
 		Sub:  r.Sub,
 		Name: r.Name,
