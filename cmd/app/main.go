@@ -68,8 +68,15 @@ func main() {
 	{
 		api := v1.Group("/api")
 		{
-			userHandler.Route(api)
-			authHandler.Route(api)
+			users := api.Group("/users", tokenMiddleware.RequireAuthorization)
+			{
+				userHandler.Route(users)
+			}
+
+			auth := api.Group("/auth")
+			{
+				authHandler.Route(auth)
+			}
 		}
 	}
 

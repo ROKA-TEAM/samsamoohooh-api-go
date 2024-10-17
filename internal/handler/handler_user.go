@@ -1,10 +1,11 @@
 package handler
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"samsamoohooh-go-api/internal/domain"
 	"samsamoohooh-go-api/internal/handler/utils"
 	"samsamoohooh-go-api/internal/infra/presenter"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type UserHandler struct {
@@ -16,12 +17,12 @@ func NewUserHandler(userService domain.UserService) *UserHandler {
 }
 
 func (h *UserHandler) Route(router fiber.Router) {
-	router.Post("/users", h.Create)
-	router.Get("/users", h.List)
-	router.Get("/users/:id", h.GetByID)
-	router.Get("/users/:id/groups", h.GetGroupsByID)
-	router.Put("/users/:id", h.Update)
-	router.Delete("/users/:id", h.Delete)
+	router.Post("/", h.Create)
+	router.Get("/", h.List)
+	router.Get("/:id", h.GetByID)
+	router.Get("/:id/groups", h.GetGroupsByID)
+	router.Put("/:id", h.Update)
+	router.Delete("/:id", h.Delete)
 }
 
 func (h *UserHandler) Create(c *fiber.Ctx) error {

@@ -35,14 +35,14 @@ func NewAuthHandler(
 }
 
 func (h *AuthHandler) Route(router fiber.Router) {
-	router.Post("/auth/token/refresh", h.Refresh)
-	router.Post("/auth/token/validation", h.Validation)
+	router.Post("/token/refresh", h.Refresh)
+	router.Post("/token/validation", h.Validation)
 
-	router.Get("/auth/google", h.GetLoginURLOfGoogle)
-	router.Get("/auth/google/callback", h.GoogleCallback)
+	router.Get("/google", h.GetLoginURLOfGoogle)
+	router.Get("/google/callback", h.GoogleCallback)
 
-	router.Get("/auth/kakao", h.GetLoginURLOfKakao)
-	router.Get("/auth/kakao/callback", h.KaKaoCallback)
+	router.Get("/kakao", h.GetLoginURLOfKakao)
+	router.Get("/kakao/callback", h.KaKaoCallback)
 }
 
 func (h *AuthHandler) Validation(c *fiber.Ctx) error {
