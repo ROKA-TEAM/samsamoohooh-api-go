@@ -1,6 +1,8 @@
 package presenter
 
-import "samsamoohooh-go-api/internal/domain"
+import (
+	"samsamoohooh-go-api/internal/domain"
+)
 
 type GroupCreateReqeust struct {
 	BookTitle   string `json:"bookTitle" validate:"min=1,max=28"`

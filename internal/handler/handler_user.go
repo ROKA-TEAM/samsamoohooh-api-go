@@ -52,7 +52,7 @@ func (h *UserHandler) List(c *fiber.Ctx) error {
 }
 
 func (h *UserHandler) GetByID(c *fiber.Ctx) error {
-	id, err := c.ParamsInt(":id")
+	id, err := c.ParamsInt("id")
 	if err != nil {
 		return err
 	}
@@ -66,7 +66,7 @@ func (h *UserHandler) GetByID(c *fiber.Ctx) error {
 }
 
 func (h *UserHandler) GetGroupsByID(c *fiber.Ctx) error {
-	id, err := c.ParamsInt(":id")
+	id, err := c.ParamsInt("id")
 	limit := c.QueryInt("limit", DefaultLimit)
 	offset := c.QueryInt("offset", DefaultOffset)
 
@@ -83,7 +83,7 @@ func (h *UserHandler) GetGroupsByID(c *fiber.Ctx) error {
 }
 
 func (h *UserHandler) Update(c *fiber.Ctx) error {
-	id, err := c.ParamsInt(":id")
+	id, err := c.ParamsInt("id")
 	if err != nil {
 		return err
 	}
@@ -93,15 +93,15 @@ func (h *UserHandler) Update(c *fiber.Ctx) error {
 		return err
 	}
 
-	udpatedUser, err := h.userService.Update(c.Context(), id, body.ToDomain())
+	updatedUser, err := h.userService.Update(c.Context(), id, body.ToDomain())
 	if err != nil {
 		return err
 	}
-	return c.Status(fiber.StatusOK).JSON(presenter.NewUserUpdateResponse(udpatedUser))
+	return c.Status(fiber.StatusOK).JSON(presenter.NewUserUpdateResponse(updatedUser))
 }
 
 func (h *UserHandler) Delete(c *fiber.Ctx) error {
-	id, err := c.ParamsInt(":id")
+	id, err := c.ParamsInt("id")
 	if err != nil {
 		return err
 	}

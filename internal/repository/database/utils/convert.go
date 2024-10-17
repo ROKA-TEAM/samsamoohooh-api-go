@@ -29,15 +29,16 @@ func ConvertDomainUsers(users []*ent.User) []*domain.User {
 
 func ConvertDomainGroup(group *ent.Group) *domain.Group {
 	return &domain.Group{
-		ID:        group.ID,
-		BookTitle: group.BookTitle,
-		Author:    group.Author,
-		MaxPage:   group.MaxPage,
-		Publisher: group.Publisher,
-		Bookmark:  group.BookMark,
-		CreatedAt: group.CreatedAt,
-		UpdatedAt: group.UpdatedAt,
-		DeletedAt: group.DeleteAt,
+		ID:          group.ID,
+		BookTitle:   group.BookTitle,
+		Author:      group.Author,
+		MaxPage:     group.MaxPage,
+		Publisher:   group.Publisher,
+		Bookmark:    group.BookMark,
+		Description: group.Description,
+		CreatedAt:   group.CreatedAt,
+		UpdatedAt:   group.UpdatedAt,
+		DeletedAt:   group.DeleteAt,
 	}
 }
 

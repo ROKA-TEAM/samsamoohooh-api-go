@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"samsamoohooh-go-api/internal/domain"
 	"samsamoohooh-go-api/internal/repository/database"
 	groupent "samsamoohooh-go-api/internal/repository/database/ent/group"
@@ -19,6 +20,10 @@ func NewGroupRepository(database *database.Database) *GroupRepository {
 }
 
 func (r *GroupRepository) Create(ctx context.Context, group *domain.Group) (*domain.Group, error) {
+	token, ok := ctx.Value("token").(*domain.Token)
+	if !ok {
+		return nil, errors.Wrap(domain.ErrInternal, "token value cannot be converted")
+	}
 	createdGroup, err := r.database.Client.Group.
 		Create().
 		SetBookTitle(group.BookTitle).
@@ -27,6 +32,7 @@ func (r *GroupRepository) Create(ctx context.Context, group *domain.Group) (*dom
 		SetPublisher(group.Publisher).
 		SetDescription(group.Description).
 		SetBookMark(0).
+		AddUserIDs(token.Subject).
 		Save(ctx)
 
 	if err != nil {
