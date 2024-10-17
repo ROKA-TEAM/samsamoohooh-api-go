@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"samsamoohooh-go-api/internal/domain"
 )
 
@@ -18,7 +19,11 @@ func NewGroupService(groupRepository domain.GroupRepository) *GroupService {
 }
 
 func (s *GroupService) Create(ctx context.Context, group *domain.Group) (*domain.Group, error) {
-	return s.groupRepository.Create(ctx, group)
+	token, ok := ctx.Value("token").(*domain.Token)
+	if !ok {
+		return nil, errors.Wrap(domain.ErrInternal, "token value cannot be converted")
+	}
+	return s.groupRepository.Create(ctx, token.Subject, group)
 }
 func (s *GroupService) List(ctx context.Context, offset, limit int) ([]*domain.Group, error) {
 	return s.groupRepository.List(ctx, offset, limit)

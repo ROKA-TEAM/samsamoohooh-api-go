@@ -24,7 +24,7 @@ type Group struct {
 }
 
 type GroupRepository interface {
-	Create(ctx context.Context, group *Group) (*Group, error)
+	Create(ctx context.Context, userID int, group *Group) (*Group, error)
 	List(ctx context.Context, offset, limit int) ([]*Group, error)
 	GetByID(ctx context.Context, id int) (*Group, error)
 	GetUsersByID(ctx context.Context, id int, offset, limit int) ([]*User, error)
