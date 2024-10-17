@@ -34,7 +34,7 @@ type GroupRepository interface {
 	Delete(ctx context.Context, id int) error
 }
 
-type GruopService interface {
+type GroupService interface {
 	Create(ctx context.Context, group *Group) (*Group, error)
 	List(ctx context.Context, offset, limit int) ([]*Group, error)
 	GetByID(ctx context.Context, id int) (*Group, error)
