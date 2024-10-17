@@ -15,8 +15,8 @@ func NewPostService(postRepository domain.PostRepository) *PostService {
 	return &PostService{postRepository: postRepository}
 }
 
-func (p *PostService) Create(ctx context.Context, post *domain.Post) (*domain.Post, error) {
-	return p.postRepository.Create(ctx, post)
+func (p *PostService) Create(ctx context.Context, groupID int, post *domain.Post) (*domain.Post, error) {
+	return p.postRepository.Create(ctx, groupID, post)
 }
 
 func (p *PostService) List(ctx context.Context, offset, limit int) ([]*domain.Post, error) {

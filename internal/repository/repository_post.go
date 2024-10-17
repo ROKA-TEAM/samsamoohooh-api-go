@@ -18,11 +18,12 @@ func NewPostRepository(database *database.Database) *PostRepository {
 	return &PostRepository{database: database}
 }
 
-func (r PostRepository) Create(ctx context.Context, post *domain.Post) (*domain.Post, error) {
+func (r PostRepository) Create(ctx context.Context, groupID int, post *domain.Post) (*domain.Post, error) {
 	createdPost, err := r.database.Post.
 		Create().
 		SetTitle(post.Title).
 		SetContent(post.Content).
+		SetGroupID(groupID).
 		Save(ctx)
 
 	if err != nil {

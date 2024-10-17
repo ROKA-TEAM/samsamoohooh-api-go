@@ -22,7 +22,7 @@ type Post struct {
 }
 
 type PostRepository interface {
-	Create(ctx context.Context, post *Post) (*Post, error)
+	Create(ctx context.Context, groupID int, post *Post) (*Post, error)
 	List(ctx context.Context, offset, limit int) ([]*Post, error)
 	GetByID(ctx context.Context, id int) (*Post, error)
 	GetCommentsByID(ctx context.Context, id, offset, limit int) ([]*Comment, error)
@@ -31,7 +31,7 @@ type PostRepository interface {
 }
 
 type PostService interface {
-	Create(ctx context.Context, post *Post) (*Post, error)
+	Create(ctx context.Context, groupID int, post *Post) (*Post, error)
 	List(ctx context.Context, offset, limit int) ([]*Post, error)
 	GetByID(ctx context.Context, id int) (*Post, error)
 	GetCommentsByID(ctx context.Context, id, offset, limit int) ([]*Comment, error)

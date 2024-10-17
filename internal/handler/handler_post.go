@@ -29,7 +29,7 @@ func (h *PostHandler) Create(c *fiber.Ctx) error {
 		return err
 	}
 
-	createdPost, err := h.postService.Create(c.Context(), body.ToDomain())
+	createdPost, err := h.postService.Create(c.Context(), body.GroupID, body.ToDomain())
 	if err != nil {
 		return err
 	}
