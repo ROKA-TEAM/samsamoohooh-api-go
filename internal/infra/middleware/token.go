@@ -15,7 +15,7 @@ func NewTokenMiddleware(tokenService domain.TokenService) *TokenMiddleware {
 	return &TokenMiddleware{tokenService: tokenService}
 }
 
-func (m TokenMiddleware) Authorization(c *fiber.Ctx) error {
+func (m TokenMiddleware) RequireAuthorization(c *fiber.Ctx) error {
 	tokenString := c.Get("Authorization")
 	if tokenString == "" {
 		return domain.ErrMissingAuthorizationHeader

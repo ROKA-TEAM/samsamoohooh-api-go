@@ -56,11 +56,13 @@ func (r *UserRepository) GetBySub(ctx context.Context, sub string) (*domain.User
 	return utils.ConvertDomainUser(gotUser), nil
 }
 
-func (r *UserRepository) GetGroupsByID(ctx context.Context, id int) ([]*domain.Group, error) {
+func (r *UserRepository) GetGroupsByID(ctx context.Context, id int, limit, offset int) ([]*domain.Group, error) {
 	gotGroups, err := r.database.User.
 		Query().
 		Where(entuser.IDEQ(id)).
 		QueryGroups().
+		Offset(offset).
+		Limit(limit).
 		All(ctx)
 
 	if err != nil {

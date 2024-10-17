@@ -44,13 +44,15 @@ func main() {
 	userService := service.NewUserService(userRepository)
 	userHandler := handler.NewUserHandler(userService)
 
+	groupRepository := repository.NewGroupRepository(db)
+	groupService := service.NewGroupService(groupRepository)
+	groupHandler := handler.NewGroupHandler(groupService)
+
 	jwtService := token.NewJWTService(cfg)
 	tokenMiddleware := middleware.NewTokenMiddleware(jwtService)
-	_ = tokenMiddleware
 
 	oauthGoogleService := google.NewOauthGoogleService(cfg, userService, jwtService)
 	oauthKakaoService := kakao.NewOauthKakaoService(cfg, userService, jwtService)
-
 	authHandler := handler.NewAuthHandler(oauthGoogleService, oauthKakaoService, jwtService)
 
 	app := fiber.New(fiber.Config{
@@ -68,8 +70,20 @@ func main() {
 	{
 		api := v1.Group("/api")
 		{
-			userHandler.Route(api)
-			authHandler.Route(api)
+			users := api.Group("/users", tokenMiddleware.RequireAuthorization)
+			{
+				userHandler.Route(users)
+			}
+
+			groups := api.Group("/groups", tokenMiddleware.RequireAuthorization)
+			{
+				groupHandler.Route(groups)
+			}
+
+			auth := api.Group("/auth")
+			{
+				authHandler.Route(auth)
+			}
 		}
 	}
 
