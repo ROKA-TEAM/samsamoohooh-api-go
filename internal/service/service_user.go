@@ -42,8 +42,8 @@ func (s *UserService) GetBySub(ctx context.Context, sub string) (*domain.User, e
 	return gotUser, nil
 }
 
-func (s *UserService) GetGroupsByID(ctx context.Context, id int) ([]*domain.Group, error) {
-	gotGroups, err := s.userRepository.GetGroupsByID(ctx, id)
+func (s *UserService) GetGroupsByID(ctx context.Context, id int, limit, offset int) ([]*domain.Group, error) {
+	gotGroups, err := s.userRepository.GetGroupsByID(ctx, id, limit, offset)
 	if err != nil {
 		return nil, err
 	}

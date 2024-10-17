@@ -39,8 +39,8 @@ func (h *UserHandler) Create(c *fiber.Ctx) error {
 }
 
 func (h *UserHandler) List(c *fiber.Ctx) error {
-	limit := c.QueryInt("limit")
-	offset := c.QueryInt("offset")
+	limit := c.QueryInt("limit", DefaultLimit)
+	offset := c.QueryInt("offset", DefaultOffset)
 
 	listUsers, err := h.userService.List(c.Context(), limit, offset)
 	if err != nil {
@@ -66,11 +66,14 @@ func (h *UserHandler) GetByID(c *fiber.Ctx) error {
 
 func (h *UserHandler) GetGroupsByID(c *fiber.Ctx) error {
 	id, err := c.ParamsInt(":id")
+	limit := c.QueryInt("limit", DefaultLimit)
+	offset := c.QueryInt("offset", DefaultOffset)
+
 	if err != nil {
 		return err
 	}
 
-	gotGroups, err := h.userService.GetGroupsByID(c.Context(), id)
+	gotGroups, err := h.userService.GetGroupsByID(c.Context(), id, limit, offset)
 	if err != nil {
 		return err
 	}

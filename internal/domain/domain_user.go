@@ -42,7 +42,7 @@ type UserRepository interface {
 	Create(ctx context.Context, user *User) (*User, error)
 	GetByID(ctx context.Context, id int) (*User, error)
 	GetBySub(ctx context.Context, sub string) (*User, error)
-	GetGroupsByID(ctx context.Context, id int) ([]*Group, error)
+	GetGroupsByID(ctx context.Context, id int, limit, offset int) ([]*Group, error)
 	List(ctx context.Context, limit, offset int) ([]*User, error)
 	Update(ctx context.Context, id int, user *User) (*User, error)
 	Delete(ctx context.Context, id int) error
@@ -53,7 +53,7 @@ type UserService interface {
 	GetByID(ctx context.Context, id int) (*User, error)
 
 	GetBySub(ctx context.Context, sub string) (*User, error)
-	GetGroupsByID(ctx context.Context, id int) ([]*Group, error)
+	GetGroupsByID(ctx context.Context, id int, limit, offset int) ([]*Group, error)
 	List(ctx context.Context, limit, offset int) ([]*User, error)
 	Update(ctx context.Context, id int, user *User) (*User, error)
 	Delete(ctx context.Context, id int) error
