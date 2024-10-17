@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/gofiber/fiber/v2/middleware/logger"
 	"log"
 	"samsamoohooh-go-api/internal/handler"
 	"samsamoohooh-go-api/internal/infra/catcher"
@@ -14,6 +13,8 @@ import (
 	"samsamoohooh-go-api/internal/repository"
 	"samsamoohooh-go-api/internal/repository/database"
 	"samsamoohooh-go-api/internal/service"
+
+	"github.com/gofiber/fiber/v2/middleware/logger"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -47,10 +48,10 @@ func main() {
 	tokenMiddleware := middleware.NewTokenMiddleware(jwtService)
 	_ = tokenMiddleware
 
-	oauthGoogleService := google.NewOauthGoogleService(cfg)
-	oauthKaKaoService := kakao.NewOauthKakaoService(cfg, userService, jwtService)
+	oauthGoogleService := google.NewOauthGoogleService(cfg, userService, jwtService)
+	oauthKakaoService := kakao.NewOauthKakaoService(cfg, userService, jwtService)
 
-	authHandler := handler.NewAuthHandler(userService, jwtService, oauthGoogleService, oauthKaKaoService)
+	authHandler := handler.NewAuthHandler(oauthGoogleService, oauthKakaoService)
 
 	app := fiber.New(fiber.Config{
 		ErrorHandler: catcher.ErrorHandler,
