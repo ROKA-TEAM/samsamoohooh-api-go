@@ -25,6 +25,12 @@ type Duration struct {
 	ActivationDelay customDuration // 토큰이 유효해지기까지의 지연 시간
 }
 
+type OauthAuthorizationCodeGrantInfo struct {
+	ClientID     string
+	ClientSecret string
+	CallbackURL  string
+}
+
 type Config struct {
 	Database struct {
 		User     string
@@ -44,11 +50,8 @@ type Config struct {
 	}
 
 	Oauth struct {
-		Google struct {
-			ClientID     string
-			ClientSecret string
-			CallbackURL  string
-		}
+		Google OauthAuthorizationCodeGrantInfo
+		Kakao  OauthAuthorizationCodeGrantInfo
 	}
 }
 
