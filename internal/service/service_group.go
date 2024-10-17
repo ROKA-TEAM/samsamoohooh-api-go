@@ -5,6 +5,8 @@ import (
 	"samsamoohooh-go-api/internal/domain"
 )
 
+var _ domain.GroupService = &GroupService{}
+
 type GroupService struct {
 	groupRepository domain.GroupRepository
 }
