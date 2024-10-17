@@ -17,8 +17,10 @@ var store = session.New(session.Config{
 })
 
 type AuthHandler struct {
-	userService  domain.UserService
-	tokenService domain.TokenService
+	userService       domain.UserService
+	tokenService      domain.TokenService
+	kakaoOauthService domain.OauthAuthorizationGrantService
+
 	// 직접 의존하는 방식을 이용
 	oauthGoogleService *google.OauthGoogleService
 }
@@ -27,17 +29,22 @@ func NewAuthHandler(
 	userService domain.UserService,
 	tokenService domain.TokenService,
 	oauthGoogleService *google.OauthGoogleService,
+	kakaoOauthService domain.OauthAuthorizationGrantService,
 ) *AuthHandler {
 	return &AuthHandler{
 		userService:        userService,
 		tokenService:       tokenService,
 		oauthGoogleService: oauthGoogleService,
+		kakaoOauthService:  kakaoOauthService,
 	}
 }
 
 func (h *AuthHandler) Route(router fiber.Router) {
 	router.Get("/auth/google", h.GetLoginURLOfGoogle)
 	router.Get("/auth/google/callback", h.GoogleCallback)
+
+	router.Get("/auth/kakao", h.GetLoginURLOfKakao)
+	router.Get("/auth/kakao/callback", h.KaKaoCallback)
 }
 
 func (h *AuthHandler) GetLoginURLOfGoogle(c *fiber.Ctx) error {
@@ -116,4 +123,50 @@ func (h *AuthHandler) GoogleCallback(c *fiber.Ctx) error {
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	})
+}
+
+func (h *AuthHandler) GetLoginURLOfKakao(c *fiber.Ctx) error {
+	sess, err := store.Get(c)
+	if err != nil {
+		return err
+	}
+
+	state := utils.GenerateState()
+	sess.Set("state", state)
+	err = sess.Save()
+	if err != nil {
+		return err
+	}
+
+	redirectURL := h.kakaoOauthService.GetLoginURL(state)
+	return c.Redirect(redirectURL, fiber.StatusTemporaryRedirect)
+}
+
+func (h *AuthHandler) KaKaoCallback(c *fiber.Ctx) error {
+	sess, err := store.Get(c)
+	if err != nil {
+		return err
+	}
+
+	state := sess.Get("state")
+	sess.Delete("state")
+	err = sess.Save()
+	if err != nil {
+		return err
+	}
+
+	if state != c.FormValue("state") {
+		return errors.Wrap(domain.ErrNotMatchState, "invalid state")
+	}
+
+	accessToken, refreshToken, err := h.kakaoOauthService.AuthenticateOrRegister(c.Context(), c.FormValue("code"))
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(&presenter.KaKaoCallbackResponse{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	})
+
 }
