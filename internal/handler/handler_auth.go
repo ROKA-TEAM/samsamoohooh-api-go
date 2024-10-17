@@ -19,24 +19,83 @@ var store = session.New(session.Config{
 type AuthHandler struct {
 	kakaoOauthService  domain.OauthAuthorizationGrantService
 	googleOauthService domain.OauthAuthorizationGrantService
+	tokenService       domain.TokenService
 }
 
 func NewAuthHandler(
 	googleOauthService domain.OauthAuthorizationGrantService,
 	kakaoOauthService domain.OauthAuthorizationGrantService,
+	tokenService domain.TokenService,
 ) *AuthHandler {
 	return &AuthHandler{
 		googleOauthService: googleOauthService,
 		kakaoOauthService:  kakaoOauthService,
+		tokenService:       tokenService,
 	}
 }
 
 func (h *AuthHandler) Route(router fiber.Router) {
+	router.Post("/auth/token/refresh", h.Refresh)
+	router.Post("/auth/token/validation", h.Validation)
+
 	router.Get("/auth/google", h.GetLoginURLOfGoogle)
 	router.Get("/auth/google/callback", h.GoogleCallback)
 
 	router.Get("/auth/kakao", h.GetLoginURLOfKakao)
 	router.Get("/auth/kakao/callback", h.KaKaoCallback)
+}
+
+func (h *AuthHandler) Validation(c *fiber.Ctx) error {
+	body := new(presenter.AuthValidationRequest)
+	if err := utils.ParseAndVerify(c, body); err != nil {
+		return err
+	}
+
+	if body.AccessToken == "" && body.RefreshToken == "" {
+		return c.Status(fiber.StatusUnauthorized).SendString("request body is empty")
+	}
+
+	if body.AccessToken != "" {
+		_, err := h.tokenService.ValidateToken(body.AccessToken)
+		if err != nil {
+			return err
+		}
+	}
+
+	if body.RefreshToken != "" {
+		_, err := h.tokenService.ValidateToken(body.RefreshToken)
+		if err != nil {
+			return err
+		}
+	}
+
+	return c.SendStatus(fiber.StatusNoContent)
+}
+
+func (h *AuthHandler) Refresh(c *fiber.Ctx) error {
+	body := new(presenter.AuthRefreshRequest)
+	if err := utils.ParseAndVerify(c, body); err != nil {
+		return err
+	}
+
+	_, err := h.tokenService.ValidateToken(body.RefreshToken)
+	if err != nil {
+		return err
+	}
+
+	token, err := h.tokenService.ParseToken(body.RefreshToken)
+	if err != nil {
+		return err
+	}
+
+	accessToken, err := h.tokenService.GenerateAccessTokenString(token.Subject, token.Role)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(&presenter.AuthRefreshResponse{
+		AccessToken: accessToken,
+	})
 }
 
 func (h *AuthHandler) GetLoginURLOfGoogle(c *fiber.Ctx) error {

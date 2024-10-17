@@ -51,7 +51,7 @@ func main() {
 	oauthGoogleService := google.NewOauthGoogleService(cfg, userService, jwtService)
 	oauthKakaoService := kakao.NewOauthKakaoService(cfg, userService, jwtService)
 
-	authHandler := handler.NewAuthHandler(oauthGoogleService, oauthKakaoService)
+	authHandler := handler.NewAuthHandler(oauthGoogleService, oauthKakaoService, jwtService)
 
 	app := fiber.New(fiber.Config{
 		ErrorHandler: catcher.ErrorHandler,

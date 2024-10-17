@@ -79,7 +79,7 @@ func (s *JWTService) ValidateToken(tokenString string) (bool, error) {
 		return []byte(s.config.Token.SecretKey), nil
 	})
 	if err != nil {
-		return false, err
+		return false, errors.Wrap(domain.ErrTokenParse, err.Error())
 	}
 
 	// 현재 시각
