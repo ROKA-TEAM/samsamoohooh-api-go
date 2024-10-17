@@ -11,7 +11,7 @@ type GroupService struct {
 	groupRepository domain.GroupRepository
 }
 
-func NewGroupRepository(groupRepository domain.GroupRepository) *GroupService {
+func NewGroupService(groupRepository domain.GroupRepository) *GroupService {
 	return &GroupService{
 		groupRepository: groupRepository,
 	}
