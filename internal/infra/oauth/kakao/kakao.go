@@ -1,58 +1,55 @@
-package google
+package kakao
 
 import (
 	"context"
 	"encoding/json"
+	"github.com/pkg/errors"
+	"golang.org/x/oauth2"
 	"samsamoohooh-go-api/internal/domain"
 	"samsamoohooh-go-api/internal/infra/config"
-
-	"github.com/pkg/errors"
-
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/google"
 )
-
-var _ domain.OauthAuthorizationGrantService = (*OauthGoogleService)(nil)
 
 const (
-	scopeProfile = "https://www.googleapis.com/auth/userinfo.profile"
-
-	userInfoAPI = "https://www.googleapis.com/oauth2/v3/userinfo"
+	authURL     = "https://kauth.kakao.com/oauth/authorize"
+	tokenURL    = "https://kauth.kakao.com/oauth/token" //nolint:gosec
+	userInfoAPI = "https://kapi.kakao.com/v2/user/me"
 )
 
-// Authorization Code Grant 방식으로 구현
+var _ domain.OauthAuthorizationGrantService = (*OauthKakaoService)(nil)
 
-type OauthGoogleService struct {
+type OauthKakaoService struct {
 	config       *config.Config
 	oauthConfig  *oauth2.Config
 	userService  domain.UserService
 	tokenService domain.TokenService
 }
 
-func NewOauthGoogleService(
+func NewOauthKakaoService(
 	config *config.Config,
 	userService domain.UserService,
 	tokenService domain.TokenService,
-) *OauthGoogleService {
-	return &OauthGoogleService{
+) *OauthKakaoService {
+	return &OauthKakaoService{
 		config: config,
 		oauthConfig: &oauth2.Config{
-			ClientID:     config.Oauth.Google.ClientID,
-			ClientSecret: config.Oauth.Google.ClientSecret,
-			RedirectURL:  config.Oauth.Google.CallbackURL,
-			Scopes:       []string{scopeProfile},
-			Endpoint:     google.Endpoint,
+			ClientID:     config.Oauth.Kakao.ClientID,
+			ClientSecret: config.Oauth.Kakao.ClientSecret,
+			RedirectURL:  config.Oauth.Kakao.CallbackURL,
+			Endpoint: oauth2.Endpoint{
+				AuthURL:  authURL,
+				TokenURL: tokenURL,
+			},
 		},
 		userService:  userService,
 		tokenService: tokenService,
 	}
 }
 
-func (s OauthGoogleService) GetLoginURL(state string) string {
+func (s OauthKakaoService) GetLoginURL(state string) string {
 	return s.oauthConfig.AuthCodeURL(state)
 }
 
-func (s OauthGoogleService) Exchange(ctx context.Context, code string) (*domain.OauthPayload, error) {
+func (s OauthKakaoService) Exchange(ctx context.Context, code string) (*domain.OauthPayload, error) {
 	token, err := s.oauthConfig.Exchange(ctx, code)
 	if err != nil {
 		return nil, errors.Wrap(domain.ErrInternal, err.Error())
@@ -64,7 +61,7 @@ func (s OauthGoogleService) Exchange(ctx context.Context, code string) (*domain.
 		return nil, errors.Wrap(domain.ErrInternal, err.Error())
 	}
 
-	var respBody exchangeResponseBody
+	var respBody exchangeRespBody
 	if err := json.NewDecoder(resp.Body).Decode(&respBody); err != nil {
 		return nil, errors.Wrap(domain.ErrInternal, err.Error())
 	}
@@ -77,7 +74,7 @@ func (s OauthGoogleService) Exchange(ctx context.Context, code string) (*domain.
 	return respBody.toDomain(), nil
 }
 
-func (s OauthGoogleService) AuthenticateOrRegister(ctx context.Context, code string) (string, string, error) {
+func (s OauthKakaoService) AuthenticateOrRegister(ctx context.Context, code string) (string, string, error) {
 	payload, err := s.Exchange(ctx, code)
 	if err != nil {
 		return "", "", errors.Wrap(domain.ErrInternal, err.Error())
@@ -89,7 +86,7 @@ func (s OauthGoogleService) AuthenticateOrRegister(ctx context.Context, code str
 		createdUser, err := s.userService.Create(ctx, &domain.User{
 			Name:      payload.Name,
 			Role:      domain.UserRoleGuest,
-			Social:    domain.UserSocialGoogle,
+			Social:    domain.UserSocialKaKao,
 			SocialSub: payload.Sub,
 		})
 		if err != nil {
