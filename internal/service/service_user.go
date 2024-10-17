@@ -5,6 +5,8 @@ import (
 	"samsamoohooh-go-api/internal/domain"
 )
 
+var _ domain.UserService = (*UserService)(nil)
+
 type UserService struct {
 	userRepository domain.UserRepository
 }
