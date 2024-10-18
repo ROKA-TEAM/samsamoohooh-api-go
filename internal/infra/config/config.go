@@ -32,6 +32,14 @@ type OauthAuthorizationCodeGrantInfo struct {
 }
 
 type Config struct {
+	HTTP struct {
+		Development bool
+		Port        string
+		TLS         struct {
+			CertFilePath string
+			KeyFilePath  string
+		}
+	}
 	Database struct {
 		User     string
 		Password string
@@ -55,8 +63,7 @@ type Config struct {
 	}
 
 	Logger struct {
-		Development bool
-		Encoding    string
+		Encoding string
 	}
 }
 

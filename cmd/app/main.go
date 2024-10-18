@@ -135,5 +135,11 @@ func main() {
 	}
 
 	logger.Get().Debug("success route api")
-	log.Println(app.Listen(":8080"))
+	if cfg.HTTP.Development {
+		log.Println(app.Listen(cfg.HTTP.Port))
+	} else {
+		log.Println(app.ListenTLS(cfg.HTTP.Port, cfg.HTTP.TLS.CertFilePath, cfg.HTTP.TLS.KeyFilePath))
+	}
+
+	// app.ListenTLS()
 }

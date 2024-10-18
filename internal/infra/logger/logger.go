@@ -1,9 +1,10 @@
 package logger
 
 import (
+	"samsamoohooh-go-api/internal/infra/config"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"samsamoohooh-go-api/internal/infra/config"
 )
 
 var instance *zap.Logger
@@ -25,7 +26,7 @@ func Initialize(cfg *config.Config) error {
 
 	// 환경에 따라 로그 레벨 설정
 	var logLevel zapcore.Level
-	if cfg.Logger.Development {
+	if cfg.HTTP.Development {
 		logLevel = zapcore.DebugLevel
 	} else {
 		logLevel = zapcore.InfoLevel
@@ -34,7 +35,7 @@ func Initialize(cfg *config.Config) error {
 	atomicLevel := zap.NewAtomicLevelAt(logLevel)
 	zapConfig := zap.Config{
 		Level:            atomicLevel,
-		Development:      cfg.Logger.Development,
+		Development:      cfg.HTTP.Development,
 		Encoding:         cfg.Logger.Encoding,
 		EncoderConfig:    encoderConfig,
 		OutputPaths:      []string{"stdout"},
