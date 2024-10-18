@@ -11,6 +11,10 @@ type TaskService struct {
 	taskRepository domain.TaskRepository
 }
 
+func NewTaskService(taskRepository domain.TaskRepository) *TaskService {
+	return &TaskService{taskRepository: taskRepository}
+}
+
 func (s *TaskService) Create(ctx context.Context, groupID int, task *domain.Task) (*domain.Task, error) {
 	return s.taskRepository.Create(ctx, groupID, task)
 }
