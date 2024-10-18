@@ -18,7 +18,7 @@ type Comment struct {
 }
 
 type CommentRepository interface {
-	Create(ctx context.Context, comment *Comment) (*Comment, error)
+	Create(ctx context.Context, postID int, comment *Comment) (*Comment, error)
 	List(ctx context.Context, offset, limit int) ([]*Comment, error)
 	GetByID(ctx context.Context, id int) (*Comment, error)
 	Update(ctx context.Context, id int, comment *Comment) (*Comment, error)
@@ -26,7 +26,7 @@ type CommentRepository interface {
 }
 
 type CommentService interface {
-	Create(ctx context.Context, comment *Comment) (*Comment, error)
+	Create(ctx context.Context, postID int, comment *Comment) (*Comment, error)
 	List(ctx context.Context, offset, limit int) ([]*Comment, error)
 	GetByID(ctx context.Context, id int) (*Comment, error)
 	Update(ctx context.Context, id int, comment *Comment) (*Comment, error)
