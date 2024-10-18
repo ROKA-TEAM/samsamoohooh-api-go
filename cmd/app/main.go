@@ -18,9 +18,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func init() {
-}
-
 func main() {
 	cfg, err := config.NewConfig(".env.toml")
 	if err != nil {
