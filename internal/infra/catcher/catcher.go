@@ -1,11 +1,11 @@
 package catcher
 
 import (
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
-	"reflect"
+	"go.uber.org/zap"
 	"samsamoohooh-go-api/internal/domain"
+	"samsamoohooh-go-api/internal/infra/logger"
 )
 
 var ErrorHandler = func(c *fiber.Ctx, caughtErr error) error {
@@ -52,7 +52,10 @@ var ErrorHandler = func(c *fiber.Ctx, caughtErr error) error {
 		return fiber.DefaultErrorHandler(c, caughtErr)
 	}
 
-	fmt.Println("refelct: ", reflect.TypeOf(caughtErr), "err: ", caughtErr)
+	if status == fiber.StatusInternalServerError {
+		logger.Get().Error("unintentional errors", zap.Error(caughtErr))
+	}
+
 	c.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
 	return c.Status(status).SendString(caughtErr.Error())
 }

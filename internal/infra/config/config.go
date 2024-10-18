@@ -53,6 +53,11 @@ type Config struct {
 		Google OauthAuthorizationCodeGrantInfo
 		Kakao  OauthAuthorizationCodeGrantInfo
 	}
+
+	Logger struct {
+		Development bool
+		Encoding    string
+	}
 }
 
 func NewConfig(path string) (*Config, error) {
