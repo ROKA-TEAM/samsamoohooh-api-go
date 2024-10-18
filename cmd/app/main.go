@@ -72,6 +72,10 @@ func main() {
 	commentService := service.NewCommentService(commentRepository)
 	commentHandler := handler.NewCommentHandler(commentService)
 
+	taskRepository := repository.NewTaskRepository(db)
+	taskService := service.NewTaskService(taskRepository)
+	taskHandler := handler.NewTaskHandler(taskService)
+
 	jwtService := token.NewJWTService(cfg)
 	tokenMiddleware := middleware.NewTokenMiddleware(jwtService)
 
@@ -107,6 +111,11 @@ func main() {
 			comments := api.Group("/comments", tokenMiddleware.RequireAuthorization)
 			{
 				commentHandler.Route(comments)
+			}
+
+			tasks := api.Group("/tasks", tokenMiddleware.RequireAuthorization)
+			{
+				taskHandler.Route(tasks)
 			}
 
 			auth := api.Group("/auth")
