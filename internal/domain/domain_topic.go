@@ -1,6 +1,9 @@
 package domain
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 type Topic struct {
 	ID      int
@@ -14,4 +17,20 @@ type Topic struct {
 	// relation
 	UserID int
 	TaskID int
+}
+
+type TopicRepository interface {
+	Create(ctx context.Context, taskID int, topic *Topic) (*Topic, error)
+	List(ctx context.Context, offset, limit int) ([]*Topic, error)
+	GetByID(ctx context.Context, id int) (*Topic, error)
+	Update(ctx context.Context, id int, topic *Topic) (*Topic, error)
+	Delete(ctx context.Context, id int) error
+}
+
+type TopicService interface {
+	Create(ctx context.Context, taskID int, topic *Topic) (*Topic, error)
+	List(ctx context.Context, offset, limit int) ([]*Topic, error)
+	GetByID(ctx context.Context, id int) (*Topic, error)
+	Update(ctx context.Context, id int, topic *Topic) (*Topic, error)
+	Delete(ctx context.Context, id int) error
 }
