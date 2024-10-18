@@ -76,6 +76,10 @@ func main() {
 	taskService := service.NewTaskService(taskRepository)
 	taskHandler := handler.NewTaskHandler(taskService)
 
+	topicRepository := repository.NewTopicRepository(db)
+	topicService := service.NewTopicService(topicRepository)
+	topicHandler := handler.NewTopicHandler(topicService)
+
 	jwtService := token.NewJWTService(cfg)
 	tokenMiddleware := middleware.NewTokenMiddleware(jwtService)
 
@@ -93,6 +97,11 @@ func main() {
 	{
 		api := v1.Group("/api")
 		{
+			auth := api.Group("/auth")
+			{
+				authHandler.Route(auth)
+			}
+
 			users := api.Group("/users", tokenMiddleware.RequireAuthorization)
 			{
 				userHandler.Route(users)
@@ -118,14 +127,13 @@ func main() {
 				taskHandler.Route(tasks)
 			}
 
-			auth := api.Group("/auth")
+			topics := api.Group("/topics", tokenMiddleware.RequireAuthorization)
 			{
-				authHandler.Route(auth)
+				topicHandler.Route(topics)
 			}
 		}
 	}
 
 	logger.Get().Debug("success route api")
 	log.Println(app.Listen(":8080"))
-
 }
