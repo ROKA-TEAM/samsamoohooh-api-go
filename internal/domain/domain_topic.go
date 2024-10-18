@@ -20,7 +20,7 @@ type Topic struct {
 }
 
 type TopicRepository interface {
-	Create(ctx context.Context, topic *Topic) (*Topic, error)
+	Create(ctx context.Context, taskID int, topic *Topic) (*Topic, error)
 	List(ctx context.Context, offset, limit int) ([]*Topic, error)
 	GetByID(ctx context.Context, id int) (*Topic, error)
 	Update(ctx context.Context, id int, topic *Topic) (*Topic, error)
@@ -28,7 +28,7 @@ type TopicRepository interface {
 }
 
 type TopicService interface {
-	Create(ctx context.Context, topic *Topic) (*Topic, error)
+	Create(ctx context.Context, taskID int, topic *Topic) (*Topic, error)
 	List(ctx context.Context, offset, limit int) ([]*Topic, error)
 	GetByID(ctx context.Context, id int) (*Topic, error)
 	Update(ctx context.Context, id int, topic *Topic) (*Topic, error)
