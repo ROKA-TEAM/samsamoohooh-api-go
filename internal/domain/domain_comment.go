@@ -1,6 +1,9 @@
 package domain
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 type Comment struct {
 	ID        int
@@ -12,4 +15,20 @@ type Comment struct {
 	// relation
 	UserID int
 	PostID int
+}
+
+type CommentRepository interface {
+	Create(ctx context.Context, postID int, comment *Comment) (*Comment, error)
+	List(ctx context.Context, offset, limit int) ([]*Comment, error)
+	GetByID(ctx context.Context, id int) (*Comment, error)
+	Update(ctx context.Context, id int, comment *Comment) (*Comment, error)
+	Delete(ctx context.Context, id int) error
+}
+
+type CommentService interface {
+	Create(ctx context.Context, postID int, comment *Comment) (*Comment, error)
+	List(ctx context.Context, offset, limit int) ([]*Comment, error)
+	GetByID(ctx context.Context, id int) (*Comment, error)
+	Update(ctx context.Context, id int, comment *Comment) (*Comment, error)
+	Delete(ctx context.Context, id int) error
 }
