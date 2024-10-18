@@ -31,14 +31,19 @@ type TopicListResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func NewTopicListResponse(topic *domain.Topic) *TopicListResponse {
-	return &TopicListResponse{
-		ID:        topic.ID,
-		Topic:     topic.Topic,
-		Feeling:   topic.Feeling,
-		CreatedAt: topic.CreatedAt,
-		UpdatedAt: topic.UpdatedAt,
+func NewTopicListResponse(topics []*domain.Topic) []*TopicListResponse {
+	var listTopicResp []*TopicListResponse
+	for _, topic := range topics {
+		listTopicResp = append(listTopicResp, &TopicListResponse{
+			ID:        topic.ID,
+			Topic:     topic.Topic,
+			Feeling:   topic.Feeling,
+			CreatedAt: topic.CreatedAt,
+			UpdatedAt: topic.UpdatedAt,
+		})
 	}
+
+	return listTopicResp
 }
 
 type TopicGetByIDResponse struct {
