@@ -22,15 +22,15 @@ type Topic struct {
 type TopicRepository interface {
 	Create(ctx context.Context, topic *Topic) (*Topic, error)
 	List(ctx context.Context, offset, limit int) ([]*Topic, error)
-	GetByID(ctx context.Context, id int) (Topic, error)
-	Update(ctx context.Context, id int, topic *Topic) (Topic, error)
+	GetByID(ctx context.Context, id int) (*Topic, error)
+	Update(ctx context.Context, id int, topic *Topic) (*Topic, error)
 	Delete(ctx context.Context, id int) error
 }
 
 type TopicService interface {
 	Create(ctx context.Context, topic *Topic) (*Topic, error)
 	List(ctx context.Context, offset, limit int) ([]*Topic, error)
-	GetByID(ctx context.Context, id int) (Topic, error)
-	Update(ctx context.Context, id int, topic *Topic) (Topic, error)
+	GetByID(ctx context.Context, id int) (*Topic, error)
+	Update(ctx context.Context, id int, topic *Topic) (*Topic, error)
 	Delete(ctx context.Context, id int) error
 }
