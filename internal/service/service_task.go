@@ -15,8 +15,8 @@ func (s *TaskService) Create(ctx context.Context, groupID int, task *domain.Task
 	return s.taskRepository.Create(ctx, groupID, task)
 }
 
-func (s *TaskService) List(ctx context.Context, id, offset, limit int) ([]*domain.Task, error) {
-	return s.taskRepository.List(ctx, id, offset, limit)
+func (s *TaskService) List(ctx context.Context, offset, limit int) ([]*domain.Task, error) {
+	return s.taskRepository.List(ctx, offset, limit)
 }
 
 func (s *TaskService) GetByID(ctx context.Context, id int) (*domain.Task, error) {

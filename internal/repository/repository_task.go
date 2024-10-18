@@ -32,7 +32,7 @@ func (r *TaskRepository) Create(ctx context.Context, groupID int, task *domain.T
 
 	return utils.ConvertDomainTask(createdTask), nil
 }
-func (r *TaskRepository) List(ctx context.Context, id, offset, limit int) ([]*domain.Task, error) {
+func (r *TaskRepository) List(ctx context.Context, offset, limit int) ([]*domain.Task, error) {
 	listTask, err := r.database.Task.
 		Query().
 		Offset(offset).

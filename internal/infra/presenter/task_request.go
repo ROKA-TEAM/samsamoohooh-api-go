@@ -19,12 +19,12 @@ func (r TaskCreateRequest) ToDomain() *domain.Task {
 	}
 }
 
-type TaskUdpateRequest struct {
+type TaskUpdateRequest struct {
 	Deadline time.Time `json:"deadline,omitempty" validate:"omitempty"`
 	Range    int       `json:"range,omitempty" validate:"omitempty"`
 }
 
-func (r TaskUdpateRequest) ToDomain() *domain.Task {
+func (r TaskUpdateRequest) ToDomain() *domain.Task {
 	return &domain.Task{
 		Deadline: r.Deadline,
 		Range:    r.Range,

@@ -63,7 +63,7 @@ func NewTaskGetByIDResponse(task *domain.Task) *TaskGetByIDResponse {
 	}
 }
 
-type TaskGetSubjectsByIDResponse struct {
+type TaskGetTopicsByIDResponse struct {
 	ID        int       `json:"id"`
 	Topic     string    `json:"topic"`
 	Feeling   string    `json:"feeling"`
@@ -71,18 +71,18 @@ type TaskGetSubjectsByIDResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func NewTaskGetSubjectsByIDResponse(subjects []*domain.Subject) []*TaskGetSubjectsByIDResponse {
-	var subjectList []*TaskGetSubjectsByIDResponse
-	for _, subject := range subjects {
-		subjectList = append(subjectList, &TaskGetSubjectsByIDResponse{
-			ID:        subject.ID,
-			Topic:     subject.Topic,
-			Feeling:   subject.Feeling,
-			CreatedAt: subject.CreatedAt,
-			UpdatedAt: subject.UpdatedAt,
+func NewTaskGetTopicsByIDResponse(topics []*domain.Topic) []*TaskGetTopicsByIDResponse {
+	var topicList []*TaskGetTopicsByIDResponse
+	for _, topic := range topics {
+		topicList = append(topicList, &TaskGetTopicsByIDResponse{
+			ID:        topic.ID,
+			Topic:     topic.Topic,
+			Feeling:   topic.Feeling,
+			CreatedAt: topic.CreatedAt,
+			UpdatedAt: topic.UpdatedAt,
 		})
 	}
-	return subjectList
+	return topicList
 }
 
 type TaskUpdateResponse struct {
