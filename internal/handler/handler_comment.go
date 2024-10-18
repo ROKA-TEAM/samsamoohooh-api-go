@@ -1,18 +1,18 @@
 package handler
 
 import (
+	"samsamoohooh-go-api/internal/domain"
 	"samsamoohooh-go-api/internal/handler/utils"
 	"samsamoohooh-go-api/internal/infra/presenter"
-	"samsamoohooh-go-api/internal/service"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type CommentHandler struct {
-	commentService service.CommentService
+	commentService domain.CommentService
 }
 
-func NewCommentHandler(commentService service.CommentService) *CommentHandler {
+func NewCommentHandler(commentService domain.CommentService) *CommentHandler {
 	return &CommentHandler{commentService: commentService}
 }
 
