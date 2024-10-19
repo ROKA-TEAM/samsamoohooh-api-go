@@ -109,12 +109,12 @@ func main() {
 
 			groups := api.Group("/groups", guardMiddleware.RequireAuthorization)
 			{
-				groupHandler.Route(groups)
+				groupHandler.Route(groups, guardMiddleware)
 			}
 
 			posts := api.Group("/posts", guardMiddleware.RequireAuthorization)
 			{
-				postHandler.Route(posts)
+				postHandler.Route(posts, guardMiddleware)
 			}
 
 			comments := api.Group("/comments", guardMiddleware.RequireAuthorization)
@@ -124,12 +124,12 @@ func main() {
 
 			tasks := api.Group("/tasks", guardMiddleware.RequireAuthorization)
 			{
-				taskHandler.Route(tasks)
+				taskHandler.Route(tasks, guardMiddleware)
 			}
 
 			topics := api.Group("/topics", guardMiddleware.RequireAuthorization)
 			{
-				topicHandler.Route(topics)
+				topicHandler.Route(topics, guardMiddleware)
 			}
 		}
 	}
