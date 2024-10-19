@@ -3,6 +3,7 @@ package handler
 import (
 	"samsamoohooh-go-api/internal/domain"
 	"samsamoohooh-go-api/internal/handler/utils"
+	"samsamoohooh-go-api/internal/infra/middleware"
 	"samsamoohooh-go-api/internal/infra/presenter"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,13 +17,13 @@ func NewUserHandler(userService domain.UserService) *UserHandler {
 	return &UserHandler{userService: userService}
 }
 
-func (h *UserHandler) Route(router fiber.Router) {
-	router.Post("/", h.Create)
-	router.Get("/", h.List)
-	router.Get("/:id", h.GetByID)
-	router.Get("/:id/groups", h.GetGroupsByID)
-	router.Put("/:id", h.Update)
-	router.Delete("/:id", h.Delete)
+func (h *UserHandler) Route(router fiber.Router, guard *middleware.GuardMiddleware) {
+	router.Post("/", guard.RequireAccess(domain.UserRoleAdmin), h.Create)
+	router.Get("/", guard.RequireAccess(domain.UserRoleAdmin), h.List)
+	router.Get("/:id", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.GetByID)
+	router.Get("/:id/groups", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.GetGroupsByID)
+	router.Put("/:id", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.Update)
+	router.Delete("/:id", guard.RequireAccess(domain.UserRoleAdmin), h.Delete)
 }
 
 func (h *UserHandler) Create(c *fiber.Ctx) error {

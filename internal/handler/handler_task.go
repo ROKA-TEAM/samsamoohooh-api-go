@@ -1,10 +1,12 @@
 package handler
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"samsamoohooh-go-api/internal/domain"
 	"samsamoohooh-go-api/internal/handler/utils"
+	"samsamoohooh-go-api/internal/infra/middleware"
 	"samsamoohooh-go-api/internal/infra/presenter"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type TaskHandler struct {
@@ -15,13 +17,13 @@ func NewTaskHandler(taskService domain.TaskService) *TaskHandler {
 	return &TaskHandler{taskService: taskService}
 }
 
-func (h *TaskHandler) Route(router fiber.Router) {
-	router.Post("/", h.Create)
-	router.Get("/", h.List)
-	router.Get("/:id", h.GetByID)
-	router.Get("/:id/topics", h.GetTopicsByID)
-	router.Put("/:id", h.Update)
-	router.Delete("/", h.Delete)
+func (h *TaskHandler) Route(router fiber.Router, guard *middleware.GuardMiddleware) {
+	router.Post("/", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.Create)
+	router.Get("/", guard.RequireAccess(domain.UserRoleAdmin), h.List)
+	router.Get("/:id", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.GetByID)
+	router.Get("/:id/topics", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.GetTopicsByID)
+	router.Put("/:id", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.Update)
+	router.Delete("/", guard.RequireAccess(domain.UserRoleAdmin), h.Delete)
 }
 
 func (h *TaskHandler) Create(c *fiber.Ctx) error {

@@ -1,15 +1,18 @@
 package catcher
 
 import (
+	"samsamoohooh-go-api/internal/domain"
+	"samsamoohooh-go-api/internal/infra/logger"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
-	"samsamoohooh-go-api/internal/domain"
-	"samsamoohooh-go-api/internal/infra/logger"
 )
 
-var ErrorHandler = func(c *fiber.Ctx, caughtErr error) error {
+var ErrorHandler = func(c *fiber.Ctx, err error) error {
 	var status int
+
+	caughtErr := errors.Cause(err)
 
 	switch {
 	case errors.Is(domain.ErrTokenGenerate, caughtErr):
@@ -48,6 +51,10 @@ var ErrorHandler = func(c *fiber.Ctx, caughtErr error) error {
 	case errors.Is(domain.ErrNotMatchState, caughtErr):
 		status = fiber.StatusUnauthorized
 
+	case errors.Is(domain.ErrForbidden, caughtErr):
+		status = fiber.StatusForbidden
+	case errors.Is(domain.ErrParsing, caughtErr):
+		status = fiber.StatusBadRequest
 	default:
 		return fiber.DefaultErrorHandler(c, caughtErr)
 	}
@@ -57,5 +64,5 @@ var ErrorHandler = func(c *fiber.Ctx, caughtErr error) error {
 	}
 
 	c.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
-	return c.Status(status).SendString(caughtErr.Error())
+	return c.Status(status).SendString(err.Error())
 }

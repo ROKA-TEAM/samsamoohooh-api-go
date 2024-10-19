@@ -3,6 +3,7 @@ package handler
 import (
 	"samsamoohooh-go-api/internal/domain"
 	"samsamoohooh-go-api/internal/handler/utils"
+	"samsamoohooh-go-api/internal/infra/middleware"
 	"samsamoohooh-go-api/internal/infra/presenter"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,12 +17,12 @@ func NewCommentHandler(commentService domain.CommentService) *CommentHandler {
 	return &CommentHandler{commentService: commentService}
 }
 
-func (h *CommentHandler) Route(r fiber.Router) {
-	r.Post("/", h.Create)
-	r.Get("/", h.List)
-	r.Get("/:id", h.GetByID)
-	r.Put("/:id", h.Update)
-	r.Delete("/:id", h.Delete)
+func (h *CommentHandler) Route(r fiber.Router, guard *middleware.GuardMiddleware) {
+	r.Post("/", guard.RequireAccess(domain.UserRoleAdmin), h.Create)
+	r.Get("/", h.List, guard.RequireAccess(domain.UserRoleAdmin))
+	r.Get("/:id", h.GetByID, guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest))
+	r.Put("/:id", h.Update, guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest))
+	r.Delete("/:id", h.Delete, guard.RequireAccess(domain.UserRoleAdmin))
 }
 
 func (h *CommentHandler) Create(c *fiber.Ctx) error {

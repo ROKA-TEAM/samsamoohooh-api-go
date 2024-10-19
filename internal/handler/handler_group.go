@@ -3,6 +3,7 @@ package handler
 import (
 	"samsamoohooh-go-api/internal/domain"
 	"samsamoohooh-go-api/internal/handler/utils"
+	"samsamoohooh-go-api/internal/infra/middleware"
 	"samsamoohooh-go-api/internal/infra/presenter"
 
 	"github.com/gofiber/fiber/v2"
@@ -18,15 +19,15 @@ func NewGroupHandler(groupService domain.GroupService) *GroupHandler {
 	}
 }
 
-func (h *GroupHandler) Route(router fiber.Router) {
-	router.Post("/", h.Create)
-	router.Get("/", h.List)
-	router.Get("/:id", h.GetByID)
-	router.Get("/:id/users", h.GetUsersByID)
-	router.Get("/:id/posts", h.GetPostsByID)
-	router.Get("/:id/tasks", h.GetTasksByID)
-	router.Put("/:id", h.Update)
-	router.Delete("/:id", h.Delete)
+func (h *GroupHandler) Route(router fiber.Router, guard *middleware.GuardMiddleware) {
+	router.Post("/", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.Create)
+	router.Get("/", guard.RequireAccess(domain.UserRoleAdmin), h.List)
+	router.Get("/:id", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.GetByID)
+	router.Get("/:id/users", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.GetUsersByID)
+	router.Get("/:id/posts", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.GetPostsByID)
+	router.Get("/:id/tasks", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.GetTasksByID)
+	router.Put("/:id", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.Update)
+	router.Delete("/:id", guard.RequireAccess(domain.UserRoleAdmin), h.Delete)
 }
 
 func (h *GroupHandler) Create(c *fiber.Ctx) error {

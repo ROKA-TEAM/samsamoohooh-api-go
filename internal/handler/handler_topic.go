@@ -1,10 +1,12 @@
 package handler
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"samsamoohooh-go-api/internal/domain"
 	"samsamoohooh-go-api/internal/handler/utils"
+	"samsamoohooh-go-api/internal/infra/middleware"
 	"samsamoohooh-go-api/internal/infra/presenter"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type TopicHandler struct {
@@ -15,12 +17,12 @@ func NewTopicHandler(topicService domain.TopicService) *TopicHandler {
 	return &TopicHandler{topicService: topicService}
 }
 
-func (h *TopicHandler) Route(router fiber.Router) {
-	router.Post("/", h.Create)
-	router.Get("/", h.List)
-	router.Get("/:id", h.GetByID)
-	router.Put("/:id", h.Update)
-	router.Delete("/:id", h.Delete)
+func (h *TopicHandler) Route(router fiber.Router, guard *middleware.GuardMiddleware) {
+	router.Post("/", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.Create)
+	router.Get("/", guard.RequireAccess(domain.UserRoleAdmin), h.List)
+	router.Get("/:id", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.GetByID)
+	router.Put("/:id", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.Update)
+	router.Delete("/:id", guard.RequireAccess(domain.UserRoleAdmin), h.Delete)
 }
 
 func (h *TopicHandler) Create(c *fiber.Ctx) error {

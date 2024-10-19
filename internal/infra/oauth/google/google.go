@@ -103,12 +103,12 @@ func (s OauthGoogleService) AuthenticateOrRegister(ctx context.Context, code str
 	// 전에 등록한 사용자이다.
 
 	// 토큰을 발급한다.
-	accessToken, err := s.tokenService.GenerateAccessTokenString(user.ID, domain.TokenRoleType(user.Role))
+	accessToken, err := s.tokenService.GenerateAccessTokenString(user.ID, user.Role)
 	if err != nil {
 		return "", "", err
 	}
 
-	refreshToken, err := s.tokenService.GenerateRefreshTokenString(user.ID, domain.TokenRoleType(user.Role))
+	refreshToken, err := s.tokenService.GenerateRefreshTokenString(user.ID, user.Role)
 	if err != nil {
 		return "", "", err
 	}
