@@ -2,11 +2,11 @@ package verifier
 
 import (
 	"fmt"
-	"github.com/go-playground/validator/v10"
-	"github.com/pkg/errors"
-	"samsamoohooh-go-api/internal/domain"
 	"strings"
 	"sync"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/pkg/errors"
 )
 
 type Verifier struct {
@@ -23,9 +23,9 @@ func (v *Verifier) Verify(s any) error {
 			for i, fieldError := range validationErrors {
 				errorMessages[i] = fmt.Sprintf("Field '%s' fails '%s' validation", fieldError.Field(), fieldError.Tag())
 			}
-			return errors.Wrap(domain.ErrValidation, fmt.Sprintf("validation failed:\n%s", strings.Join(errorMessages, "\n")))
+			return fmt.Errorf("validation failed:\n%s", strings.Join(errorMessages, "\n"))
 		}
-		return errors.Wrap(domain.ErrValidation, err.Error())
+		return err
 	}
 	return nil
 }

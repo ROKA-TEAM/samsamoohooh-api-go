@@ -81,7 +81,7 @@ func main() {
 	topicHandler := handler.NewTopicHandler(topicService)
 
 	jwtService := token.NewJWTService(cfg)
-	tokenMiddleware := middleware.NewTokenMiddleware(jwtService)
+	guardMiddleware := middleware.NewGuardMiddleware(jwtService)
 
 	oauthGoogleService := google.NewOauthGoogleService(cfg, userService, jwtService)
 	oauthKakaoService := kakao.NewOauthKakaoService(cfg, userService, jwtService)
@@ -102,32 +102,32 @@ func main() {
 				authHandler.Route(auth)
 			}
 
-			users := api.Group("/users", tokenMiddleware.RequireAuthorization)
+			users := api.Group("/users", guardMiddleware.RequireAuthorization)
 			{
-				userHandler.Route(users)
+				userHandler.Route(users, guardMiddleware)
 			}
 
-			groups := api.Group("/groups", tokenMiddleware.RequireAuthorization)
+			groups := api.Group("/groups", guardMiddleware.RequireAuthorization)
 			{
 				groupHandler.Route(groups)
 			}
 
-			posts := api.Group("/posts", tokenMiddleware.RequireAuthorization)
+			posts := api.Group("/posts", guardMiddleware.RequireAuthorization)
 			{
 				postHandler.Route(posts)
 			}
 
-			comments := api.Group("/comments", tokenMiddleware.RequireAuthorization)
+			comments := api.Group("/comments", guardMiddleware.RequireAuthorization)
 			{
-				commentHandler.Route(comments)
+				commentHandler.Route(comments, guardMiddleware)
 			}
 
-			tasks := api.Group("/tasks", tokenMiddleware.RequireAuthorization)
+			tasks := api.Group("/tasks", guardMiddleware.RequireAuthorization)
 			{
 				taskHandler.Route(tasks)
 			}
 
-			topics := api.Group("/topics", tokenMiddleware.RequireAuthorization)
+			topics := api.Group("/topics", guardMiddleware.RequireAuthorization)
 			{
 				topicHandler.Route(topics)
 			}

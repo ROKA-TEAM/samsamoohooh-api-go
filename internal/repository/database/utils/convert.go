@@ -10,6 +10,7 @@ func ConvertDomainUser(user *ent.User) *domain.User {
 		ID:         user.ID,
 		Name:       user.Name,
 		Resolution: user.Resolution,
+		Role:       domain.UserRoleType(user.Role),
 		Social:     domain.UserSocialType(user.Social),
 		SocialSub:  user.SocialSub,
 		CreatedAt:  user.CreatedAt,

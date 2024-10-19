@@ -8,9 +8,9 @@ import (
 
 type customClaims struct {
 	jwt.RegisteredClaims
-	Subject int                  `json:"subject"`
-	Role    domain.TokenRoleType `json:"role"`
-	Type    domain.TokenType     `json:"type"`
+	Subject int                 `json:"subject"`
+	Role    domain.UserRoleType `json:"role"`
+	Type    domain.TokenType    `json:"type"`
 }
 
 func (c customClaims) toDomain() *domain.Token {

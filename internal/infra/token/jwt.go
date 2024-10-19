@@ -1,6 +1,7 @@
 package token
 
 import (
+	"fmt"
 	"github.com/pkg/errors"
 	"samsamoohooh-go-api/internal/domain"
 	"samsamoohooh-go-api/internal/infra/config"
@@ -21,7 +22,8 @@ func NewJWTService(config *config.Config) *JWTService {
 	}
 }
 
-func (s *JWTService) GenerateAccessTokenString(subject int, role domain.TokenRoleType) (string, error) {
+func (s *JWTService) GenerateAccessTokenString(subject int, role domain.UserRoleType) (string, error) {
+	fmt.Println("argRole: ", role)
 	now := time.Now()
 	expiresAt := now.Add(time.Duration(s.config.Token.Duration.Access.ValidityPeriod))
 	notBefore := now.Add(time.Duration(s.config.Token.Duration.Access.ActivationDelay))
@@ -47,7 +49,7 @@ func (s *JWTService) GenerateAccessTokenString(subject int, role domain.TokenRol
 	return tokenString, nil
 }
 
-func (s *JWTService) GenerateRefreshTokenString(subject int, role domain.TokenRoleType) (string, error) {
+func (s *JWTService) GenerateRefreshTokenString(subject int, role domain.UserRoleType) (string, error) {
 	now := time.Now()
 
 	expiresAt := now.Add(time.Duration(s.config.Token.Duration.Refresh.ValidityPeriod))

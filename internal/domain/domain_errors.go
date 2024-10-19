@@ -18,4 +18,8 @@ var (
 
 	ErrInternal      = errors.New("internal error")
 	ErrNotMatchState = errors.New("not match state")
+
+	ErrForbidden = errors.New("forbidden")
+
+	ErrParsing = errors.New("parsing error")
 )

@@ -4,6 +4,8 @@ import (
 	"samsamoohooh-go-api/internal/domain"
 	"strings"
 
+	"github.com/pkg/errors"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -37,7 +39,7 @@ func (m GuardMiddleware) RequireAuthorization(c *fiber.Ctx) error {
 	return c.Next()
 }
 
-func (m GuardMiddleware) RequireAccess(accessibleRoles ...domain.TokenRoleType) func(*fiber.Ctx) error {
+func (m GuardMiddleware) RequireAccess(accessibleRoles ...domain.UserRoleType) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		token, ok := c.Locals("token").(*domain.Token)
 		if !ok {
@@ -54,7 +56,7 @@ func (m GuardMiddleware) RequireAccess(accessibleRoles ...domain.TokenRoleType) 
 		}
 
 		if !isAccessible {
-			return fiber.ErrForbidden
+			return errors.Wrap(domain.ErrForbidden, "you are in possession of an inaccessible coin.")
 		}
 
 		return c.Next()
