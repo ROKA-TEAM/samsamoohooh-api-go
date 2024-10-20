@@ -32,6 +32,8 @@ type GroupRepository interface {
 	GetTasksByID(ctx context.Context, id int, offset, limit int) ([]*Task, error)
 	Update(ctx context.Context, id int, group *Group) (*Group, error)
 	Delete(ctx context.Context, id int) error
+
+	GetUsersLenByID(ctx context.Context, id int) (int, error)
 }
 
 type GroupService interface {
@@ -43,4 +45,6 @@ type GroupService interface {
 	GetTasksByID(ctx context.Context, id int, offset, limit int) ([]*Task, error)
 	Update(ctx context.Context, id int, group *Group) (*Group, error)
 	Delete(ctx context.Context, id int) error
+
+	StartDiscussion(ctx context.Context, groupID, taskID int) (topics []string, userNames []string, err error)
 }

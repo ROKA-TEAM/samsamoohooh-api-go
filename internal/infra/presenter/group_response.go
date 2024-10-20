@@ -188,3 +188,16 @@ func NewGroupUpdateResponse(group *domain.Group) *GroupUpdateResponse {
 		UpdatedAt:   group.UpdatedAt,
 	}
 }
+
+type GroupStartDiscussionResponse struct {
+	Topics []string `json:"topics"`
+	Users  []string `json:"users"`
+}
+
+func NewGruopStartDiscussionResponse(topics []string, users []string) *GroupStartDiscussionResponse {
+
+	return &GroupStartDiscussionResponse{
+		Topics: topics,
+		Users:  users,
+	}
+}

@@ -28,6 +28,8 @@ func (h *GroupHandler) Route(router fiber.Router, guard *middleware.GuardMiddlew
 	router.Get("/:id/tasks", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.GetTasksByID)
 	router.Put("/:id", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.Update)
 	router.Delete("/:id", guard.RequireAccess(domain.UserRoleAdmin), h.Delete)
+
+	router.Get("/:gid/tasks/:tid/discussion/start", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.StartDiscussion)
 }
 
 func (h *GroupHandler) Create(c *fiber.Ctx) error {
@@ -149,4 +151,23 @@ func (h *GroupHandler) Delete(c *fiber.Ctx) error {
 	}
 
 	return c.SendStatus(fiber.StatusNoContent)
+}
+
+func (h *GroupHandler) StartDiscussion(c *fiber.Ctx) error {
+	gid, err := c.ParamsInt("gid")
+	if err != nil {
+		return err
+	}
+
+	tid, err := c.ParamsInt("tid")
+	if err != nil {
+		return err
+	}
+
+	topics, userNames, err := h.groupService.StartDiscussion(c.Context(), gid, tid)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(presenter.NewGruopStartDiscussionResponse(topics, userNames))
 }
