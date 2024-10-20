@@ -81,6 +81,20 @@ func (s *GroupService) StartDiscussion(ctx context.Context, groupID, taskID int)
 		return nil, nil, err
 	}
 
+	// bookmark
+	gotTask, err := s.taskService.GetByID(ctx, taskID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// group bookmark 설정
+	_, err = s.groupRepository.Update(ctx, groupID, &domain.Group{
+		Bookmark: gotTask.Range,
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+
 	for _, queryTopic := range queriedTopics {
 		topics = append(topics, queryTopic.Topic)
 	}
