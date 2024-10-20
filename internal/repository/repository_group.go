@@ -150,3 +150,17 @@ func (r *GroupRepository) Delete(ctx context.Context, id int) error {
 
 	return nil
 }
+
+func (r *GroupRepository) GetUsersLenByID(ctx context.Context, id int) (int, error) {
+	cnt, err := r.database.Client.Group.
+		Query().
+		Where(groupent.ID(id)).
+		QueryUsers().
+		Count(ctx)
+
+	if err != nil {
+		return 0, utils.Wrap(err)
+	}
+
+	return cnt, nil
+}

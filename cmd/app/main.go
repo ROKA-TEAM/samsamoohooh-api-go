@@ -141,5 +141,4 @@ func main() {
 		log.Println(app.ListenTLS(cfg.HTTP.Port, cfg.HTTP.TLS.CertFilePath, cfg.HTTP.TLS.KeyFilePath))
 	}
 
-	// app.ListenTLS()
 }
