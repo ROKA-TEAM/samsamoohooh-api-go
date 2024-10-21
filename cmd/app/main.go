@@ -3,19 +3,19 @@ package main
 import (
 	"context"
 	"log"
-	"samsamoohooh-go-api/internal/handler"
-	"samsamoohooh-go-api/internal/infra/catcher"
+	"samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/handler"
+	"samsamoohooh-go-api/internal/application/repository"
+	"samsamoohooh-go-api/internal/application/repository/database"
+	"samsamoohooh-go-api/internal/application/service"
 	"samsamoohooh-go-api/internal/infra/config"
-	"samsamoohooh-go-api/internal/infra/logger"
-	"samsamoohooh-go-api/internal/infra/middleware"
-	"samsamoohooh-go-api/internal/infra/oauth/google"
-	"samsamoohooh-go-api/internal/infra/oauth/kakao"
-	"samsamoohooh-go-api/internal/infra/token"
-	"samsamoohooh-go-api/internal/repository"
-	"samsamoohooh-go-api/internal/repository/database"
-	"samsamoohooh-go-api/internal/service"
+	"samsamoohooh-go-api/internal/infra/middleware/guard"
+	"samsamoohooh-go-api/internal/infra/validator"
+	"samsamoohooh-go-api/pkg/oauth/google"
+	"samsamoohooh-go-api/pkg/oauth/kakao"
+	"samsamoohooh-go-api/pkg/token/jwt"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 func main() {
@@ -24,44 +24,35 @@ func main() {
 		log.Panicf("failed to load config: %v\n", err)
 	}
 
-	err = logger.Initialize(cfg)
-	if err != nil {
-		log.Panicf("failed to initialize logger: %v\n", err)
-	}
-	defer func() {
-		err := logger.Sync()
-		if err != nil {
-			log.Panicf("failed to sync logger: %v\n", err)
-		}
-	}()
-
-	logger.Get().Debug("success logger initialized")
-
 	db, err := database.NewDatabase(cfg)
 	if err != nil {
-		log.Panicf("failed to connect to database: %v\n", err)
+		log.Panicf("failed to connect database: %v\n", err)
 	}
-	defer func() {
+	// TODO: set time out
+	if db.AutoMigration(context.Background()) != nil {
+		log.Panicf("failed to auto migration: %v\n", err)
+	}
+	defer func(db *database.Database) {
 		err := db.Close()
 		if err != nil {
 			log.Panicf("failed to close database connection: %v\n", err)
 		}
-	}()
-
-	logger.Get().Debug("success connect to database")
-
-	if err := db.AutoMigration(context.Background()); err != nil {
-		log.Panicf("failed to auto migrate: %v\n", err)
-	}
-
-	logger.Get().Debug("success auto migrate")
+	}(db)
 
 	userRepository := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepository)
 	userHandler := handler.NewUserHandler(userService)
 
+	taskRepository := repository.NewTaskRepository(db)
+	taskService := service.NewTaskService(taskRepository)
+	taskHandler := handler.NewTaskHandler(taskService)
+
+	topicRepository := repository.NewTopicRepository(db)
+	topicService := service.NewTopicService(topicRepository)
+	topicHandler := handler.NewTopicHandler(topicService)
+
 	groupRepository := repository.NewGroupRepository(db)
-	groupService := service.NewGroupService(groupRepository)
+	groupService := service.NewGroupService(groupRepository, userService, taskService)
 	groupHandler := handler.NewGroupHandler(groupService)
 
 	postRepository := repository.NewPostRepository(db)
@@ -72,73 +63,100 @@ func main() {
 	commentService := service.NewCommentService(commentRepository)
 	commentHandler := handler.NewCommentHandler(commentService)
 
-	taskRepository := repository.NewTaskRepository(db)
-	taskService := service.NewTaskService(taskRepository)
-	taskHandler := handler.NewTaskHandler(taskService)
+	jwtService := jwt.NewService(cfg)
+	kakaoOauthService := kakao.NewService(jwtService, userService, cfg)
+	googleOauthService := google.NewService(jwtService, userService, cfg)
+	guardMiddleware := guard.NewMiddleware(jwtService, userService)
 
-	topicRepository := repository.NewTopicRepository(db)
-	topicService := service.NewTopicService(topicRepository)
-	topicHandler := handler.NewTopicHandler(topicService)
-
-	jwtService := token.NewJWTService(cfg)
-	guardMiddleware := middleware.NewGuardMiddleware(jwtService)
-
-	oauthGoogleService := google.NewOauthGoogleService(cfg, userService, jwtService)
-	oauthKakaoService := kakao.NewOauthKakaoService(cfg, userService, jwtService)
-	authHandler := handler.NewAuthHandler(oauthGoogleService, oauthKakaoService, jwtService)
-
-	logger.Get().Debug("success dependency injection")
+	authHandler := handler.NewAuthHandler(kakaoOauthService, googleOauthService, jwtService)
 
 	app := fiber.New(fiber.Config{
-		ErrorHandler: catcher.ErrorHandler,
+		StructValidator: validator.New(),
 	})
 
-	v1 := app.Group("/v1")
+	v1 := app.Group("v1")
 	{
 		api := v1.Group("/api")
 		{
+
 			auth := api.Group("/auth")
 			{
-				authHandler.Route(auth)
+				token := auth.Group("/token")
+				{
+					token.Post("/refresh", authHandler.Refresh)
+					token.Post("/validation", authHandler.Validation)
+				}
+
+				auth.Get("/google", authHandler.GetLoginURLOfGoogle)
+				auth.Get("/google/callback", authHandler.GoogleCallback)
+				auth.Get("/kakao", authHandler.GetLoginURLOfKakao)
+				auth.Get("/kakao/callback", authHandler.KaKaoCallback)
 			}
 
-			users := api.Group("/users", guardMiddleware.RequireAuthorization)
+			users := api.Group("/users")
 			{
-				userHandler.Route(users, guardMiddleware)
+				me := users.Group("/me", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
+				{
+					me.Get("/", userHandler.GetByMe)
+					me.Get("/groups", userHandler.GetGroupsByMe)
+					me.Put("/", userHandler.UpdateMe)
+					me.Delete("/", userHandler.DeleteMe)
+				}
 			}
 
-			groups := api.Group("/groups", guardMiddleware.RequireAuthorization)
+			groups := api.Group("/groups", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
 			{
-				groupHandler.Route(groups, guardMiddleware)
+				groups.Post("/", groupHandler.CreateGroup)
+				groups.Get("/:gid", groupHandler.GetByGroupID)
+				groups.Get("/:gid/users", groupHandler.GetUsersByGroupID)
+				groups.Get("/:gid/posts", groupHandler.GetPostsByGroupID)
+				groups.Get("/:gid/tasks", groupHandler.GetTasksByGroupID)
+				groups.Put("/:gid", groupHandler.UpdateGroup)
+				groups.Post("/:gid/tasks/:tid/discussion/start", groupHandler.StartDiscussion)
 			}
 
-			posts := api.Group("/posts", guardMiddleware.RequireAuthorization)
+			posts := api.Group("/posts", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
 			{
-				postHandler.Route(posts, guardMiddleware)
+				posts.Post("/", postHandler.CreatePost)
+				posts.Get("/:pid/comments", postHandler.GetCommentsByPostID)
+				posts.Put("/:pid", postHandler.UpdatePost)
+				posts.Delete("/:pid", postHandler.DeletePost)
 			}
 
 			comments := api.Group("/comments", guardMiddleware.RequireAuthorization)
 			{
-				commentHandler.Route(comments, guardMiddleware)
+				comments.Post("/", commentHandler.CreateComment)
+				comments.Get("/:cid", commentHandler.GetByCommentID)
+				comments.Put("/:cid", commentHandler.UpdateComment)
+				comments.Delete("/:cid", commentHandler.DeleteComment)
 			}
 
-			tasks := api.Group("/tasks", guardMiddleware.RequireAuthorization)
+			tasks := api.Group("/tasks", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
 			{
-				taskHandler.Route(tasks, guardMiddleware)
+				tasks.Post("/", taskHandler.CreateTask)
+				tasks.Get("/:tid/topics", taskHandler.GetTopicsByTaskID)
+				tasks.Put("/:tid", taskHandler.UpdateTask)
+				tasks.Delete("/:tid", taskHandler.DeleteTask)
 			}
 
-			topics := api.Group("/topics", guardMiddleware.RequireAuthorization)
+			topics := api.Group("/topics", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
 			{
-				topicHandler.Route(topics, guardMiddleware)
+				topics.Post("/", topicHandler.CreateTopic)
+				topics.Get("/:tid", topicHandler.GetByTopicID)
+				topics.Put("/:tid", topicHandler.UpdateTopic)
+				topics.Delete("/:tid", topicHandler.Delete)
 			}
+
 		}
 	}
 
-	logger.Get().Debug("success route api")
-	if cfg.HTTP.Development {
-		log.Println(app.Listen(cfg.HTTP.Port))
-	} else {
-		log.Println(app.ListenTLS(cfg.HTTP.Port, cfg.HTTP.TLS.CertFilePath, cfg.HTTP.TLS.KeyFilePath))
+	var listenConfig fiber.ListenConfig
+	if !cfg.HTTP.Development {
+		listenConfig = fiber.ListenConfig{
+			CertFile:    cfg.HTTP.TLS.CertFilePath,
+			CertKeyFile: cfg.HTTP.TLS.KeyFilePath,
+		}
 	}
 
+	log.Println(app.Listen(":8080", listenConfig))
 }
