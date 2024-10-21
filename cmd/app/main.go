@@ -10,6 +10,7 @@ import (
 	"samsamoohooh-go-api/internal/application/service"
 	"samsamoohooh-go-api/internal/infra/config"
 	"samsamoohooh-go-api/internal/infra/middleware/guard"
+	"samsamoohooh-go-api/internal/infra/validator"
 	"samsamoohooh-go-api/pkg/oauth/google"
 	"samsamoohooh-go-api/pkg/oauth/kakao"
 	"samsamoohooh-go-api/pkg/token/jwt"
@@ -69,7 +70,9 @@ func main() {
 
 	authHandler := handler.NewAuthHandler(kakaoOauthService, googleOauthService, jwtService)
 
-	app := fiber.New(fiber.Config{})
+	app := fiber.New(fiber.Config{
+		StructValidator: validator.New(),
+	})
 
 	v1 := app.Group("v1")
 	{
