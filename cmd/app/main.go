@@ -150,5 +150,13 @@ func main() {
 		}
 	}
 
-	log.Println(app.Listen(":8080"))
+	var listenConfig fiber.ListenConfig
+	if !cfg.HTTP.Development {
+		listenConfig = fiber.ListenConfig{
+			CertFile:    cfg.HTTP.TLS.CertFilePath,
+			CertKeyFile: cfg.HTTP.TLS.KeyFilePath,
+		}
+	}
+
+	log.Println(app.Listen(":8080", listenConfig))
 }
