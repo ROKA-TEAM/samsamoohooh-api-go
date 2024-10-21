@@ -74,7 +74,19 @@ func (m *Middleware) CheckGroupAccess(c fiber.Ctx) error {
 
 	gid := fiber.Params[int](c, "gid", -1)
 	if gid == -1 {
-		return fiber.NewError(fiber.StatusUnauthorized, "empty gid")
+		var body struct {
+			GroupID int `json:"groupID"`
+		}
+
+		if err := c.Bind().JSON(&body); err != nil {
+			return err
+		}
+
+		if body.GroupID < 1 {
+			return fiber.NewError(fiber.StatusUnauthorized, "empty gid")
+		}
+
+		gid = body.GroupID
 	}
 
 	isValid, err := m.userService.IsUserInGroup(c.Context(), t.Subject, gid)

@@ -65,7 +65,7 @@ func (h *GroupHandler) GetPostsByGroupID(c fiber.Ctx) error {
 	limit := fiber.Query[int](c, "limit", DefaultLimit)
 	offset := fiber.Query[int](c, "offset", DefaultOffset)
 
-	listPost, err := h.groupService.GetPostsByGroupID(c.Context(), gid, limit, offset)
+	listPost, err := h.groupService.GetPostsByGroupID(c.Context(), gid, offset, limit)
 	if err != nil {
 		return err
 	}

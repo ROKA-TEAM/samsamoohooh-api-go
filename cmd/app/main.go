@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/gofiber/fiber/v3"
 	"log"
 	"samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/application/handler"
@@ -14,6 +13,8 @@ import (
 	"samsamoohooh-go-api/pkg/oauth/google"
 	"samsamoohooh-go-api/pkg/oauth/kakao"
 	"samsamoohooh-go-api/pkg/token/jwt"
+
+	"github.com/gofiber/fiber/v3"
 )
 
 func main() {
@@ -47,6 +48,10 @@ func main() {
 	groupRepository := repository.NewGroupRepository(db)
 	groupService := service.NewGroupService(groupRepository, userService, taskService)
 	groupHandler := handler.NewGroupHandler(groupService)
+
+	postRepository := repository.NewPostRepository(db)
+	postService := service.NewPostService(postRepository)
+	postHandler := handler.NewPostHandler(postService)
 
 	jwtService := jwt.NewService(cfg)
 	kakaoOauthService := kakao.NewService(jwtService, userService, cfg)
@@ -90,12 +95,20 @@ func main() {
 			groups := api.Group("/groups", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
 			{
 				groups.Post("/", groupHandler.CreateGroup)
-				groups.Get("/:gid", groupHandler.GetByGroupID, guardMiddleware.CheckGroupAccess)
-				groups.Get("/:gid/users", groupHandler.GetUsersByGroupID, guardMiddleware.CheckGroupAccess)
-				groups.Get("/:gid/posts", groupHandler.GetPostsByGroupID, guardMiddleware.CheckGroupAccess)
-				groups.Get("/:gid/tasks", groupHandler.GetTasksByGroupID, guardMiddleware.CheckGroupAccess)
-				groups.Put("/:gid", groupHandler.UpdateGroup, guardMiddleware.CheckGroupAccess)
-				groups.Post("/:gid/tasks/:tid/discussion/start", groupHandler.StartDiscussion, guardMiddleware.CheckGroupAccess)
+				groups.Get("/:gid", groupHandler.GetByGroupID)
+				groups.Get("/:gid/users", groupHandler.GetUsersByGroupID)
+				groups.Get("/:gid/posts", groupHandler.GetPostsByGroupID)
+				groups.Get("/:gid/tasks", groupHandler.GetTasksByGroupID)
+				groups.Put("/:gid", groupHandler.UpdateGroup)
+				groups.Post("/:gid/tasks/:tid/discussion/start", groupHandler.StartDiscussion)
+			}
+
+			posts := api.Group("/posts", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
+			{
+				posts.Post("/", postHandler.CreatePost)
+				posts.Get("/:pid", postHandler.GetCommentsByPostID)
+				posts.Put("/:pid", postHandler.UpdatePost)
+				posts.Delete("/:pid", postHandler.DeletePost)
 			}
 		}
 	}

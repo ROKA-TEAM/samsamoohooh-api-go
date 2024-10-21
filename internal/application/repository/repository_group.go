@@ -79,10 +79,9 @@ func (r *GroupRepository) GetPostsByGroupID(ctx context.Context, id int, offset,
 	listPost, err := r.database.Client.Group.
 		Query().Where(groupent.ID(id)).
 		QueryPosts().
-		Offset(offset).
 		Limit(limit).
+		Offset(offset).
 		All(ctx)
-
 	if err != nil {
 		return nil, err
 	}
