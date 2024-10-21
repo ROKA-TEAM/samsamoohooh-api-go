@@ -5,7 +5,7 @@ import (
 	"samsamoohooh-go-api/internal/application/domain"
 )
 
-var _ domain.CommentRepository = (*CommentService)(nil)
+var _ domain.CommentService = (*CommentService)(nil)
 
 type CommentService struct {
 	commentRepository domain.CommentRepository

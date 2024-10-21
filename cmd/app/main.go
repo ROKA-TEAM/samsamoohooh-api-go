@@ -53,6 +53,10 @@ func main() {
 	postService := service.NewPostService(postRepository)
 	postHandler := handler.NewPostHandler(postService)
 
+	commentRepository := repository.NewCommentRepository(db)
+	commentService := service.NewCommentService(commentRepository)
+	commentHandler := handler.NewCommentHandler(commentService)
+
 	jwtService := jwt.NewService(cfg)
 	kakaoOauthService := kakao.NewService(jwtService, userService, cfg)
 	googleOauthService := google.NewService(jwtService, userService, cfg)
@@ -106,10 +110,19 @@ func main() {
 			posts := api.Group("/posts", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
 			{
 				posts.Post("/", postHandler.CreatePost)
-				posts.Get("/:pid", postHandler.GetCommentsByPostID)
+				posts.Get("/:pid/comments", postHandler.GetCommentsByPostID)
 				posts.Put("/:pid", postHandler.UpdatePost)
 				posts.Delete("/:pid", postHandler.DeletePost)
 			}
+
+			comments := api.Group("/comments", guardMiddleware.RequireAuthorization)
+			{
+				comments.Post("/", commentHandler.CreateComment)
+				comments.Get("/:cid", commentHandler.GetByCommentID)
+				comments.Put("/:cid", commentHandler.UpdateComment)
+				comments.Delete("/:cid", commentHandler.DeleteComment)
+			}
+
 		}
 	}
 

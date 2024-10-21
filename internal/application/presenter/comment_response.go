@@ -42,15 +42,15 @@ func NewCommentListResponse(comments []*domain.Comment) []*CommentListResponse {
 	return listComments
 }
 
-type CommentGetByIDResponse struct {
+type CommentGetByCommentID struct {
 	ID        int       `json:"id"`
 	Content   string    `json:"content"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func NewCommentGetByIDResponse(comment *domain.Comment) *CommentGetByIDResponse {
-	return &CommentGetByIDResponse{
+func NewCommentGetByCommentIDResponse(comment *domain.Comment) *CommentGetByCommentID {
+	return &CommentGetByCommentID{
 		ID:        comment.ID,
 		Content:   comment.Content,
 		CreatedAt: comment.CreatedAt,
