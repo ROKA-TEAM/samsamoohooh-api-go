@@ -164,3 +164,16 @@ func (r *GroupRepository) GetUsersLenByGroupID(ctx context.Context, id int) (int
 
 	return cnt, nil
 }
+
+func (r *GroupRepository) GetTasksLenByGroupID(ctx context.Context, id int) (int, error) {
+	cnt, err := r.database.Client.Group.
+		Query().
+		Where(groupent.ID(id)).
+		QueryTasks().
+		Count(ctx)
+	if err != nil {
+		return 0, err
+	}
+
+	return cnt, nil
+}

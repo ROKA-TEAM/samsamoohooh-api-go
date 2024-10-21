@@ -102,3 +102,17 @@ func (r *TaskRepository) DeleteTask(ctx context.Context, id int) error {
 
 	return nil
 }
+
+func (r *TaskRepository) GetTopicsLenByTaskID(ctx context.Context, id int) (int, error) {
+	cnt, err := r.database.Task.
+		Query().
+		Where(enttask.IDEQ(id)).
+		QueryTopics().
+		Count(ctx)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return cnt, nil
+}

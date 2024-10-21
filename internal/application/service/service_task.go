@@ -70,3 +70,12 @@ func (s *TaskService) DeleteTask(ctx context.Context, id int) error {
 
 	return nil
 }
+
+func (s *TaskService) GetTopicsLenByTaskID(ctx context.Context, id int) (int, error) {
+	topicsLen, err := s.taskRepository.GetTopicsLenByTaskID(ctx, id)
+	if err != nil {
+		return 0, err
+	}
+
+	return topicsLen, nil
+}

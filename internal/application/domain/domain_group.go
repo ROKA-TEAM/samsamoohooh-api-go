@@ -33,10 +33,11 @@ type GroupRepository interface {
 	UpdateGroup(ctx context.Context, id int, group *Group) (*Group, error)
 	DeleteGroup(ctx context.Context, id int) error
 	GetUsersLenByGroupID(ctx context.Context, id int) (int, error)
+	GetTasksLenByGroupID(ctx context.Context, id int) (int, error)
 }
 
 type GroupService interface {
-	CreateGroup(ctx context.Context, group *Group) (*Group, error)
+	CreateGroup(ctx context.Context, userID int, group *Group) (*Group, error)
 	GetGroups(ctx context.Context, offset, limit int) ([]*Group, error)
 	GetByGroupID(ctx context.Context, id int) (*Group, error)
 	GetUsersByGroupID(ctx context.Context, id int, offset, limit int) ([]*User, error)

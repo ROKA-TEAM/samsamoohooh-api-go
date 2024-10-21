@@ -27,6 +27,8 @@ type TaskRepository interface {
 	GetTopicsByTaskID(ctx context.Context, id, offset, limit int) ([]*Topic, error)
 	UpdateTask(ctx context.Context, id int, task *Task) (*Task, error)
 	DeleteTask(ctx context.Context, id int) error
+
+	GetTopicsLenByTaskID(ctx context.Context, id int) (int, error)
 }
 
 type TaskService interface {
@@ -36,4 +38,6 @@ type TaskService interface {
 	GetTopicsByTaskID(ctx context.Context, id, offset, limit int) ([]*Topic, error)
 	UpdateTask(ctx context.Context, id int, task *Task) (*Task, error)
 	DeleteTask(ctx context.Context, id int) error
+
+	GetTopicsLenByTaskID(ctx context.Context, id int) (int, error)
 }
