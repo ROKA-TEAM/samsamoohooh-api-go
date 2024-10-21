@@ -44,6 +44,7 @@ func main() {
 
 	taskRepository := repository.NewTaskRepository(db)
 	taskService := service.NewTaskService(taskRepository)
+	taskHandler := handler.NewTaskHandler(taskService)
 
 	groupRepository := repository.NewGroupRepository(db)
 	groupService := service.NewGroupService(groupRepository, userService, taskService)
@@ -121,6 +122,14 @@ func main() {
 				comments.Get("/:cid", commentHandler.GetByCommentID)
 				comments.Put("/:cid", commentHandler.UpdateComment)
 				comments.Delete("/:cid", commentHandler.DeleteComment)
+			}
+
+			tasks := api.Group("/tasks", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
+			{
+				tasks.Post("/", taskHandler.CreateTask)
+				tasks.Get("/:tid", taskHandler.GetByTaskID)
+				tasks.Put("/:tid", taskHandler.UpdateTask)
+				tasks.Delete("/:tid", taskHandler.DeleteTask)
 			}
 
 		}

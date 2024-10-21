@@ -45,7 +45,7 @@ func NewTaskListResponse(tasks []*domain2.Task) []*TaskListResponse {
 	return taskList
 }
 
-type TaskGetByIDResponse struct {
+type TaskGetByTaskID struct {
 	ID        int       `json:"id"`
 	Deadline  time.Time `json:"deadline"`
 	Range     int       `json:"range"`
@@ -53,8 +53,8 @@ type TaskGetByIDResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func NewTaskGetByIDResponse(task *domain2.Task) *TaskGetByIDResponse {
-	return &TaskGetByIDResponse{
+func NewTaskGetByTaskIDResponse(task *domain2.Task) *TaskGetByTaskID {
+	return &TaskGetByTaskID{
 		ID:        task.ID,
 		Deadline:  task.Deadline,
 		Range:     task.Range,
