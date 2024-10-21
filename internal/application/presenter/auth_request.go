@@ -1,4 +1,4 @@
-package v1
+package presenter
 
 type AuthValidationRequest struct {
 	AccessToken  string `json:"accessToken,omitempty"`

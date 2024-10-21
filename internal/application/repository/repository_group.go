@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	domain "samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/application/repository/database"
 	groupent "samsamoohooh-go-api/internal/application/repository/database/ent/group"
 	"samsamoohooh-go-api/internal/application/repository/database/utils"

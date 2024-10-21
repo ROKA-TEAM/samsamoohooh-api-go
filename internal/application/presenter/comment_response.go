@@ -1,4 +1,4 @@
-package v1
+package presenter
 
 import (
 	"samsamoohooh-go-api/internal/application/domain"

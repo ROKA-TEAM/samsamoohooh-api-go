@@ -48,6 +48,8 @@ type UserRepository interface {
 	GetUsers(ctx context.Context, limit, offset int) ([]*User, error)
 	UpdateUser(ctx context.Context, id int, user *User) (*User, error)
 	DeleteUser(ctx context.Context, id int) error
+
+	IsUserInGroup(ctx context.Context, userID, groupID int) (bool, error)
 }
 
 type UserService interface {
@@ -58,4 +60,6 @@ type UserService interface {
 	GetUsers(ctx context.Context, limit, offset int) ([]*User, error)
 	UpdateUser(ctx context.Context, id int, user *User) (*User, error)
 	DeleteUser(ctx context.Context, id int) error
+
+	IsUserInGroup(ctx context.Context, userID, groupID int) (bool, error)
 }

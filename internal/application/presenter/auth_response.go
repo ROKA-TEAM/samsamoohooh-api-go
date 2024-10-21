@@ -1,4 +1,4 @@
-package v1
+package presenter
 
 type GoogleCallbackResponse struct {
 	AccessToken  string `json:"access_token"`

@@ -79,3 +79,12 @@ func (s *UserService) DeleteUser(ctx context.Context, id int) error {
 
 	return nil
 }
+
+func (s *UserService) IsUserInGroup(ctx context.Context, userID, groupID int) (bool, error) {
+	isIn, err := s.userRepository.IsUserInGroup(ctx, userID, groupID)
+	if err != nil {
+		return false, err
+	}
+
+	return isIn, nil
+}

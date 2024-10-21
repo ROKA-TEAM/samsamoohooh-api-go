@@ -1,53 +1,45 @@
 package handler
 
 import (
-	domain2 "samsamoohooh-go-api/internal/application/domain"
-	utils2 "samsamoohooh-go-api/internal/application/handler/utils"
-	"samsamoohooh-go-api/internal/application/presenter/v1"
+	"samsamoohooh-go-api/internal/application/handler/utils"
+	"samsamoohooh-go-api/internal/application/presenter"
+	"samsamoohooh-go-api/pkg/oauth"
+	"samsamoohooh-go-api/pkg/token"
 	"time"
 
-	"github.com/pkg/errors"
-
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/session"
+	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/session"
 )
 
 var store = session.New(session.Config{
 	Expiration: time.Minute * 3,
 })
 
+const (
+	stateKey = "state"
+)
+
 type AuthHandler struct {
-	kakaoOauthService  domain2.OauthAuthorizationGrantService
-	googleOauthService domain2.OauthAuthorizationGrantService
-	tokenService       domain2.TokenService
+	kakaoOauthService  oauth.AuthorizationGrantCodeService
+	googleOauthService oauth.AuthorizationGrantCodeService
+	tokenService       token.Service
 }
 
 func NewAuthHandler(
-	googleOauthService domain2.OauthAuthorizationGrantService,
-	kakaoOauthService domain2.OauthAuthorizationGrantService,
-	tokenService domain2.TokenService,
-) *AuthHandler {
+	kakaoOauthService oauth.AuthorizationGrantCodeService,
+	googleOauthService oauth.AuthorizationGrantCodeService,
+	tokenService token.Service) *AuthHandler {
 	return &AuthHandler{
-		googleOauthService: googleOauthService,
 		kakaoOauthService:  kakaoOauthService,
+		googleOauthService: googleOauthService,
 		tokenService:       tokenService,
 	}
 }
 
-func (h *AuthHandler) Route(router fiber.Router) {
-	router.Post("/token/refresh", h.Refresh)
-	router.Post("/token/validation", h.Validation)
+func (h *AuthHandler) Validation(c fiber.Ctx) error {
+	body := new(presenter.AuthValidationRequest)
 
-	router.Get("/google", h.GetLoginURLOfGoogle)
-	router.Get("/google/callback", h.GoogleCallback)
-
-	router.Get("/kakao", h.GetLoginURLOfKakao)
-	router.Get("/kakao/callback", h.KaKaoCallback)
-}
-
-func (h *AuthHandler) Validation(c *fiber.Ctx) error {
-	body := new(v1.AuthValidationRequest)
-	if err := utils2.ParseAndVerify(c, body); err != nil {
+	if err := c.Bind().JSON(body); err != nil {
 		return err
 	}
 
@@ -72,9 +64,9 @@ func (h *AuthHandler) Validation(c *fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusNoContent)
 }
 
-func (h *AuthHandler) Refresh(c *fiber.Ctx) error {
-	body := new(v1.AuthRefreshRequest)
-	if err := utils2.ParseAndVerify(c, body); err != nil {
+func (h *AuthHandler) Refresh(c fiber.Ctx) error {
+	body := new(presenter.AuthRefreshRequest)
+	if err := c.Bind().JSON(body); err != nil {
 		return err
 	}
 
@@ -83,53 +75,53 @@ func (h *AuthHandler) Refresh(c *fiber.Ctx) error {
 		return err
 	}
 
-	token, err := h.tokenService.ParseToken(body.RefreshToken)
+	t, err := h.tokenService.ParseToken(body.RefreshToken)
 	if err != nil {
 		return err
 	}
 
-	accessToken, err := h.tokenService.GenerateAccessTokenString(token.Subject, token.Role)
+	accessToken, err := h.tokenService.GenerateAccessTokenString(t.Subject, t.Role)
 	if err != nil {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(&v1.AuthRefreshResponse{
+	return c.Status(fiber.StatusOK).JSON(&presenter.AuthRefreshResponse{
 		AccessToken: accessToken,
 	})
 }
 
-func (h *AuthHandler) GetLoginURLOfGoogle(c *fiber.Ctx) error {
+func (h *AuthHandler) GetLoginURLOfGoogle(c fiber.Ctx) error {
 	sess, err := store.Get(c)
 	if err != nil {
 		return err
 	}
 
-	state := utils2.GenerateState()
-	sess.Set("state", state)
+	state := utils.GenerateState()
+	sess.Set(stateKey, state)
 	err = sess.Save()
 	if err != nil {
 		return err
 	}
 
 	redirectURL := h.googleOauthService.GetLoginURL(state)
-	return c.Redirect(redirectURL, fiber.StatusTemporaryRedirect)
+	return c.Redirect().Status(fiber.StatusTemporaryRedirect).To(redirectURL)
 }
 
-func (h *AuthHandler) GoogleCallback(c *fiber.Ctx) error {
+func (h *AuthHandler) GoogleCallback(c fiber.Ctx) error {
 	sess, err := store.Get(c)
 	if err != nil {
 		return err
 	}
 
-	state := sess.Get("state")
-	sess.Delete("state")
+	state := sess.Get(stateKey)
+	sess.Delete(stateKey)
 	err = sess.Save()
 	if err != nil {
 		return err
 	}
 
-	if state != c.FormValue("state") {
-		return errors.Wrap(domain2.ErrNotMatchState, "invalid state")
+	if state != c.FormValue(stateKey) {
+		return fiber.NewError(fiber.StatusBadRequest, "invalid state")
 	}
 
 	accessToken, refreshToken, err := h.googleOauthService.AuthenticateOrRegister(c.Context(), c.FormValue("code"))
@@ -137,44 +129,44 @@ func (h *AuthHandler) GoogleCallback(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(&v1.GoogleCallbackResponse{
+	return c.Status(fiber.StatusOK).JSON(&presenter.GoogleCallbackResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	})
 }
 
-func (h *AuthHandler) GetLoginURLOfKakao(c *fiber.Ctx) error {
+func (h *AuthHandler) GetLoginURLOfKakao(c fiber.Ctx) error {
 	sess, err := store.Get(c)
 	if err != nil {
 		return err
 	}
 
-	state := utils2.GenerateState()
-	sess.Set("state", state)
+	state := utils.GenerateState()
+	sess.Set(stateKey, state)
 	err = sess.Save()
 	if err != nil {
 		return err
 	}
 
 	redirectURL := h.kakaoOauthService.GetLoginURL(state)
-	return c.Redirect(redirectURL, fiber.StatusTemporaryRedirect)
+	return c.Redirect().Status(fiber.StatusTemporaryRedirect).To(redirectURL)
 }
 
-func (h *AuthHandler) KaKaoCallback(c *fiber.Ctx) error {
+func (h *AuthHandler) KaKaoCallback(c fiber.Ctx) error {
 	sess, err := store.Get(c)
 	if err != nil {
 		return err
 	}
 
-	state := sess.Get("state")
-	sess.Delete("state")
+	state := sess.Get(stateKey)
+	sess.Delete(stateKey)
 	err = sess.Save()
 	if err != nil {
 		return err
 	}
 
-	if state != c.FormValue("state") {
-		return errors.Wrap(domain2.ErrNotMatchState, "invalid state")
+	if state != c.FormValue(stateKey) {
+		return fiber.NewError(fiber.StatusBadRequest, "invalid state")
 	}
 
 	accessToken, refreshToken, err := h.kakaoOauthService.AuthenticateOrRegister(c.Context(), c.FormValue("code"))
@@ -182,7 +174,7 @@ func (h *AuthHandler) KaKaoCallback(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(&v1.KaKaoCallbackResponse{
+	return c.Status(fiber.StatusOK).JSON(&presenter.KaKaoCallbackResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	})

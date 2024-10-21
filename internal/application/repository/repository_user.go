@@ -4,6 +4,7 @@ import (
 	"context"
 	"samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/application/repository/database"
+	entgroup "samsamoohooh-go-api/internal/application/repository/database/ent/group"
 	entuser "samsamoohooh-go-api/internal/application/repository/database/ent/user"
 	"samsamoohooh-go-api/internal/application/repository/database/utils"
 )
@@ -126,4 +127,19 @@ func (r *UserRepository) DeleteUser(ctx context.Context, id int) error {
 	}
 
 	return nil
+}
+
+func (r *UserRepository) IsUserInGroup(ctx context.Context, userID, groupID int) (bool, error) {
+	cnt, err := r.database.User.
+		Query().
+		Where(entuser.IDEQ(userID)).
+		QueryGroups().
+		Where(entgroup.IDEQ(groupID)).
+		Count(ctx)
+
+	if err != nil {
+		return false, err
+	}
+
+	return cnt > 0, nil
 }
