@@ -37,26 +37,6 @@ func (gu *GroupUpdate) SetUpdatedAt(t time.Time) *GroupUpdate {
 	return gu
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (gu *GroupUpdate) SetDeleteAt(t time.Time) *GroupUpdate {
-	gu.mutation.SetDeleteAt(t)
-	return gu
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (gu *GroupUpdate) SetNillableDeleteAt(t *time.Time) *GroupUpdate {
-	if t != nil {
-		gu.SetDeleteAt(*t)
-	}
-	return gu
-}
-
-// ClearDeleteAt clears the value of the "delete_at" field.
-func (gu *GroupUpdate) ClearDeleteAt() *GroupUpdate {
-	gu.mutation.ClearDeleteAt()
-	return gu
-}
-
 // SetBookTitle sets the "book_title" field.
 func (gu *GroupUpdate) SetBookTitle(s string) *GroupUpdate {
 	gu.mutation.SetBookTitle(s)
@@ -270,9 +250,7 @@ func (gu *GroupUpdate) RemoveTasks(t ...*Task) *GroupUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (gu *GroupUpdate) Save(ctx context.Context) (int, error) {
-	if err := gu.defaults(); err != nil {
-		return 0, err
-	}
+	gu.defaults()
 	return withHooks(ctx, gu.sqlSave, gu.mutation, gu.hooks)
 }
 
@@ -299,15 +277,11 @@ func (gu *GroupUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (gu *GroupUpdate) defaults() error {
+func (gu *GroupUpdate) defaults() {
 	if _, ok := gu.mutation.UpdatedAt(); !ok {
-		if group.UpdateDefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized group.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := group.UpdateDefaultUpdatedAt()
 		gu.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 func (gu *GroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -321,12 +295,6 @@ func (gu *GroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := gu.mutation.UpdatedAt(); ok {
 		_spec.SetField(group.FieldUpdatedAt, field.TypeTime, value)
-	}
-	if value, ok := gu.mutation.DeleteAt(); ok {
-		_spec.SetField(group.FieldDeleteAt, field.TypeTime, value)
-	}
-	if gu.mutation.DeleteAtCleared() {
-		_spec.ClearField(group.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := gu.mutation.BookTitle(); ok {
 		_spec.SetField(group.FieldBookTitle, field.TypeString, value)
@@ -510,26 +478,6 @@ type GroupUpdateOne struct {
 // SetUpdatedAt sets the "updated_at" field.
 func (guo *GroupUpdateOne) SetUpdatedAt(t time.Time) *GroupUpdateOne {
 	guo.mutation.SetUpdatedAt(t)
-	return guo
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (guo *GroupUpdateOne) SetDeleteAt(t time.Time) *GroupUpdateOne {
-	guo.mutation.SetDeleteAt(t)
-	return guo
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (guo *GroupUpdateOne) SetNillableDeleteAt(t *time.Time) *GroupUpdateOne {
-	if t != nil {
-		guo.SetDeleteAt(*t)
-	}
-	return guo
-}
-
-// ClearDeleteAt clears the value of the "delete_at" field.
-func (guo *GroupUpdateOne) ClearDeleteAt() *GroupUpdateOne {
-	guo.mutation.ClearDeleteAt()
 	return guo
 }
 
@@ -759,9 +707,7 @@ func (guo *GroupUpdateOne) Select(field string, fields ...string) *GroupUpdateOn
 
 // Save executes the query and returns the updated Group entity.
 func (guo *GroupUpdateOne) Save(ctx context.Context) (*Group, error) {
-	if err := guo.defaults(); err != nil {
-		return nil, err
-	}
+	guo.defaults()
 	return withHooks(ctx, guo.sqlSave, guo.mutation, guo.hooks)
 }
 
@@ -788,15 +734,11 @@ func (guo *GroupUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (guo *GroupUpdateOne) defaults() error {
+func (guo *GroupUpdateOne) defaults() {
 	if _, ok := guo.mutation.UpdatedAt(); !ok {
-		if group.UpdateDefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized group.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := group.UpdateDefaultUpdatedAt()
 		guo.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 func (guo *GroupUpdateOne) sqlSave(ctx context.Context) (_node *Group, err error) {
@@ -827,12 +769,6 @@ func (guo *GroupUpdateOne) sqlSave(ctx context.Context) (_node *Group, err error
 	}
 	if value, ok := guo.mutation.UpdatedAt(); ok {
 		_spec.SetField(group.FieldUpdatedAt, field.TypeTime, value)
-	}
-	if value, ok := guo.mutation.DeleteAt(); ok {
-		_spec.SetField(group.FieldDeleteAt, field.TypeTime, value)
-	}
-	if guo.mutation.DeleteAtCleared() {
-		_spec.ClearField(group.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := guo.mutation.BookTitle(); ok {
 		_spec.SetField(group.FieldBookTitle, field.TypeString, value)

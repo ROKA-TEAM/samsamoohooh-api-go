@@ -14,7 +14,6 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
-		{Name: "delete_at", Type: field.TypeTime, Nullable: true},
 		{Name: "content", Type: field.TypeString},
 		{Name: "post_comments", Type: field.TypeInt, Nullable: true},
 		{Name: "user_comments", Type: field.TypeInt, Nullable: true},
@@ -27,13 +26,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "comments_posts_comments",
-				Columns:    []*schema.Column{CommentsColumns[5]},
+				Columns:    []*schema.Column{CommentsColumns[4]},
 				RefColumns: []*schema.Column{PostsColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "comments_users_comments",
-				Columns:    []*schema.Column{CommentsColumns[6]},
+				Columns:    []*schema.Column{CommentsColumns[5]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
@@ -44,7 +43,6 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
-		{Name: "delete_at", Type: field.TypeTime, Nullable: true},
 		{Name: "book_title", Type: field.TypeString},
 		{Name: "author", Type: field.TypeString},
 		{Name: "max_page", Type: field.TypeInt},
@@ -63,7 +61,6 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
-		{Name: "delete_at", Type: field.TypeTime, Nullable: true},
 		{Name: "title", Type: field.TypeString},
 		{Name: "content", Type: field.TypeString},
 		{Name: "group_posts", Type: field.TypeInt, Nullable: true},
@@ -77,13 +74,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "posts_groups_posts",
-				Columns:    []*schema.Column{PostsColumns[6]},
+				Columns:    []*schema.Column{PostsColumns[5]},
 				RefColumns: []*schema.Column{GroupsColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "posts_users_posts",
-				Columns:    []*schema.Column{PostsColumns[7]},
+				Columns:    []*schema.Column{PostsColumns[6]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
@@ -94,7 +91,6 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
-		{Name: "delete_at", Type: field.TypeTime, Nullable: true},
 		{Name: "deadline", Type: field.TypeTime},
 		{Name: "range", Type: field.TypeInt},
 		{Name: "group_tasks", Type: field.TypeInt, Nullable: true},
@@ -107,7 +103,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "tasks_groups_tasks",
-				Columns:    []*schema.Column{TasksColumns[6]},
+				Columns:    []*schema.Column{TasksColumns[5]},
 				RefColumns: []*schema.Column{GroupsColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
@@ -118,7 +114,6 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
-		{Name: "delete_at", Type: field.TypeTime, Nullable: true},
 		{Name: "topic", Type: field.TypeString},
 		{Name: "feeling", Type: field.TypeString},
 		{Name: "task_topics", Type: field.TypeInt, Nullable: true},
@@ -132,13 +127,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "topics_tasks_topics",
-				Columns:    []*schema.Column{TopicsColumns[6]},
+				Columns:    []*schema.Column{TopicsColumns[5]},
 				RefColumns: []*schema.Column{TasksColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "topics_users_topics",
-				Columns:    []*schema.Column{TopicsColumns[7]},
+				Columns:    []*schema.Column{TopicsColumns[6]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
@@ -149,7 +144,6 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
-		{Name: "delete_at", Type: field.TypeTime, Nullable: true},
 		{Name: "name", Type: field.TypeString},
 		{Name: "resolution", Type: field.TypeString},
 		{Name: "role", Type: field.TypeEnum, Enums: []string{"ADMIN", "MANAGER", "USER"}},

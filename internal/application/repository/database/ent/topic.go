@@ -23,8 +23,6 @@ type Topic struct {
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	// DeleteAt holds the value of the "delete_at" field.
-	DeleteAt time.Time `json:"delete_at,omitempty"`
 	// Topic holds the value of the "topic" field.
 	Topic string `json:"topic,omitempty"`
 	// Feeling holds the value of the "feeling" field.
@@ -79,7 +77,7 @@ func (*Topic) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullInt64)
 		case topic.FieldTopic, topic.FieldFeeling:
 			values[i] = new(sql.NullString)
-		case topic.FieldCreatedAt, topic.FieldUpdatedAt, topic.FieldDeleteAt:
+		case topic.FieldCreatedAt, topic.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
 		case topic.ForeignKeys[0]: // task_topics
 			values[i] = new(sql.NullInt64)
@@ -117,12 +115,6 @@ func (t *Topic) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
 				t.UpdatedAt = value.Time
-			}
-		case topic.FieldDeleteAt:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field delete_at", values[i])
-			} else if value.Valid {
-				t.DeleteAt = value.Time
 			}
 		case topic.FieldTopic:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -201,9 +193,6 @@ func (t *Topic) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
 	builder.WriteString(t.UpdatedAt.Format(time.ANSIC))
-	builder.WriteString(", ")
-	builder.WriteString("delete_at=")
-	builder.WriteString(t.DeleteAt.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("topic=")
 	builder.WriteString(t.Topic)

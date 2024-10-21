@@ -36,26 +36,6 @@ func (tu *TopicUpdate) SetUpdatedAt(t time.Time) *TopicUpdate {
 	return tu
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (tu *TopicUpdate) SetDeleteAt(t time.Time) *TopicUpdate {
-	tu.mutation.SetDeleteAt(t)
-	return tu
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (tu *TopicUpdate) SetNillableDeleteAt(t *time.Time) *TopicUpdate {
-	if t != nil {
-		tu.SetDeleteAt(*t)
-	}
-	return tu
-}
-
-// ClearDeleteAt clears the value of the "delete_at" field.
-func (tu *TopicUpdate) ClearDeleteAt() *TopicUpdate {
-	tu.mutation.ClearDeleteAt()
-	return tu
-}
-
 // SetTopic sets the "topic" field.
 func (tu *TopicUpdate) SetTopic(s string) *TopicUpdate {
 	tu.mutation.SetTopic(s)
@@ -141,9 +121,7 @@ func (tu *TopicUpdate) ClearTask() *TopicUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (tu *TopicUpdate) Save(ctx context.Context) (int, error) {
-	if err := tu.defaults(); err != nil {
-		return 0, err
-	}
+	tu.defaults()
 	return withHooks(ctx, tu.sqlSave, tu.mutation, tu.hooks)
 }
 
@@ -170,15 +148,11 @@ func (tu *TopicUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (tu *TopicUpdate) defaults() error {
+func (tu *TopicUpdate) defaults() {
 	if _, ok := tu.mutation.UpdatedAt(); !ok {
-		if topic.UpdateDefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized topic.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := topic.UpdateDefaultUpdatedAt()
 		tu.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 func (tu *TopicUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -192,12 +166,6 @@ func (tu *TopicUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := tu.mutation.UpdatedAt(); ok {
 		_spec.SetField(topic.FieldUpdatedAt, field.TypeTime, value)
-	}
-	if value, ok := tu.mutation.DeleteAt(); ok {
-		_spec.SetField(topic.FieldDeleteAt, field.TypeTime, value)
-	}
-	if tu.mutation.DeleteAtCleared() {
-		_spec.ClearField(topic.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := tu.mutation.Topic(); ok {
 		_spec.SetField(topic.FieldTopic, field.TypeString, value)
@@ -286,26 +254,6 @@ type TopicUpdateOne struct {
 // SetUpdatedAt sets the "updated_at" field.
 func (tuo *TopicUpdateOne) SetUpdatedAt(t time.Time) *TopicUpdateOne {
 	tuo.mutation.SetUpdatedAt(t)
-	return tuo
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (tuo *TopicUpdateOne) SetDeleteAt(t time.Time) *TopicUpdateOne {
-	tuo.mutation.SetDeleteAt(t)
-	return tuo
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (tuo *TopicUpdateOne) SetNillableDeleteAt(t *time.Time) *TopicUpdateOne {
-	if t != nil {
-		tuo.SetDeleteAt(*t)
-	}
-	return tuo
-}
-
-// ClearDeleteAt clears the value of the "delete_at" field.
-func (tuo *TopicUpdateOne) ClearDeleteAt() *TopicUpdateOne {
-	tuo.mutation.ClearDeleteAt()
 	return tuo
 }
 
@@ -407,9 +355,7 @@ func (tuo *TopicUpdateOne) Select(field string, fields ...string) *TopicUpdateOn
 
 // Save executes the query and returns the updated Topic entity.
 func (tuo *TopicUpdateOne) Save(ctx context.Context) (*Topic, error) {
-	if err := tuo.defaults(); err != nil {
-		return nil, err
-	}
+	tuo.defaults()
 	return withHooks(ctx, tuo.sqlSave, tuo.mutation, tuo.hooks)
 }
 
@@ -436,15 +382,11 @@ func (tuo *TopicUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (tuo *TopicUpdateOne) defaults() error {
+func (tuo *TopicUpdateOne) defaults() {
 	if _, ok := tuo.mutation.UpdatedAt(); !ok {
-		if topic.UpdateDefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized topic.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := topic.UpdateDefaultUpdatedAt()
 		tuo.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 func (tuo *TopicUpdateOne) sqlSave(ctx context.Context) (_node *Topic, err error) {
@@ -475,12 +417,6 @@ func (tuo *TopicUpdateOne) sqlSave(ctx context.Context) (_node *Topic, err error
 	}
 	if value, ok := tuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(topic.FieldUpdatedAt, field.TypeTime, value)
-	}
-	if value, ok := tuo.mutation.DeleteAt(); ok {
-		_spec.SetField(topic.FieldDeleteAt, field.TypeTime, value)
-	}
-	if tuo.mutation.DeleteAtCleared() {
-		_spec.ClearField(topic.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := tuo.mutation.Topic(); ok {
 		_spec.SetField(topic.FieldTopic, field.TypeString, value)

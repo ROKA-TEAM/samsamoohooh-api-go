@@ -50,20 +50,6 @@ func (cc *CommentCreate) SetNillableUpdatedAt(t *time.Time) *CommentCreate {
 	return cc
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (cc *CommentCreate) SetDeleteAt(t time.Time) *CommentCreate {
-	cc.mutation.SetDeleteAt(t)
-	return cc
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (cc *CommentCreate) SetNillableDeleteAt(t *time.Time) *CommentCreate {
-	if t != nil {
-		cc.SetDeleteAt(*t)
-	}
-	return cc
-}
-
 // SetContent sets the "content" field.
 func (cc *CommentCreate) SetContent(s string) *CommentCreate {
 	cc.mutation.SetContent(s)
@@ -115,9 +101,7 @@ func (cc *CommentCreate) Mutation() *CommentMutation {
 
 // Save creates the Comment in the database.
 func (cc *CommentCreate) Save(ctx context.Context) (*Comment, error) {
-	if err := cc.defaults(); err != nil {
-		return nil, err
-	}
+	cc.defaults()
 	return withHooks(ctx, cc.sqlSave, cc.mutation, cc.hooks)
 }
 
@@ -144,22 +128,15 @@ func (cc *CommentCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (cc *CommentCreate) defaults() error {
+func (cc *CommentCreate) defaults() {
 	if _, ok := cc.mutation.CreatedAt(); !ok {
-		if comment.DefaultCreatedAt == nil {
-			return fmt.Errorf("ent: uninitialized comment.DefaultCreatedAt (forgotten import ent/runtime?)")
-		}
 		v := comment.DefaultCreatedAt()
 		cc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := cc.mutation.UpdatedAt(); !ok {
-		if comment.DefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized comment.DefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := comment.DefaultUpdatedAt()
 		cc.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -206,10 +183,6 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 	if value, ok := cc.mutation.UpdatedAt(); ok {
 		_spec.SetField(comment.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
-	}
-	if value, ok := cc.mutation.DeleteAt(); ok {
-		_spec.SetField(comment.FieldDeleteAt, field.TypeTime, value)
-		_node.DeleteAt = value
 	}
 	if value, ok := cc.mutation.Content(); ok {
 		_spec.SetField(comment.FieldContent, field.TypeString, value)

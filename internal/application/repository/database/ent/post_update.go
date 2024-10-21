@@ -37,26 +37,6 @@ func (pu *PostUpdate) SetUpdatedAt(t time.Time) *PostUpdate {
 	return pu
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (pu *PostUpdate) SetDeleteAt(t time.Time) *PostUpdate {
-	pu.mutation.SetDeleteAt(t)
-	return pu
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (pu *PostUpdate) SetNillableDeleteAt(t *time.Time) *PostUpdate {
-	if t != nil {
-		pu.SetDeleteAt(*t)
-	}
-	return pu
-}
-
-// ClearDeleteAt clears the value of the "delete_at" field.
-func (pu *PostUpdate) ClearDeleteAt() *PostUpdate {
-	pu.mutation.ClearDeleteAt()
-	return pu
-}
-
 // SetTitle sets the "title" field.
 func (pu *PostUpdate) SetTitle(s string) *PostUpdate {
 	pu.mutation.SetTitle(s)
@@ -178,9 +158,7 @@ func (pu *PostUpdate) ClearGroup() *PostUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (pu *PostUpdate) Save(ctx context.Context) (int, error) {
-	if err := pu.defaults(); err != nil {
-		return 0, err
-	}
+	pu.defaults()
 	return withHooks(ctx, pu.sqlSave, pu.mutation, pu.hooks)
 }
 
@@ -207,15 +185,11 @@ func (pu *PostUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (pu *PostUpdate) defaults() error {
+func (pu *PostUpdate) defaults() {
 	if _, ok := pu.mutation.UpdatedAt(); !ok {
-		if post.UpdateDefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized post.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := post.UpdateDefaultUpdatedAt()
 		pu.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 func (pu *PostUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -229,12 +203,6 @@ func (pu *PostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := pu.mutation.UpdatedAt(); ok {
 		_spec.SetField(post.FieldUpdatedAt, field.TypeTime, value)
-	}
-	if value, ok := pu.mutation.DeleteAt(); ok {
-		_spec.SetField(post.FieldDeleteAt, field.TypeTime, value)
-	}
-	if pu.mutation.DeleteAtCleared() {
-		_spec.ClearField(post.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := pu.mutation.Title(); ok {
 		_spec.SetField(post.FieldTitle, field.TypeString, value)
@@ -368,26 +336,6 @@ type PostUpdateOne struct {
 // SetUpdatedAt sets the "updated_at" field.
 func (puo *PostUpdateOne) SetUpdatedAt(t time.Time) *PostUpdateOne {
 	puo.mutation.SetUpdatedAt(t)
-	return puo
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (puo *PostUpdateOne) SetDeleteAt(t time.Time) *PostUpdateOne {
-	puo.mutation.SetDeleteAt(t)
-	return puo
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (puo *PostUpdateOne) SetNillableDeleteAt(t *time.Time) *PostUpdateOne {
-	if t != nil {
-		puo.SetDeleteAt(*t)
-	}
-	return puo
-}
-
-// ClearDeleteAt clears the value of the "delete_at" field.
-func (puo *PostUpdateOne) ClearDeleteAt() *PostUpdateOne {
-	puo.mutation.ClearDeleteAt()
 	return puo
 }
 
@@ -525,9 +473,7 @@ func (puo *PostUpdateOne) Select(field string, fields ...string) *PostUpdateOne 
 
 // Save executes the query and returns the updated Post entity.
 func (puo *PostUpdateOne) Save(ctx context.Context) (*Post, error) {
-	if err := puo.defaults(); err != nil {
-		return nil, err
-	}
+	puo.defaults()
 	return withHooks(ctx, puo.sqlSave, puo.mutation, puo.hooks)
 }
 
@@ -554,15 +500,11 @@ func (puo *PostUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (puo *PostUpdateOne) defaults() error {
+func (puo *PostUpdateOne) defaults() {
 	if _, ok := puo.mutation.UpdatedAt(); !ok {
-		if post.UpdateDefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized post.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := post.UpdateDefaultUpdatedAt()
 		puo.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 func (puo *PostUpdateOne) sqlSave(ctx context.Context) (_node *Post, err error) {
@@ -593,12 +535,6 @@ func (puo *PostUpdateOne) sqlSave(ctx context.Context) (_node *Post, err error) 
 	}
 	if value, ok := puo.mutation.UpdatedAt(); ok {
 		_spec.SetField(post.FieldUpdatedAt, field.TypeTime, value)
-	}
-	if value, ok := puo.mutation.DeleteAt(); ok {
-		_spec.SetField(post.FieldDeleteAt, field.TypeTime, value)
-	}
-	if puo.mutation.DeleteAtCleared() {
-		_spec.ClearField(post.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := puo.mutation.Title(); ok {
 		_spec.SetField(post.FieldTitle, field.TypeString, value)

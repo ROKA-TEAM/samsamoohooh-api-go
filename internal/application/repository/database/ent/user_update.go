@@ -38,26 +38,6 @@ func (uu *UserUpdate) SetUpdatedAt(t time.Time) *UserUpdate {
 	return uu
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (uu *UserUpdate) SetDeleteAt(t time.Time) *UserUpdate {
-	uu.mutation.SetDeleteAt(t)
-	return uu
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableDeleteAt(t *time.Time) *UserUpdate {
-	if t != nil {
-		uu.SetDeleteAt(*t)
-	}
-	return uu
-}
-
-// ClearDeleteAt clears the value of the "delete_at" field.
-func (uu *UserUpdate) ClearDeleteAt() *UserUpdate {
-	uu.mutation.ClearDeleteAt()
-	return uu
-}
-
 // SetName sets the "name" field.
 func (uu *UserUpdate) SetName(s string) *UserUpdate {
 	uu.mutation.SetName(s)
@@ -279,9 +259,7 @@ func (uu *UserUpdate) RemoveTopics(t ...*Topic) *UserUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (uu *UserUpdate) Save(ctx context.Context) (int, error) {
-	if err := uu.defaults(); err != nil {
-		return 0, err
-	}
+	uu.defaults()
 	return withHooks(ctx, uu.sqlSave, uu.mutation, uu.hooks)
 }
 
@@ -308,15 +286,11 @@ func (uu *UserUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (uu *UserUpdate) defaults() error {
+func (uu *UserUpdate) defaults() {
 	if _, ok := uu.mutation.UpdatedAt(); !ok {
-		if user.UpdateDefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized user.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := user.UpdateDefaultUpdatedAt()
 		uu.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -348,12 +322,6 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := uu.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
-	}
-	if value, ok := uu.mutation.DeleteAt(); ok {
-		_spec.SetField(user.FieldDeleteAt, field.TypeTime, value)
-	}
-	if uu.mutation.DeleteAtCleared() {
-		_spec.ClearField(user.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := uu.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
@@ -573,26 +541,6 @@ type UserUpdateOne struct {
 // SetUpdatedAt sets the "updated_at" field.
 func (uuo *UserUpdateOne) SetUpdatedAt(t time.Time) *UserUpdateOne {
 	uuo.mutation.SetUpdatedAt(t)
-	return uuo
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (uuo *UserUpdateOne) SetDeleteAt(t time.Time) *UserUpdateOne {
-	uuo.mutation.SetDeleteAt(t)
-	return uuo
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableDeleteAt(t *time.Time) *UserUpdateOne {
-	if t != nil {
-		uuo.SetDeleteAt(*t)
-	}
-	return uuo
-}
-
-// ClearDeleteAt clears the value of the "delete_at" field.
-func (uuo *UserUpdateOne) ClearDeleteAt() *UserUpdateOne {
-	uuo.mutation.ClearDeleteAt()
 	return uuo
 }
 
@@ -830,9 +778,7 @@ func (uuo *UserUpdateOne) Select(field string, fields ...string) *UserUpdateOne 
 
 // Save executes the query and returns the updated User entity.
 func (uuo *UserUpdateOne) Save(ctx context.Context) (*User, error) {
-	if err := uuo.defaults(); err != nil {
-		return nil, err
-	}
+	uuo.defaults()
 	return withHooks(ctx, uuo.sqlSave, uuo.mutation, uuo.hooks)
 }
 
@@ -859,15 +805,11 @@ func (uuo *UserUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (uuo *UserUpdateOne) defaults() error {
+func (uuo *UserUpdateOne) defaults() {
 	if _, ok := uuo.mutation.UpdatedAt(); !ok {
-		if user.UpdateDefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized user.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := user.UpdateDefaultUpdatedAt()
 		uuo.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -916,12 +858,6 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if value, ok := uuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
-	}
-	if value, ok := uuo.mutation.DeleteAt(); ok {
-		_spec.SetField(user.FieldDeleteAt, field.TypeTime, value)
-	}
-	if uuo.mutation.DeleteAtCleared() {
-		_spec.ClearField(user.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := uuo.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)

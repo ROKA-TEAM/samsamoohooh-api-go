@@ -5,7 +5,6 @@ package topic
 import (
 	"time"
 
-	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 )
@@ -19,8 +18,6 @@ const (
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
 	FieldUpdatedAt = "updated_at"
-	// FieldDeleteAt holds the string denoting the delete_at field in the database.
-	FieldDeleteAt = "delete_at"
 	// FieldTopic holds the string denoting the topic field in the database.
 	FieldTopic = "topic"
 	// FieldFeeling holds the string denoting the feeling field in the database.
@@ -52,7 +49,6 @@ var Columns = []string{
 	FieldID,
 	FieldCreatedAt,
 	FieldUpdatedAt,
-	FieldDeleteAt,
 	FieldTopic,
 	FieldFeeling,
 }
@@ -79,14 +75,7 @@ func ValidColumn(column string) bool {
 	return false
 }
 
-// Note that the variables below are initialized by the runtime
-// package on the initialization of the application. Therefore,
-// it should be imported in the main as follows:
-//
-//	import _ "samsamoohooh-go-api/internal/application/repository/database/ent/runtime"
 var (
-	Hooks        [1]ent.Hook
-	Interceptors [1]ent.Interceptor
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
@@ -111,11 +100,6 @@ func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByUpdatedAt orders the results by the updated_at field.
 func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
-}
-
-// ByDeleteAt orders the results by the delete_at field.
-func ByDeleteAt(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldDeleteAt, opts...).ToFunc()
 }
 
 // ByTopic orders the results by the topic field.

@@ -22,8 +22,6 @@ type Task struct {
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	// DeleteAt holds the value of the "delete_at" field.
-	DeleteAt time.Time `json:"delete_at,omitempty"`
 	// Deadline holds the value of the "deadline" field.
 	Deadline time.Time `json:"deadline,omitempty"`
 	// Range holds the value of the "range" field.
@@ -73,7 +71,7 @@ func (*Task) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case task.FieldID, task.FieldRange:
 			values[i] = new(sql.NullInt64)
-		case task.FieldCreatedAt, task.FieldUpdatedAt, task.FieldDeleteAt, task.FieldDeadline:
+		case task.FieldCreatedAt, task.FieldUpdatedAt, task.FieldDeadline:
 			values[i] = new(sql.NullTime)
 		case task.ForeignKeys[0]: // group_tasks
 			values[i] = new(sql.NullInt64)
@@ -109,12 +107,6 @@ func (t *Task) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
 				t.UpdatedAt = value.Time
-			}
-		case task.FieldDeleteAt:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field delete_at", values[i])
-			} else if value.Valid {
-				t.DeleteAt = value.Time
 			}
 		case task.FieldDeadline:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -186,9 +178,6 @@ func (t *Task) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
 	builder.WriteString(t.UpdatedAt.Format(time.ANSIC))
-	builder.WriteString(", ")
-	builder.WriteString("delete_at=")
-	builder.WriteString(t.DeleteAt.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("deadline=")
 	builder.WriteString(t.Deadline.Format(time.ANSIC))

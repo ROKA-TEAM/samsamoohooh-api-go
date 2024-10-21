@@ -65,11 +65,6 @@ func UpdatedAt(v time.Time) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldUpdatedAt, v))
 }
 
-// DeleteAt applies equality check predicate on the "delete_at" field. It's identical to DeleteAtEQ.
-func DeleteAt(v time.Time) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldDeleteAt, v))
-}
-
 // Name applies equality check predicate on the "name" field. It's identical to NameEQ.
 func Name(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldName, v))
@@ -163,56 +158,6 @@ func UpdatedAtLT(v time.Time) predicate.User {
 // UpdatedAtLTE applies the LTE predicate on the "updated_at" field.
 func UpdatedAtLTE(v time.Time) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldUpdatedAt, v))
-}
-
-// DeleteAtEQ applies the EQ predicate on the "delete_at" field.
-func DeleteAtEQ(v time.Time) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldDeleteAt, v))
-}
-
-// DeleteAtNEQ applies the NEQ predicate on the "delete_at" field.
-func DeleteAtNEQ(v time.Time) predicate.User {
-	return predicate.User(sql.FieldNEQ(FieldDeleteAt, v))
-}
-
-// DeleteAtIn applies the In predicate on the "delete_at" field.
-func DeleteAtIn(vs ...time.Time) predicate.User {
-	return predicate.User(sql.FieldIn(FieldDeleteAt, vs...))
-}
-
-// DeleteAtNotIn applies the NotIn predicate on the "delete_at" field.
-func DeleteAtNotIn(vs ...time.Time) predicate.User {
-	return predicate.User(sql.FieldNotIn(FieldDeleteAt, vs...))
-}
-
-// DeleteAtGT applies the GT predicate on the "delete_at" field.
-func DeleteAtGT(v time.Time) predicate.User {
-	return predicate.User(sql.FieldGT(FieldDeleteAt, v))
-}
-
-// DeleteAtGTE applies the GTE predicate on the "delete_at" field.
-func DeleteAtGTE(v time.Time) predicate.User {
-	return predicate.User(sql.FieldGTE(FieldDeleteAt, v))
-}
-
-// DeleteAtLT applies the LT predicate on the "delete_at" field.
-func DeleteAtLT(v time.Time) predicate.User {
-	return predicate.User(sql.FieldLT(FieldDeleteAt, v))
-}
-
-// DeleteAtLTE applies the LTE predicate on the "delete_at" field.
-func DeleteAtLTE(v time.Time) predicate.User {
-	return predicate.User(sql.FieldLTE(FieldDeleteAt, v))
-}
-
-// DeleteAtIsNil applies the IsNil predicate on the "delete_at" field.
-func DeleteAtIsNil() predicate.User {
-	return predicate.User(sql.FieldIsNull(FieldDeleteAt))
-}
-
-// DeleteAtNotNil applies the NotNil predicate on the "delete_at" field.
-func DeleteAtNotNil() predicate.User {
-	return predicate.User(sql.FieldNotNull(FieldDeleteAt))
 }
 
 // NameEQ applies the EQ predicate on the "name" field.

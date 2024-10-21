@@ -32,10 +32,10 @@ func (m *Middleware) RequireAuthorization(c fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusUnauthorized, "Missing Authorization header")
 	}
 
-	tokenString = strings.TrimSpace(tokenString)
+	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
 	isValid, err := m.tokenService.ValidateToken(tokenString)
 	if err != nil {
-		return err
+		return fiber.NewError(fiber.StatusUnauthorized, "Not validation token"+err.Error())
 	}
 
 	if !isValid {
@@ -64,6 +64,29 @@ func (m *Middleware) AccessOnly(roleType domain.UserRoleType) func(c fiber.Ctx) 
 
 		return c.Next()
 	}
+}
+
+func (m *Middleware) CheckGroupAccess(c fiber.Ctx) error {
+	t, ok := c.Locals(TokenKey).(*token.Token)
+	if !ok {
+		return fiber.NewError(fiber.StatusUnauthorized, "unable to get token")
+	}
+
+	gid := fiber.Params[int](c, "gid", -1)
+	if gid == -1 {
+		return fiber.NewError(fiber.StatusUnauthorized, "empty gid")
+	}
+
+	isValid, err := m.userService.IsUserInGroup(c.Context(), t.Subject, gid)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
+	if !isValid {
+		return fiber.NewError(fiber.StatusForbidden, "requested user is not in the group")
+	}
+
+	return c.Next()
 }
 
 //func (m GuardMiddleware) RequireAccess(accessibleRoles ...domain2.UserRoleType) func(*fiber.Ctx) error {

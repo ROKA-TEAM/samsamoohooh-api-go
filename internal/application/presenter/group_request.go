@@ -6,10 +6,10 @@ import (
 
 type GroupCreateReqeust struct {
 	BookTitle   string `json:"bookTitle" validate:"min=1,max=28"`
-	Author      string `json:"author" validate:"min=1,max=12"`
-	MaxPage     int    `json:"maxPage" validate:"min=1,max=9999"`
-	Publisher   string `json:"publisher" validate:"min=1,max=30"`
-	Description string `json:"description" validate:"min=0,max=56"`
+	Author      string `json:"author" validate:"min=1,max=12,omitempty"`
+	MaxPage     int    `json:"maxPage" validate:"min=1,max=9999,omitempty"`
+	Publisher   string `json:"publisher" validate:"min=1,max=30,omitempty"`
+	Description string `json:"description" validate:"min=0,max=56,omitempty"`
 }
 
 func (r *GroupCreateReqeust) ToDomain() *domain.Group {

@@ -50,20 +50,6 @@ func (tc *TopicCreate) SetNillableUpdatedAt(t *time.Time) *TopicCreate {
 	return tc
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (tc *TopicCreate) SetDeleteAt(t time.Time) *TopicCreate {
-	tc.mutation.SetDeleteAt(t)
-	return tc
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (tc *TopicCreate) SetNillableDeleteAt(t *time.Time) *TopicCreate {
-	if t != nil {
-		tc.SetDeleteAt(*t)
-	}
-	return tc
-}
-
 // SetTopic sets the "topic" field.
 func (tc *TopicCreate) SetTopic(s string) *TopicCreate {
 	tc.mutation.SetTopic(s)
@@ -121,9 +107,7 @@ func (tc *TopicCreate) Mutation() *TopicMutation {
 
 // Save creates the Topic in the database.
 func (tc *TopicCreate) Save(ctx context.Context) (*Topic, error) {
-	if err := tc.defaults(); err != nil {
-		return nil, err
-	}
+	tc.defaults()
 	return withHooks(ctx, tc.sqlSave, tc.mutation, tc.hooks)
 }
 
@@ -150,22 +134,15 @@ func (tc *TopicCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (tc *TopicCreate) defaults() error {
+func (tc *TopicCreate) defaults() {
 	if _, ok := tc.mutation.CreatedAt(); !ok {
-		if topic.DefaultCreatedAt == nil {
-			return fmt.Errorf("ent: uninitialized topic.DefaultCreatedAt (forgotten import ent/runtime?)")
-		}
 		v := topic.DefaultCreatedAt()
 		tc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := tc.mutation.UpdatedAt(); !ok {
-		if topic.DefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized topic.DefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := topic.DefaultUpdatedAt()
 		tc.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -215,10 +192,6 @@ func (tc *TopicCreate) createSpec() (*Topic, *sqlgraph.CreateSpec) {
 	if value, ok := tc.mutation.UpdatedAt(); ok {
 		_spec.SetField(topic.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
-	}
-	if value, ok := tc.mutation.DeleteAt(); ok {
-		_spec.SetField(topic.FieldDeleteAt, field.TypeTime, value)
-		_node.DeleteAt = value
 	}
 	if value, ok := tc.mutation.Topic(); ok {
 		_spec.SetField(topic.FieldTopic, field.TypeString, value)

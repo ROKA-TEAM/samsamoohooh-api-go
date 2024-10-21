@@ -122,6 +122,7 @@ func (r *UserRepository) DeleteUser(ctx context.Context, id int) error {
 	err := r.database.User.
 		DeleteOneID(id).
 		Exec(ctx)
+
 	if err != nil {
 		return err
 	}

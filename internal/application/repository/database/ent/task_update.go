@@ -36,26 +36,6 @@ func (tu *TaskUpdate) SetUpdatedAt(t time.Time) *TaskUpdate {
 	return tu
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (tu *TaskUpdate) SetDeleteAt(t time.Time) *TaskUpdate {
-	tu.mutation.SetDeleteAt(t)
-	return tu
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (tu *TaskUpdate) SetNillableDeleteAt(t *time.Time) *TaskUpdate {
-	if t != nil {
-		tu.SetDeleteAt(*t)
-	}
-	return tu
-}
-
-// ClearDeleteAt clears the value of the "delete_at" field.
-func (tu *TaskUpdate) ClearDeleteAt() *TaskUpdate {
-	tu.mutation.ClearDeleteAt()
-	return tu
-}
-
 // SetDeadline sets the "deadline" field.
 func (tu *TaskUpdate) SetDeadline(t time.Time) *TaskUpdate {
 	tu.mutation.SetDeadline(t)
@@ -159,9 +139,7 @@ func (tu *TaskUpdate) RemoveTopics(t ...*Topic) *TaskUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (tu *TaskUpdate) Save(ctx context.Context) (int, error) {
-	if err := tu.defaults(); err != nil {
-		return 0, err
-	}
+	tu.defaults()
 	return withHooks(ctx, tu.sqlSave, tu.mutation, tu.hooks)
 }
 
@@ -188,15 +166,11 @@ func (tu *TaskUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (tu *TaskUpdate) defaults() error {
+func (tu *TaskUpdate) defaults() {
 	if _, ok := tu.mutation.UpdatedAt(); !ok {
-		if task.UpdateDefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized task.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := task.UpdateDefaultUpdatedAt()
 		tu.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 func (tu *TaskUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -210,12 +184,6 @@ func (tu *TaskUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := tu.mutation.UpdatedAt(); ok {
 		_spec.SetField(task.FieldUpdatedAt, field.TypeTime, value)
-	}
-	if value, ok := tu.mutation.DeleteAt(); ok {
-		_spec.SetField(task.FieldDeleteAt, field.TypeTime, value)
-	}
-	if tu.mutation.DeleteAtCleared() {
-		_spec.ClearField(task.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := tu.mutation.Deadline(); ok {
 		_spec.SetField(task.FieldDeadline, field.TypeTime, value)
@@ -323,26 +291,6 @@ type TaskUpdateOne struct {
 // SetUpdatedAt sets the "updated_at" field.
 func (tuo *TaskUpdateOne) SetUpdatedAt(t time.Time) *TaskUpdateOne {
 	tuo.mutation.SetUpdatedAt(t)
-	return tuo
-}
-
-// SetDeleteAt sets the "delete_at" field.
-func (tuo *TaskUpdateOne) SetDeleteAt(t time.Time) *TaskUpdateOne {
-	tuo.mutation.SetDeleteAt(t)
-	return tuo
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (tuo *TaskUpdateOne) SetNillableDeleteAt(t *time.Time) *TaskUpdateOne {
-	if t != nil {
-		tuo.SetDeleteAt(*t)
-	}
-	return tuo
-}
-
-// ClearDeleteAt clears the value of the "delete_at" field.
-func (tuo *TaskUpdateOne) ClearDeleteAt() *TaskUpdateOne {
-	tuo.mutation.ClearDeleteAt()
 	return tuo
 }
 
@@ -462,9 +410,7 @@ func (tuo *TaskUpdateOne) Select(field string, fields ...string) *TaskUpdateOne 
 
 // Save executes the query and returns the updated Task entity.
 func (tuo *TaskUpdateOne) Save(ctx context.Context) (*Task, error) {
-	if err := tuo.defaults(); err != nil {
-		return nil, err
-	}
+	tuo.defaults()
 	return withHooks(ctx, tuo.sqlSave, tuo.mutation, tuo.hooks)
 }
 
@@ -491,15 +437,11 @@ func (tuo *TaskUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (tuo *TaskUpdateOne) defaults() error {
+func (tuo *TaskUpdateOne) defaults() {
 	if _, ok := tuo.mutation.UpdatedAt(); !ok {
-		if task.UpdateDefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized task.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := task.UpdateDefaultUpdatedAt()
 		tuo.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 func (tuo *TaskUpdateOne) sqlSave(ctx context.Context) (_node *Task, err error) {
@@ -530,12 +472,6 @@ func (tuo *TaskUpdateOne) sqlSave(ctx context.Context) (_node *Task, err error) 
 	}
 	if value, ok := tuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(task.FieldUpdatedAt, field.TypeTime, value)
-	}
-	if value, ok := tuo.mutation.DeleteAt(); ok {
-		_spec.SetField(task.FieldDeleteAt, field.TypeTime, value)
-	}
-	if tuo.mutation.DeleteAtCleared() {
-		_spec.ClearField(task.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := tuo.mutation.Deadline(); ok {
 		_spec.SetField(task.FieldDeadline, field.TypeTime, value)

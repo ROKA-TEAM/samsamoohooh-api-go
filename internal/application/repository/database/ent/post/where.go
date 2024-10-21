@@ -65,11 +65,6 @@ func UpdatedAt(v time.Time) predicate.Post {
 	return predicate.Post(sql.FieldEQ(FieldUpdatedAt, v))
 }
 
-// DeleteAt applies equality check predicate on the "delete_at" field. It's identical to DeleteAtEQ.
-func DeleteAt(v time.Time) predicate.Post {
-	return predicate.Post(sql.FieldEQ(FieldDeleteAt, v))
-}
-
 // Title applies equality check predicate on the "title" field. It's identical to TitleEQ.
 func Title(v string) predicate.Post {
 	return predicate.Post(sql.FieldEQ(FieldTitle, v))
@@ -158,56 +153,6 @@ func UpdatedAtLT(v time.Time) predicate.Post {
 // UpdatedAtLTE applies the LTE predicate on the "updated_at" field.
 func UpdatedAtLTE(v time.Time) predicate.Post {
 	return predicate.Post(sql.FieldLTE(FieldUpdatedAt, v))
-}
-
-// DeleteAtEQ applies the EQ predicate on the "delete_at" field.
-func DeleteAtEQ(v time.Time) predicate.Post {
-	return predicate.Post(sql.FieldEQ(FieldDeleteAt, v))
-}
-
-// DeleteAtNEQ applies the NEQ predicate on the "delete_at" field.
-func DeleteAtNEQ(v time.Time) predicate.Post {
-	return predicate.Post(sql.FieldNEQ(FieldDeleteAt, v))
-}
-
-// DeleteAtIn applies the In predicate on the "delete_at" field.
-func DeleteAtIn(vs ...time.Time) predicate.Post {
-	return predicate.Post(sql.FieldIn(FieldDeleteAt, vs...))
-}
-
-// DeleteAtNotIn applies the NotIn predicate on the "delete_at" field.
-func DeleteAtNotIn(vs ...time.Time) predicate.Post {
-	return predicate.Post(sql.FieldNotIn(FieldDeleteAt, vs...))
-}
-
-// DeleteAtGT applies the GT predicate on the "delete_at" field.
-func DeleteAtGT(v time.Time) predicate.Post {
-	return predicate.Post(sql.FieldGT(FieldDeleteAt, v))
-}
-
-// DeleteAtGTE applies the GTE predicate on the "delete_at" field.
-func DeleteAtGTE(v time.Time) predicate.Post {
-	return predicate.Post(sql.FieldGTE(FieldDeleteAt, v))
-}
-
-// DeleteAtLT applies the LT predicate on the "delete_at" field.
-func DeleteAtLT(v time.Time) predicate.Post {
-	return predicate.Post(sql.FieldLT(FieldDeleteAt, v))
-}
-
-// DeleteAtLTE applies the LTE predicate on the "delete_at" field.
-func DeleteAtLTE(v time.Time) predicate.Post {
-	return predicate.Post(sql.FieldLTE(FieldDeleteAt, v))
-}
-
-// DeleteAtIsNil applies the IsNil predicate on the "delete_at" field.
-func DeleteAtIsNil() predicate.Post {
-	return predicate.Post(sql.FieldIsNull(FieldDeleteAt))
-}
-
-// DeleteAtNotNil applies the NotNil predicate on the "delete_at" field.
-func DeleteAtNotNil() predicate.Post {
-	return predicate.Post(sql.FieldNotNull(FieldDeleteAt))
 }
 
 // TitleEQ applies the EQ predicate on the "title" field.

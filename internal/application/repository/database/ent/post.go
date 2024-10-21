@@ -23,8 +23,6 @@ type Post struct {
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	// DeleteAt holds the value of the "delete_at" field.
-	DeleteAt time.Time `json:"delete_at,omitempty"`
 	// Title holds the value of the "title" field.
 	Title string `json:"title,omitempty"`
 	// Content holds the value of the "content" field.
@@ -90,7 +88,7 @@ func (*Post) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullInt64)
 		case post.FieldTitle, post.FieldContent:
 			values[i] = new(sql.NullString)
-		case post.FieldCreatedAt, post.FieldUpdatedAt, post.FieldDeleteAt:
+		case post.FieldCreatedAt, post.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
 		case post.ForeignKeys[0]: // group_posts
 			values[i] = new(sql.NullInt64)
@@ -128,12 +126,6 @@ func (po *Post) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
 				po.UpdatedAt = value.Time
-			}
-		case post.FieldDeleteAt:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field delete_at", values[i])
-			} else if value.Valid {
-				po.DeleteAt = value.Time
 			}
 		case post.FieldTitle:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -217,9 +209,6 @@ func (po *Post) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
 	builder.WriteString(po.UpdatedAt.Format(time.ANSIC))
-	builder.WriteString(", ")
-	builder.WriteString("delete_at=")
-	builder.WriteString(po.DeleteAt.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("title=")
 	builder.WriteString(po.Title)

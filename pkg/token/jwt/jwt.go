@@ -75,10 +75,8 @@ func (s *Service) ValidateToken(tokenString string) (bool, error) {
 		return []byte(s.config.Token.SecretKey), nil
 	})
 	if err != nil {
-		return false, token.ErrTokenParse
+		return false, err
 	}
-
-	// 현재 시각
 	now := time.Now()
 
 	// 해석한 토큰의 issure가 일치하는가?

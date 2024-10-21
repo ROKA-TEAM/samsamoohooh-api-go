@@ -388,14 +388,12 @@ func (c *CommentClient) QueryPost(co *Comment) *PostQuery {
 
 // Hooks returns the client hooks.
 func (c *CommentClient) Hooks() []Hook {
-	hooks := c.hooks.Comment
-	return append(hooks[:len(hooks):len(hooks)], comment.Hooks[:]...)
+	return c.hooks.Comment
 }
 
 // Interceptors returns the client interceptors.
 func (c *CommentClient) Interceptors() []Interceptor {
-	inters := c.inters.Comment
-	return append(inters[:len(inters):len(inters)], comment.Interceptors[:]...)
+	return c.inters.Comment
 }
 
 func (c *CommentClient) mutate(ctx context.Context, m *CommentMutation) (Value, error) {
@@ -571,14 +569,12 @@ func (c *GroupClient) QueryTasks(gr *Group) *TaskQuery {
 
 // Hooks returns the client hooks.
 func (c *GroupClient) Hooks() []Hook {
-	hooks := c.hooks.Group
-	return append(hooks[:len(hooks):len(hooks)], group.Hooks[:]...)
+	return c.hooks.Group
 }
 
 // Interceptors returns the client interceptors.
 func (c *GroupClient) Interceptors() []Interceptor {
-	inters := c.inters.Group
-	return append(inters[:len(inters):len(inters)], group.Interceptors[:]...)
+	return c.inters.Group
 }
 
 func (c *GroupClient) mutate(ctx context.Context, m *GroupMutation) (Value, error) {
@@ -754,14 +750,12 @@ func (c *PostClient) QueryGroup(po *Post) *GroupQuery {
 
 // Hooks returns the client hooks.
 func (c *PostClient) Hooks() []Hook {
-	hooks := c.hooks.Post
-	return append(hooks[:len(hooks):len(hooks)], post.Hooks[:]...)
+	return c.hooks.Post
 }
 
 // Interceptors returns the client interceptors.
 func (c *PostClient) Interceptors() []Interceptor {
-	inters := c.inters.Post
-	return append(inters[:len(inters):len(inters)], post.Interceptors[:]...)
+	return c.inters.Post
 }
 
 func (c *PostClient) mutate(ctx context.Context, m *PostMutation) (Value, error) {
@@ -921,14 +915,12 @@ func (c *TaskClient) QueryTopics(t *Task) *TopicQuery {
 
 // Hooks returns the client hooks.
 func (c *TaskClient) Hooks() []Hook {
-	hooks := c.hooks.Task
-	return append(hooks[:len(hooks):len(hooks)], task.Hooks[:]...)
+	return c.hooks.Task
 }
 
 // Interceptors returns the client interceptors.
 func (c *TaskClient) Interceptors() []Interceptor {
-	inters := c.inters.Task
-	return append(inters[:len(inters):len(inters)], task.Interceptors[:]...)
+	return c.inters.Task
 }
 
 func (c *TaskClient) mutate(ctx context.Context, m *TaskMutation) (Value, error) {
@@ -1088,14 +1080,12 @@ func (c *TopicClient) QueryTask(t *Topic) *TaskQuery {
 
 // Hooks returns the client hooks.
 func (c *TopicClient) Hooks() []Hook {
-	hooks := c.hooks.Topic
-	return append(hooks[:len(hooks):len(hooks)], topic.Hooks[:]...)
+	return c.hooks.Topic
 }
 
 // Interceptors returns the client interceptors.
 func (c *TopicClient) Interceptors() []Interceptor {
-	inters := c.inters.Topic
-	return append(inters[:len(inters):len(inters)], topic.Interceptors[:]...)
+	return c.inters.Topic
 }
 
 func (c *TopicClient) mutate(ctx context.Context, m *TopicMutation) (Value, error) {
@@ -1287,14 +1277,12 @@ func (c *UserClient) QueryTopics(u *User) *TopicQuery {
 
 // Hooks returns the client hooks.
 func (c *UserClient) Hooks() []Hook {
-	hooks := c.hooks.User
-	return append(hooks[:len(hooks):len(hooks)], user.Hooks[:]...)
+	return c.hooks.User
 }
 
 // Interceptors returns the client interceptors.
 func (c *UserClient) Interceptors() []Interceptor {
-	inters := c.inters.User
-	return append(inters[:len(inters):len(inters)], user.Interceptors[:]...)
+	return c.inters.User
 }
 
 func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error) {

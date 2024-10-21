@@ -15,7 +15,6 @@ func ConvertDomainUser(user *ent.User) *domain.User {
 		SocialSub:  user.SocialSub,
 		CreatedAt:  user.CreatedAt,
 		UpdatedAt:  user.UpdatedAt,
-		DeletedAt:  user.DeleteAt,
 	}
 }
 
@@ -39,7 +38,6 @@ func ConvertDomainGroup(group *ent.Group) *domain.Group {
 		Description: group.Description,
 		CreatedAt:   group.CreatedAt,
 		UpdatedAt:   group.UpdatedAt,
-		DeletedAt:   group.DeleteAt,
 	}
 }
 
@@ -59,7 +57,6 @@ func ConvertDomainPost(post *ent.Post) *domain.Post {
 		Content:   post.Content,
 		CreatedAt: post.CreatedAt,
 		UpdatedAt: post.UpdatedAt,
-		DeletedAt: post.DeleteAt,
 	}
 }
 
@@ -78,7 +75,6 @@ func ConvertDomainComment(comment *ent.Comment) *domain.Comment {
 		Content:   comment.Content,
 		CreatedAt: comment.CreatedAt,
 		UpdatedAt: comment.UpdatedAt,
-		DeletedAt: comment.DeleteAt,
 	}
 }
 
@@ -98,7 +94,6 @@ func ConvertDomainTask(task *ent.Task) *domain.Task {
 		Range:     task.Range,
 		CreatedAt: task.CreatedAt,
 		UpdatedAt: task.UpdatedAt,
-		DeletedAt: task.DeleteAt,
 	}
 }
 
@@ -118,7 +113,6 @@ func ConvertDomainTopic(topic *ent.Topic) *domain.Topic {
 		Feeling:   topic.Feeling,
 		CreatedAt: topic.CreatedAt,
 		UpdatedAt: topic.UpdatedAt,
-		DeletedAt: topic.DeleteAt,
 	}
 }
 

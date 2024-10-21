@@ -51,20 +51,6 @@ func (gc *GroupCreate) SetNillableUpdatedAt(t *time.Time) *GroupCreate {
 	return gc
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (gc *GroupCreate) SetDeleteAt(t time.Time) *GroupCreate {
-	gc.mutation.SetDeleteAt(t)
-	return gc
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (gc *GroupCreate) SetNillableDeleteAt(t *time.Time) *GroupCreate {
-	if t != nil {
-		gc.SetDeleteAt(*t)
-	}
-	return gc
-}
-
 // SetBookTitle sets the "book_title" field.
 func (gc *GroupCreate) SetBookTitle(s string) *GroupCreate {
 	gc.mutation.SetBookTitle(s)
@@ -153,9 +139,7 @@ func (gc *GroupCreate) Mutation() *GroupMutation {
 
 // Save creates the Group in the database.
 func (gc *GroupCreate) Save(ctx context.Context) (*Group, error) {
-	if err := gc.defaults(); err != nil {
-		return nil, err
-	}
+	gc.defaults()
 	return withHooks(ctx, gc.sqlSave, gc.mutation, gc.hooks)
 }
 
@@ -182,22 +166,15 @@ func (gc *GroupCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (gc *GroupCreate) defaults() error {
+func (gc *GroupCreate) defaults() {
 	if _, ok := gc.mutation.CreatedAt(); !ok {
-		if group.DefaultCreatedAt == nil {
-			return fmt.Errorf("ent: uninitialized group.DefaultCreatedAt (forgotten import ent/runtime?)")
-		}
 		v := group.DefaultCreatedAt()
 		gc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := gc.mutation.UpdatedAt(); !ok {
-		if group.DefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized group.DefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := group.DefaultUpdatedAt()
 		gc.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -259,10 +236,6 @@ func (gc *GroupCreate) createSpec() (*Group, *sqlgraph.CreateSpec) {
 	if value, ok := gc.mutation.UpdatedAt(); ok {
 		_spec.SetField(group.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
-	}
-	if value, ok := gc.mutation.DeleteAt(); ok {
-		_spec.SetField(group.FieldDeleteAt, field.TypeTime, value)
-		_node.DeleteAt = value
 	}
 	if value, ok := gc.mutation.BookTitle(); ok {
 		_spec.SetField(group.FieldBookTitle, field.TypeString, value)

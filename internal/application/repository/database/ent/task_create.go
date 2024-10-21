@@ -50,20 +50,6 @@ func (tc *TaskCreate) SetNillableUpdatedAt(t *time.Time) *TaskCreate {
 	return tc
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (tc *TaskCreate) SetDeleteAt(t time.Time) *TaskCreate {
-	tc.mutation.SetDeleteAt(t)
-	return tc
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (tc *TaskCreate) SetNillableDeleteAt(t *time.Time) *TaskCreate {
-	if t != nil {
-		tc.SetDeleteAt(*t)
-	}
-	return tc
-}
-
 // SetDeadline sets the "deadline" field.
 func (tc *TaskCreate) SetDeadline(t time.Time) *TaskCreate {
 	tc.mutation.SetDeadline(t)
@@ -117,9 +103,7 @@ func (tc *TaskCreate) Mutation() *TaskMutation {
 
 // Save creates the Task in the database.
 func (tc *TaskCreate) Save(ctx context.Context) (*Task, error) {
-	if err := tc.defaults(); err != nil {
-		return nil, err
-	}
+	tc.defaults()
 	return withHooks(ctx, tc.sqlSave, tc.mutation, tc.hooks)
 }
 
@@ -146,22 +130,15 @@ func (tc *TaskCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (tc *TaskCreate) defaults() error {
+func (tc *TaskCreate) defaults() {
 	if _, ok := tc.mutation.CreatedAt(); !ok {
-		if task.DefaultCreatedAt == nil {
-			return fmt.Errorf("ent: uninitialized task.DefaultCreatedAt (forgotten import ent/runtime?)")
-		}
 		v := task.DefaultCreatedAt()
 		tc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := tc.mutation.UpdatedAt(); !ok {
-		if task.DefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized task.DefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := task.DefaultUpdatedAt()
 		tc.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -211,10 +188,6 @@ func (tc *TaskCreate) createSpec() (*Task, *sqlgraph.CreateSpec) {
 	if value, ok := tc.mutation.UpdatedAt(); ok {
 		_spec.SetField(task.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
-	}
-	if value, ok := tc.mutation.DeleteAt(); ok {
-		_spec.SetField(task.FieldDeleteAt, field.TypeTime, value)
-		_node.DeleteAt = value
 	}
 	if value, ok := tc.mutation.Deadline(); ok {
 		_spec.SetField(task.FieldDeadline, field.TypeTime, value)

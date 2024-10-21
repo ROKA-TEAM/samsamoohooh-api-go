@@ -42,6 +42,5 @@ func (Post) Edges() []ent.Edge {
 func (Post) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		TimeMixin{},
-		SoftDeleteMixin{},
 	}
 }

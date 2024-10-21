@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"github.com/gofiber/fiber/v3"
 	"log"
 	"samsamoohooh-go-api/internal/application/domain"
@@ -25,6 +26,10 @@ func main() {
 	if err != nil {
 		log.Panicf("failed to connect database: %v\n", err)
 	}
+	// TODO: set time out
+	if db.AutoMigration(context.Background()) != nil {
+		log.Panicf("failed to auto migration: %v\n", err)
+	}
 	defer func(db *database.Database) {
 		err := db.Close()
 		if err != nil {
@@ -36,13 +41,19 @@ func main() {
 	userService := service.NewUserService(userRepository)
 	userHandler := handler.NewUserHandler(userService)
 
+	taskRepository := repository.NewTaskRepository(db)
+	taskService := service.NewTaskService(taskRepository)
+
+	groupRepository := repository.NewGroupRepository(db)
+	groupService := service.NewGroupService(groupRepository, userService, taskService)
+	groupHandler := handler.NewGroupHandler(groupService)
+
 	jwtService := jwt.NewService(cfg)
 	kakaoOauthService := kakao.NewService(jwtService, userService, cfg)
 	googleOauthService := google.NewService(jwtService, userService, cfg)
+	guardMiddleware := guard.NewMiddleware(jwtService, userService)
 
 	authHandler := handler.NewAuthHandler(kakaoOauthService, googleOauthService, jwtService)
-
-	guardMiddleware := guard.NewMiddleware(jwtService, userService)
 
 	app := fiber.New(fiber.Config{})
 
@@ -74,6 +85,17 @@ func main() {
 					me.Put("/", userHandler.UpdateMe)
 					me.Delete("/", userHandler.DeleteMe)
 				}
+			}
+
+			groups := api.Group("/groups", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
+			{
+				groups.Post("/", groupHandler.CreateGroup)
+				groups.Get("/:gid", groupHandler.GetByGroupID, guardMiddleware.CheckGroupAccess)
+				groups.Get("/:gid/users", groupHandler.GetUsersByGroupID, guardMiddleware.CheckGroupAccess)
+				groups.Get("/:gid/posts", groupHandler.GetPostsByGroupID, guardMiddleware.CheckGroupAccess)
+				groups.Get("/:gid/tasks", groupHandler.GetTasksByGroupID, guardMiddleware.CheckGroupAccess)
+				groups.Put("/:gid", groupHandler.UpdateGroup, guardMiddleware.CheckGroupAccess)
+				groups.Post("/:gid/tasks/:tid/discussion/start", groupHandler.StartDiscussion, guardMiddleware.CheckGroupAccess)
 			}
 		}
 	}

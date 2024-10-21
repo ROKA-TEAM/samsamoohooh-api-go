@@ -52,20 +52,6 @@ func (uc *UserCreate) SetNillableUpdatedAt(t *time.Time) *UserCreate {
 	return uc
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (uc *UserCreate) SetDeleteAt(t time.Time) *UserCreate {
-	uc.mutation.SetDeleteAt(t)
-	return uc
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (uc *UserCreate) SetNillableDeleteAt(t *time.Time) *UserCreate {
-	if t != nil {
-		uc.SetDeleteAt(*t)
-	}
-	return uc
-}
-
 // SetName sets the "name" field.
 func (uc *UserCreate) SetName(s string) *UserCreate {
 	uc.mutation.SetName(s)
@@ -163,9 +149,7 @@ func (uc *UserCreate) Mutation() *UserMutation {
 
 // Save creates the User in the database.
 func (uc *UserCreate) Save(ctx context.Context) (*User, error) {
-	if err := uc.defaults(); err != nil {
-		return nil, err
-	}
+	uc.defaults()
 	return withHooks(ctx, uc.sqlSave, uc.mutation, uc.hooks)
 }
 
@@ -192,22 +176,15 @@ func (uc *UserCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (uc *UserCreate) defaults() error {
+func (uc *UserCreate) defaults() {
 	if _, ok := uc.mutation.CreatedAt(); !ok {
-		if user.DefaultCreatedAt == nil {
-			return fmt.Errorf("ent: uninitialized user.DefaultCreatedAt (forgotten import ent/runtime?)")
-		}
 		v := user.DefaultCreatedAt()
 		uc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := uc.mutation.UpdatedAt(); !ok {
-		if user.DefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized user.DefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := user.DefaultUpdatedAt()
 		uc.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -276,10 +253,6 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
-	}
-	if value, ok := uc.mutation.DeleteAt(); ok {
-		_spec.SetField(user.FieldDeleteAt, field.TypeTime, value)
-		_node.DeleteAt = value
 	}
 	if value, ok := uc.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)

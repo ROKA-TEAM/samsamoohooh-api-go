@@ -1,7 +1,7 @@
 package presenter
 
 import (
-	domain2 "samsamoohooh-go-api/internal/application/domain"
+	domain "samsamoohooh-go-api/internal/application/domain"
 	"time"
 )
 
@@ -17,7 +17,7 @@ type GroupCreateResponse struct {
 	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
-func NewGroupCreateResponse(group *domain2.Group) *GroupCreateResponse {
+func NewGroupCreateResponse(group *domain.Group) *GroupCreateResponse {
 	return &GroupCreateResponse{
 		ID:          group.ID,
 		BookTitle:   group.BookTitle,
@@ -43,7 +43,7 @@ type GroupListResponse struct {
 	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
-func NewGroupListResponse(groups []*domain2.Group) []*GroupListResponse {
+func NewGroupListResponse(groups []*domain.Group) []*GroupListResponse {
 	var response []*GroupListResponse
 	for _, group := range groups {
 		response = append(response, &GroupListResponse{
@@ -74,7 +74,7 @@ type GroupGetByIDResponse struct {
 	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
-func NewGroupGetByIDResponse(group *domain2.Group) *GroupGetByIDResponse {
+func NewGroupGetByIDResponse(group *domain.Group) *GroupGetByIDResponse {
 	return &GroupGetByIDResponse{
 		ID:          group.ID,
 		BookTitle:   group.BookTitle,
@@ -89,28 +89,18 @@ func NewGroupGetByIDResponse(group *domain2.Group) *GroupGetByIDResponse {
 }
 
 type GroupGetUsersByIDResponse struct {
-	ID         int                    `json:"id"`
-	Name       string                 `json:"name"`
-	Resolution string                 `json:"resolution"`
-	Role       domain2.UserRoleType   `json:"role"`
-	Social     domain2.UserSocialType `json:"social"`
-	SocialSub  string                 `json:"socialSub"`
-	CreatedAt  time.Time              `json:"createdAt"`
-	UpdatedAt  time.Time              `json:"updatedAt"`
+	ID         int    `json:"id"`
+	Name       string `json:"name"`
+	Resolution string `json:"resolution"`
 }
 
-func NewGroupGetUsersByIDResponse(users []*domain2.User) []*GroupGetUsersByIDResponse {
+func NewGroupGetUsersByIDResponse(users []*domain.User) []*GroupGetUsersByIDResponse {
 	var listUser []*GroupGetUsersByIDResponse
 	for _, user := range users {
 		listUser = append(listUser, &GroupGetUsersByIDResponse{
 			ID:         user.ID,
 			Name:       user.Name,
 			Resolution: user.Resolution,
-			Role:       user.Role,
-			Social:     user.Social,
-			SocialSub:  user.SocialSub,
-			CreatedAt:  user.CreatedAt,
-			UpdatedAt:  user.UpdatedAt,
 		})
 	}
 
@@ -125,7 +115,7 @@ type GroupGetPostsByIDResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func NewGroupGetPostsByIDResponse(posts []*domain2.Post) []*GroupGetPostsByIDResponse {
+func NewGroupGetPostsByIDResponse(posts []*domain.Post) []*GroupGetPostsByIDResponse {
 	var listPost []*GroupGetPostsByIDResponse
 	for _, post := range posts {
 		listPost = append(listPost, &GroupGetPostsByIDResponse{
@@ -148,7 +138,7 @@ type GroupGetTasksByIDResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func NewGroupGetTasksByIDResponse(tasks []*domain2.Task) []*GroupGetTasksByIDResponse {
+func NewGroupGetTasksByIDResponse(tasks []*domain.Task) []*GroupGetTasksByIDResponse {
 	var listTask []*GroupGetTasksByIDResponse
 	for _, task := range tasks {
 		listTask = append(listTask, &GroupGetTasksByIDResponse{
@@ -175,7 +165,7 @@ type GroupUpdateResponse struct {
 	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
-func NewGroupUpdateResponse(group *domain2.Group) *GroupUpdateResponse {
+func NewGroupUpdateResponse(group *domain.Group) *GroupUpdateResponse {
 	return &GroupUpdateResponse{
 		ID:          group.ID,
 		BookTitle:   group.BookTitle,
@@ -194,7 +184,7 @@ type GroupStartDiscussionResponse struct {
 	Users  []string `json:"users"`
 }
 
-func NewGruopStartDiscussionResponse(topics []string, users []string) *GroupStartDiscussionResponse {
+func NewGroupStartDiscussionResponse(topics []string, users []string) *GroupStartDiscussionResponse {
 
 	return &GroupStartDiscussionResponse{
 		Topics: topics,

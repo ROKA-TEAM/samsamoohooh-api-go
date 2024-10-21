@@ -36,26 +36,6 @@ func (cu *CommentUpdate) SetUpdatedAt(t time.Time) *CommentUpdate {
 	return cu
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (cu *CommentUpdate) SetDeleteAt(t time.Time) *CommentUpdate {
-	cu.mutation.SetDeleteAt(t)
-	return cu
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (cu *CommentUpdate) SetNillableDeleteAt(t *time.Time) *CommentUpdate {
-	if t != nil {
-		cu.SetDeleteAt(*t)
-	}
-	return cu
-}
-
-// ClearDeleteAt clears the value of the "delete_at" field.
-func (cu *CommentUpdate) ClearDeleteAt() *CommentUpdate {
-	cu.mutation.ClearDeleteAt()
-	return cu
-}
-
 // SetContent sets the "content" field.
 func (cu *CommentUpdate) SetContent(s string) *CommentUpdate {
 	cu.mutation.SetContent(s)
@@ -127,9 +107,7 @@ func (cu *CommentUpdate) ClearPost() *CommentUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (cu *CommentUpdate) Save(ctx context.Context) (int, error) {
-	if err := cu.defaults(); err != nil {
-		return 0, err
-	}
+	cu.defaults()
 	return withHooks(ctx, cu.sqlSave, cu.mutation, cu.hooks)
 }
 
@@ -156,15 +134,11 @@ func (cu *CommentUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (cu *CommentUpdate) defaults() error {
+func (cu *CommentUpdate) defaults() {
 	if _, ok := cu.mutation.UpdatedAt(); !ok {
-		if comment.UpdateDefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized comment.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := comment.UpdateDefaultUpdatedAt()
 		cu.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -178,12 +152,6 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := cu.mutation.UpdatedAt(); ok {
 		_spec.SetField(comment.FieldUpdatedAt, field.TypeTime, value)
-	}
-	if value, ok := cu.mutation.DeleteAt(); ok {
-		_spec.SetField(comment.FieldDeleteAt, field.TypeTime, value)
-	}
-	if cu.mutation.DeleteAtCleared() {
-		_spec.ClearField(comment.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := cu.mutation.Content(); ok {
 		_spec.SetField(comment.FieldContent, field.TypeString, value)
@@ -272,26 +240,6 @@ func (cuo *CommentUpdateOne) SetUpdatedAt(t time.Time) *CommentUpdateOne {
 	return cuo
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (cuo *CommentUpdateOne) SetDeleteAt(t time.Time) *CommentUpdateOne {
-	cuo.mutation.SetDeleteAt(t)
-	return cuo
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (cuo *CommentUpdateOne) SetNillableDeleteAt(t *time.Time) *CommentUpdateOne {
-	if t != nil {
-		cuo.SetDeleteAt(*t)
-	}
-	return cuo
-}
-
-// ClearDeleteAt clears the value of the "delete_at" field.
-func (cuo *CommentUpdateOne) ClearDeleteAt() *CommentUpdateOne {
-	cuo.mutation.ClearDeleteAt()
-	return cuo
-}
-
 // SetContent sets the "content" field.
 func (cuo *CommentUpdateOne) SetContent(s string) *CommentUpdateOne {
 	cuo.mutation.SetContent(s)
@@ -376,9 +324,7 @@ func (cuo *CommentUpdateOne) Select(field string, fields ...string) *CommentUpda
 
 // Save executes the query and returns the updated Comment entity.
 func (cuo *CommentUpdateOne) Save(ctx context.Context) (*Comment, error) {
-	if err := cuo.defaults(); err != nil {
-		return nil, err
-	}
+	cuo.defaults()
 	return withHooks(ctx, cuo.sqlSave, cuo.mutation, cuo.hooks)
 }
 
@@ -405,15 +351,11 @@ func (cuo *CommentUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (cuo *CommentUpdateOne) defaults() error {
+func (cuo *CommentUpdateOne) defaults() {
 	if _, ok := cuo.mutation.UpdatedAt(); !ok {
-		if comment.UpdateDefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized comment.UpdateDefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := comment.UpdateDefaultUpdatedAt()
 		cuo.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err error) {
@@ -444,12 +386,6 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 	}
 	if value, ok := cuo.mutation.UpdatedAt(); ok {
 		_spec.SetField(comment.FieldUpdatedAt, field.TypeTime, value)
-	}
-	if value, ok := cuo.mutation.DeleteAt(); ok {
-		_spec.SetField(comment.FieldDeleteAt, field.TypeTime, value)
-	}
-	if cuo.mutation.DeleteAtCleared() {
-		_spec.ClearField(comment.FieldDeleteAt, field.TypeTime)
 	}
 	if value, ok := cuo.mutation.Content(); ok {
 		_spec.SetField(comment.FieldContent, field.TypeString, value)

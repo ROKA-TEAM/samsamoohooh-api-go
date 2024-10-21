@@ -51,20 +51,6 @@ func (pc *PostCreate) SetNillableUpdatedAt(t *time.Time) *PostCreate {
 	return pc
 }
 
-// SetDeleteAt sets the "delete_at" field.
-func (pc *PostCreate) SetDeleteAt(t time.Time) *PostCreate {
-	pc.mutation.SetDeleteAt(t)
-	return pc
-}
-
-// SetNillableDeleteAt sets the "delete_at" field if the given value is not nil.
-func (pc *PostCreate) SetNillableDeleteAt(t *time.Time) *PostCreate {
-	if t != nil {
-		pc.SetDeleteAt(*t)
-	}
-	return pc
-}
-
 // SetTitle sets the "title" field.
 func (pc *PostCreate) SetTitle(s string) *PostCreate {
 	pc.mutation.SetTitle(s)
@@ -137,9 +123,7 @@ func (pc *PostCreate) Mutation() *PostMutation {
 
 // Save creates the Post in the database.
 func (pc *PostCreate) Save(ctx context.Context) (*Post, error) {
-	if err := pc.defaults(); err != nil {
-		return nil, err
-	}
+	pc.defaults()
 	return withHooks(ctx, pc.sqlSave, pc.mutation, pc.hooks)
 }
 
@@ -166,22 +150,15 @@ func (pc *PostCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (pc *PostCreate) defaults() error {
+func (pc *PostCreate) defaults() {
 	if _, ok := pc.mutation.CreatedAt(); !ok {
-		if post.DefaultCreatedAt == nil {
-			return fmt.Errorf("ent: uninitialized post.DefaultCreatedAt (forgotten import ent/runtime?)")
-		}
 		v := post.DefaultCreatedAt()
 		pc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := pc.mutation.UpdatedAt(); !ok {
-		if post.DefaultUpdatedAt == nil {
-			return fmt.Errorf("ent: uninitialized post.DefaultUpdatedAt (forgotten import ent/runtime?)")
-		}
 		v := post.DefaultUpdatedAt()
 		pc.mutation.SetUpdatedAt(v)
 	}
-	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -231,10 +208,6 @@ func (pc *PostCreate) createSpec() (*Post, *sqlgraph.CreateSpec) {
 	if value, ok := pc.mutation.UpdatedAt(); ok {
 		_spec.SetField(post.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
-	}
-	if value, ok := pc.mutation.DeleteAt(); ok {
-		_spec.SetField(post.FieldDeleteAt, field.TypeTime, value)
-		_node.DeleteAt = value
 	}
 	if value, ok := pc.mutation.Title(); ok {
 		_spec.SetField(post.FieldTitle, field.TypeString, value)

@@ -65,11 +65,6 @@ func UpdatedAt(v time.Time) predicate.Task {
 	return predicate.Task(sql.FieldEQ(FieldUpdatedAt, v))
 }
 
-// DeleteAt applies equality check predicate on the "delete_at" field. It's identical to DeleteAtEQ.
-func DeleteAt(v time.Time) predicate.Task {
-	return predicate.Task(sql.FieldEQ(FieldDeleteAt, v))
-}
-
 // Deadline applies equality check predicate on the "deadline" field. It's identical to DeadlineEQ.
 func Deadline(v time.Time) predicate.Task {
 	return predicate.Task(sql.FieldEQ(FieldDeadline, v))
@@ -158,56 +153,6 @@ func UpdatedAtLT(v time.Time) predicate.Task {
 // UpdatedAtLTE applies the LTE predicate on the "updated_at" field.
 func UpdatedAtLTE(v time.Time) predicate.Task {
 	return predicate.Task(sql.FieldLTE(FieldUpdatedAt, v))
-}
-
-// DeleteAtEQ applies the EQ predicate on the "delete_at" field.
-func DeleteAtEQ(v time.Time) predicate.Task {
-	return predicate.Task(sql.FieldEQ(FieldDeleteAt, v))
-}
-
-// DeleteAtNEQ applies the NEQ predicate on the "delete_at" field.
-func DeleteAtNEQ(v time.Time) predicate.Task {
-	return predicate.Task(sql.FieldNEQ(FieldDeleteAt, v))
-}
-
-// DeleteAtIn applies the In predicate on the "delete_at" field.
-func DeleteAtIn(vs ...time.Time) predicate.Task {
-	return predicate.Task(sql.FieldIn(FieldDeleteAt, vs...))
-}
-
-// DeleteAtNotIn applies the NotIn predicate on the "delete_at" field.
-func DeleteAtNotIn(vs ...time.Time) predicate.Task {
-	return predicate.Task(sql.FieldNotIn(FieldDeleteAt, vs...))
-}
-
-// DeleteAtGT applies the GT predicate on the "delete_at" field.
-func DeleteAtGT(v time.Time) predicate.Task {
-	return predicate.Task(sql.FieldGT(FieldDeleteAt, v))
-}
-
-// DeleteAtGTE applies the GTE predicate on the "delete_at" field.
-func DeleteAtGTE(v time.Time) predicate.Task {
-	return predicate.Task(sql.FieldGTE(FieldDeleteAt, v))
-}
-
-// DeleteAtLT applies the LT predicate on the "delete_at" field.
-func DeleteAtLT(v time.Time) predicate.Task {
-	return predicate.Task(sql.FieldLT(FieldDeleteAt, v))
-}
-
-// DeleteAtLTE applies the LTE predicate on the "delete_at" field.
-func DeleteAtLTE(v time.Time) predicate.Task {
-	return predicate.Task(sql.FieldLTE(FieldDeleteAt, v))
-}
-
-// DeleteAtIsNil applies the IsNil predicate on the "delete_at" field.
-func DeleteAtIsNil() predicate.Task {
-	return predicate.Task(sql.FieldIsNull(FieldDeleteAt))
-}
-
-// DeleteAtNotNil applies the NotNil predicate on the "delete_at" field.
-func DeleteAtNotNil() predicate.Task {
-	return predicate.Task(sql.FieldNotNull(FieldDeleteAt))
 }
 
 // DeadlineEQ applies the EQ predicate on the "deadline" field.
