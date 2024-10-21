@@ -2,39 +2,71 @@ package service
 
 import (
 	"context"
-	domain2 "samsamoohooh-go-api/internal/application/domain"
+	domain "samsamoohooh-go-api/internal/application/domain"
 )
 
-var _ domain2.TaskService = (*TaskService)(nil)
+var _ domain.TaskService = (*TaskService)(nil)
 
 type TaskService struct {
-	taskRepository domain2.TaskRepository
+	taskRepository domain.TaskRepository
 }
 
-func NewTaskService(taskRepository domain2.TaskRepository) *TaskService {
+func NewTaskService(
+	taskRepository domain.TaskRepository,
+) *TaskService {
 	return &TaskService{taskRepository: taskRepository}
 }
 
-func (s *TaskService) Create(ctx context.Context, groupID int, task *domain2.Task) (*domain2.Task, error) {
-	return s.taskRepository.Create(ctx, groupID, task)
+func (s *TaskService) CreateTask(ctx context.Context, groupID int, task *domain.Task) (*domain.Task, error) {
+	createdTask, err := s.taskRepository.CreateTask(ctx, groupID, task)
+	if err != nil {
+		return nil, err
+	}
+
+	return createdTask, nil
 }
 
-func (s *TaskService) List(ctx context.Context, offset, limit int) ([]*domain2.Task, error) {
-	return s.taskRepository.List(ctx, offset, limit)
+func (s *TaskService) GetTasks(ctx context.Context, offset, limit int) ([]*domain.Task, error) {
+	listTask, err := s.taskRepository.GetTasks(ctx, offset, limit)
+	if err != nil {
+		return nil, err
+	}
+
+	return listTask, nil
 }
 
-func (s *TaskService) GetByID(ctx context.Context, id int) (*domain2.Task, error) {
-	return s.taskRepository.GetByID(ctx, id)
+func (s *TaskService) GetByTaskID(ctx context.Context, id int) (*domain.Task, error) {
+	gotTask, err := s.taskRepository.GetByTaskID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return gotTask, nil
 }
 
-func (s *TaskService) GetTopicsByID(ctx context.Context, id, offset, limit int) ([]*domain2.Topic, error) {
-	return s.taskRepository.GetTopicsByID(ctx, id, offset, limit)
+func (s *TaskService) GetTopicsByTaskID(ctx context.Context, id, offset, limit int) ([]*domain.Topic, error) {
+	listTopic, err := s.taskRepository.GetTopicsByTaskID(ctx, id, offset, limit)
+	if err != nil {
+		return nil, err
+	}
+
+	return listTopic, nil
 }
 
-func (s *TaskService) Updated(ctx context.Context, id int, task *domain2.Task) (*domain2.Task, error) {
-	return s.taskRepository.Updated(ctx, id, task)
+func (s *TaskService) UpdateTask(ctx context.Context, id int, task *domain.Task) (*domain.Task, error) {
+	updatedTask, err := s.taskRepository.UpdateTask(ctx, id, task)
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedTask, nil
 }
 
-func (s *TaskService) Delete(ctx context.Context, id int) error {
-	return s.taskRepository.Delete(ctx, id)
+func (s *TaskService) DeleteTask(ctx context.Context, id int) error {
+	err := s.taskRepository.DeleteTask(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
