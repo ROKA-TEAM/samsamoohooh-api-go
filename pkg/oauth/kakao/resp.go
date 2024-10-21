@@ -1,7 +1,7 @@
 package kakao
 
 import (
-	"samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/pkg/oauth"
 	"strconv"
 	"time"
 )
@@ -21,8 +21,8 @@ type exchangeRespBody struct {
 	} `json:"kakao_account"`
 }
 
-func (r *exchangeRespBody) toDomain() *domain.OauthPayload {
-	return &domain.OauthPayload{
+func (r *exchangeRespBody) toDomain() *oauth.Payload {
+	return &oauth.Payload{
 		Sub:  strconv.Itoa(r.ID),
 		Name: r.KakaoAccount.Profile.Nickname,
 	}

@@ -1,8 +1,6 @@
 package google
 
-import (
-	"samsamoohooh-go-api/internal/application/domain"
-)
+import "samsamoohooh-go-api/pkg/oauth"
 
 type exchangeResponseBody struct {
 	Sub        string `json:"sub"`
@@ -12,8 +10,8 @@ type exchangeResponseBody struct {
 	Picture    string `json:"picture"`
 }
 
-func (r exchangeResponseBody) toDomain() *domain.OauthPayload {
-	return &domain.OauthPayload{
+func (r exchangeResponseBody) toDomain() *oauth.Payload {
+	return &oauth.Payload{
 		Sub:  r.Sub,
 		Name: r.Name,
 	}

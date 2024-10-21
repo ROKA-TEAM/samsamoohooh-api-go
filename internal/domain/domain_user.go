@@ -11,7 +11,7 @@ const (
 	UserRoleAdmin   UserRoleType = "ADMIN"
 	UserRoleMANAGER UserRoleType = "MANAGER"
 
-	UserRoleGuest UserRoleType = "USER"
+	UserRoleUser UserRoleType = "USER"
 )
 
 type UserSocialType string
