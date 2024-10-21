@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
-	"samsamoohooh-go-api/internal/domain"
+	"samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/infra/config"
 	"samsamoohooh-go-api/internal/repository/database/ent"
 	"samsamoohooh-go-api/pkg/oauth"
@@ -80,9 +80,9 @@ func (s Service) AuthenticateOrRegister(ctx context.Context, code string) (strin
 		return "", "", err
 	}
 
-	user, err := s.userService.GetBySub(ctx, payload.Sub)
+	user, err := s.userService.GetByUserSub(ctx, payload.Sub)
 	if ent.IsNotFound(err) {
-		createdUser, err := s.userService.Create(ctx, &domain.User{
+		createdUser, err := s.userService.CreateUser(ctx, &domain.User{
 			Name:      payload.Name,
 			Role:      domain.UserRoleUser,
 			Social:    domain.UserSocialGoogle,

@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"golang.org/x/oauth2"
-	"samsamoohooh-go-api/internal/domain"
+	"samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/infra/config"
 	"samsamoohooh-go-api/internal/repository/database/ent"
 	"samsamoohooh-go-api/pkg/oauth"
