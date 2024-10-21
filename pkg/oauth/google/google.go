@@ -6,8 +6,8 @@ import (
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/repository/database/ent"
 	"samsamoohooh-go-api/internal/infra/config"
-	"samsamoohooh-go-api/internal/repository/database/ent"
 	"samsamoohooh-go-api/pkg/oauth"
 	"samsamoohooh-go-api/pkg/token"
 )
