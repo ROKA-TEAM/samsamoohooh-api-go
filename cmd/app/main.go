@@ -127,7 +127,7 @@ func main() {
 			tasks := api.Group("/tasks", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
 			{
 				tasks.Post("/", taskHandler.CreateTask)
-				tasks.Get("/:tid", taskHandler.GetByTaskID)
+				tasks.Get("/:tid/topics", taskHandler.GetTopicsByTaskID)
 				tasks.Put("/:tid", taskHandler.UpdateTask)
 				tasks.Delete("/:tid", taskHandler.DeleteTask)
 			}

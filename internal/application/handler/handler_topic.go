@@ -1,12 +1,8 @@
 package handler
 
-import (
-	domain2 "samsamoohooh-go-api/internal/application/domain"
-)
-
-type TopicHandler struct {
-	topicService domain2.TopicService
-}
+// type TopicHandler struct {
+// 	topicService domain2.TopicService
+// }
 
 //func NewTopicHandler(topicService domain2.TopicService) *TopicHandler {
 //	return &TopicHandler{topicService: topicService}

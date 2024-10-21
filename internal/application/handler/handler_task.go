@@ -32,6 +32,18 @@ func (h *TaskHandler) CreateTask(c fiber.Ctx) error {
 	return c.JSON(presenter.NewTaskCreateResponse(createdTask))
 }
 
+func (h *TaskHandler) GetTopicsByTaskID(c fiber.Ctx) error {
+	tid := fiber.Params[int](c, "tid")
+	limit := fiber.Query[int](c, "limit", DefaultLimit)
+	offset := fiber.Query[int](c, "offset", DefaultOffset)
+
+	topics, err := h.taskService.GetTopicsByTaskID(c.Context(), tid, offset, limit)
+	if err != nil {
+		return err
+	}
+	return c.Status(fiber.StatusOK).JSON(presenter.NewTaskGetTopicsByIDResponse(topics))
+}
+
 func (h *TaskHandler) GetByTaskID(c fiber.Ctx) error {
 	tid := fiber.Params[int](c, "tid")
 
