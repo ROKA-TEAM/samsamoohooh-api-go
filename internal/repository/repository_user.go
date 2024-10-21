@@ -2,13 +2,13 @@ package repository
 
 import (
 	"context"
-	"samsamoohooh-go-api/internal/domain"
+	domain2 "samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/repository/database"
 	entuser "samsamoohooh-go-api/internal/repository/database/ent/user"
 	"samsamoohooh-go-api/internal/repository/database/utils"
 )
 
-var _ domain.UserRepository = (*UserRepository)(nil)
+var _ domain2.UserRepository = (*UserRepository)(nil)
 
 type UserRepository struct {
 	database *database.Database
@@ -18,7 +18,7 @@ func NewUserRepository(database *database.Database) *UserRepository {
 	return &UserRepository{database: database}
 }
 
-func (r *UserRepository) Create(ctx context.Context, user *domain.User) (*domain.User, error) {
+func (r *UserRepository) Create(ctx context.Context, user *domain2.User) (*domain2.User, error) {
 	createdUser, err := r.database.User.
 		Create().
 		SetName(user.Name).
@@ -35,7 +35,7 @@ func (r *UserRepository) Create(ctx context.Context, user *domain.User) (*domain
 	return utils.ConvertDomainUser(createdUser), nil
 }
 
-func (r *UserRepository) GetByID(ctx context.Context, id int) (*domain.User, error) {
+func (r *UserRepository) GetByID(ctx context.Context, id int) (*domain2.User, error) {
 	gotUser, err := r.database.User.
 		Get(ctx, id)
 	if err != nil {
@@ -44,7 +44,7 @@ func (r *UserRepository) GetByID(ctx context.Context, id int) (*domain.User, err
 
 	return utils.ConvertDomainUser(gotUser), nil
 }
-func (r *UserRepository) GetBySub(ctx context.Context, sub string) (*domain.User, error) {
+func (r *UserRepository) GetBySub(ctx context.Context, sub string) (*domain2.User, error) {
 	gotUser, err := r.database.User.
 		Query().
 		Where(entuser.SocialSubEQ(sub)).
@@ -56,7 +56,7 @@ func (r *UserRepository) GetBySub(ctx context.Context, sub string) (*domain.User
 	return utils.ConvertDomainUser(gotUser), nil
 }
 
-func (r *UserRepository) GetGroupsByID(ctx context.Context, id int, limit, offset int) ([]*domain.Group, error) {
+func (r *UserRepository) GetGroupsByID(ctx context.Context, id int, limit, offset int) ([]*domain2.Group, error) {
 	gotGroups, err := r.database.User.
 		Query().
 		Where(entuser.IDEQ(id)).
@@ -72,7 +72,7 @@ func (r *UserRepository) GetGroupsByID(ctx context.Context, id int, limit, offse
 	return utils.ConvertDomainGroups(gotGroups), nil
 }
 
-func (r *UserRepository) List(ctx context.Context, limit, offset int) ([]*domain.User, error) {
+func (r *UserRepository) List(ctx context.Context, limit, offset int) ([]*domain2.User, error) {
 	gotUsers, err := r.database.User.
 		Query().
 		Limit(limit).
@@ -85,7 +85,7 @@ func (r *UserRepository) List(ctx context.Context, limit, offset int) ([]*domain
 	return utils.ConvertDomainUsers(gotUsers), nil
 }
 
-func (r *UserRepository) Update(ctx context.Context, id int, user *domain.User) (*domain.User, error) {
+func (r *UserRepository) Update(ctx context.Context, id int, user *domain2.User) (*domain2.User, error) {
 	updateBuilder := r.database.User.
 		UpdateOneID(id)
 

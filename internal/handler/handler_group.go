@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"samsamoohooh-go-api/internal/domain"
-	"samsamoohooh-go-api/internal/handler/utils"
+	domain2 "samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/handler/utils"
 	"samsamoohooh-go-api/internal/infra/middleware"
 	"samsamoohooh-go-api/internal/infra/presenter"
 
@@ -10,26 +10,26 @@ import (
 )
 
 type GroupHandler struct {
-	groupService domain.GroupService
+	groupService domain2.GroupService
 }
 
-func NewGroupHandler(groupService domain.GroupService) *GroupHandler {
+func NewGroupHandler(groupService domain2.GroupService) *GroupHandler {
 	return &GroupHandler{
 		groupService: groupService,
 	}
 }
 
 func (h *GroupHandler) Route(router fiber.Router, guard *middleware.GuardMiddleware) {
-	router.Post("/", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.Create)
-	router.Get("/", guard.RequireAccess(domain.UserRoleAdmin), h.List)
-	router.Get("/:id", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.GetByID)
-	router.Get("/:id/users", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.GetUsersByID)
-	router.Get("/:id/posts", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.GetPostsByID)
-	router.Get("/:id/tasks", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.GetTasksByID)
-	router.Put("/:id", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.Update)
-	router.Delete("/:id", guard.RequireAccess(domain.UserRoleAdmin), h.Delete)
+	router.Post("/", guard.RequireAccess(domain2.UserRoleAdmin, domain2.UserRoleGuest), h.Create)
+	router.Get("/", guard.RequireAccess(domain2.UserRoleAdmin), h.List)
+	router.Get("/:id", guard.RequireAccess(domain2.UserRoleAdmin, domain2.UserRoleGuest), h.GetByID)
+	router.Get("/:id/users", guard.RequireAccess(domain2.UserRoleAdmin, domain2.UserRoleGuest), h.GetUsersByID)
+	router.Get("/:id/posts", guard.RequireAccess(domain2.UserRoleAdmin, domain2.UserRoleGuest), h.GetPostsByID)
+	router.Get("/:id/tasks", guard.RequireAccess(domain2.UserRoleAdmin, domain2.UserRoleGuest), h.GetTasksByID)
+	router.Put("/:id", guard.RequireAccess(domain2.UserRoleAdmin, domain2.UserRoleGuest), h.Update)
+	router.Delete("/:id", guard.RequireAccess(domain2.UserRoleAdmin), h.Delete)
 
-	router.Get("/:gid/tasks/:tid/discussion/start", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.StartDiscussion)
+	router.Get("/:gid/tasks/:tid/discussion/start", guard.RequireAccess(domain2.UserRoleAdmin, domain2.UserRoleGuest), h.StartDiscussion)
 }
 
 func (h *GroupHandler) Create(c *fiber.Ctx) error {

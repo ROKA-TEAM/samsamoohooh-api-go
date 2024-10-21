@@ -1,6 +1,8 @@
 package presenter
 
-import "samsamoohooh-go-api/internal/domain"
+import (
+	"samsamoohooh-go-api/internal/application/domain"
+)
 
 type CommentCreateRequest struct {
 	Content string `json:"content" validate:"min=1,max=24"`

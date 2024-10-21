@@ -1,29 +1,23 @@
-package token
+package jwt
 
 import (
-	"fmt"
-	"github.com/pkg/errors"
-	"samsamoohooh-go-api/internal/domain"
-	"samsamoohooh-go-api/internal/infra/config"
-	"time"
-
 	"github.com/golang-jwt/jwt/v5"
+	"samsamoohooh-go-api/internal/infra/config"
+	"samsamoohooh-go-api/pkg/token"
+	"time"
 )
 
-var _ domain.TokenService = (*JWTService)(nil)
+var _ token.Service = (*Service)(nil)
 
-type JWTService struct {
+type Service struct {
 	config *config.Config
 }
 
-func NewJWTService(config *config.Config) *JWTService {
-	return &JWTService{
-		config,
-	}
+func NewService(config *config.Config) *Service {
+	return &Service{config: config}
 }
 
-func (s *JWTService) GenerateAccessTokenString(subject int, role domain.UserRoleType) (string, error) {
-	fmt.Println("argRole: ", role)
+func (s *Service) GenerateAccessTokenString(subject int, role string) (string, error) {
 	now := time.Now()
 	expiresAt := now.Add(time.Duration(s.config.Token.Duration.Access.ValidityPeriod))
 	notBefore := now.Add(time.Duration(s.config.Token.Duration.Access.ActivationDelay))
@@ -37,19 +31,19 @@ func (s *JWTService) GenerateAccessTokenString(subject int, role domain.UserRole
 		},
 		Subject: subject,
 		Role:    role,
-		Type:    domain.TokenTypeAccess,
+		Type:    token.Access,
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString([]byte(s.config.Token.SecretKey))
+	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := t.SignedString([]byte(s.config.Token.SecretKey))
 	if err != nil {
-		return "", errors.Wrap(domain.ErrTokenGenerate, err.Error())
+		return "", err
 	}
 
 	return tokenString, nil
 }
 
-func (s *JWTService) GenerateRefreshTokenString(subject int, role domain.UserRoleType) (string, error) {
+func (s *Service) GenerateRefreshTokenString(subject int, role string) (string, error) {
 	now := time.Now()
 
 	expiresAt := now.Add(time.Duration(s.config.Token.Duration.Refresh.ValidityPeriod))
@@ -64,24 +58,24 @@ func (s *JWTService) GenerateRefreshTokenString(subject int, role domain.UserRol
 		},
 		Subject: subject,
 		Role:    role,
-		Type:    domain.TokenTypeRefresh,
+		Type:    token.Refresh,
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString([]byte(s.config.Token.SecretKey))
+	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := t.SignedString([]byte(s.config.Token.SecretKey))
 	if err != nil {
-		return "", errors.Wrap(domain.ErrTokenGenerate, err.Error())
+		return "", err
 	}
 
 	return tokenString, nil
 }
-func (s *JWTService) ValidateToken(tokenString string) (bool, error) {
+func (s *Service) ValidateToken(tokenString string) (bool, error) {
 	customClaims := new(customClaims)
 	_, err := jwt.ParseWithClaims(tokenString, customClaims, func(t *jwt.Token) (any, error) {
 		return []byte(s.config.Token.SecretKey), nil
 	})
 	if err != nil {
-		return false, errors.Wrap(domain.ErrTokenParse, err.Error())
+		return false, token.ErrTokenParse
 	}
 
 	// 현재 시각
@@ -89,33 +83,31 @@ func (s *JWTService) ValidateToken(tokenString string) (bool, error) {
 
 	// 해석한 토큰의 issure가 일치하는가?
 	if customClaims.Issuer != s.config.Token.Issuer {
-		return false, domain.ErrInvalidTokenIssuer
+		return false, token.ErrInvalidTokenIssuer
 	}
 
 	// 해석한 토큰의 expiresAt이 유효한가? (현재 시간이 expiresAt보다 앞서 있다면)
 	if now.After(customClaims.ExpiresAt.Time) {
-		// TODO: warp error
-		return false, domain.ErrTokenExpired
+		return false, token.ErrTokenExpired
 	}
 
 	// 해석한 토큰의 notBefore가 유효한가? (현재 시간이 notBefore보다 않다면)
 	if now.Before(customClaims.NotBefore.Time) {
-		return false, domain.ErrTokenNotActiveYet
+		return false, token.ErrTokenNotActiveYet
 	}
-
-	// 해석한 토큰의 subject가 유효한가? (이건 일단 보류)
 
 	return true, nil
 }
-func (s *JWTService) ParseToken(tokenString string) (*domain.Token, error) {
+
+func (s *Service) ParseToken(tokenString string) (*token.Token, error) {
 	customClaims := new(customClaims)
 	_, err := jwt.ParseWithClaims(tokenString, customClaims, func(t *jwt.Token) (any, error) {
 		return []byte(s.config.Token.SecretKey), nil
 	})
 
 	if err != nil {
-		return nil, errors.Wrap(domain.ErrTokenParse, err.Error())
+		return nil, err
 	}
 
-	return customClaims.toDomain(), nil
+	return customClaims.ToToken(), nil
 }

@@ -1,7 +1,7 @@
 package presenter
 
 import (
-	"samsamoohooh-go-api/internal/domain"
+	domain2 "samsamoohooh-go-api/internal/application/domain"
 	"time"
 )
 
@@ -13,7 +13,7 @@ type TaskCreateResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func NewTaskCreateResponse(task *domain.Task) *TaskCreateResponse {
+func NewTaskCreateResponse(task *domain2.Task) *TaskCreateResponse {
 	return &TaskCreateResponse{
 		ID:        task.ID,
 		Deadline:  task.Deadline,
@@ -31,7 +31,7 @@ type TaskListResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func NewTaskListResponse(tasks []*domain.Task) []*TaskListResponse {
+func NewTaskListResponse(tasks []*domain2.Task) []*TaskListResponse {
 	var taskList []*TaskListResponse
 	for _, task := range tasks {
 		taskList = append(taskList, &TaskListResponse{
@@ -53,7 +53,7 @@ type TaskGetByIDResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func NewTaskGetByIDResponse(task *domain.Task) *TaskGetByIDResponse {
+func NewTaskGetByIDResponse(task *domain2.Task) *TaskGetByIDResponse {
 	return &TaskGetByIDResponse{
 		ID:        task.ID,
 		Deadline:  task.Deadline,
@@ -71,7 +71,7 @@ type TaskGetTopicsByIDResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func NewTaskGetTopicsByIDResponse(topics []*domain.Topic) []*TaskGetTopicsByIDResponse {
+func NewTaskGetTopicsByIDResponse(topics []*domain2.Topic) []*TaskGetTopicsByIDResponse {
 	var topicList []*TaskGetTopicsByIDResponse
 	for _, topic := range topics {
 		topicList = append(topicList, &TaskGetTopicsByIDResponse{
@@ -93,7 +93,7 @@ type TaskUpdateResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func NewTaskUpdateResponse(task *domain.Task) *TaskUpdateResponse {
+func NewTaskUpdateResponse(task *domain2.Task) *TaskUpdateResponse {
 	return &TaskUpdateResponse{
 		ID:        task.ID,
 		Deadline:  task.Deadline,

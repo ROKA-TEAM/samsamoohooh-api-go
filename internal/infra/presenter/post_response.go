@@ -1,7 +1,7 @@
 package presenter
 
 import (
-	"samsamoohooh-go-api/internal/domain"
+	domain2 "samsamoohooh-go-api/internal/application/domain"
 	"time"
 )
 
@@ -13,7 +13,7 @@ type PostCreateResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func NewPostCreateResponse(post *domain.Post) *PostCreateResponse {
+func NewPostCreateResponse(post *domain2.Post) *PostCreateResponse {
 	return &PostCreateResponse{
 		ID:        post.ID,
 		Title:     post.Title,
@@ -31,7 +31,7 @@ type PostGetByIDResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func NewPostGetByIDResponse(post *domain.Post) *PostGetByIDResponse {
+func NewPostGetByIDResponse(post *domain2.Post) *PostGetByIDResponse {
 	return &PostGetByIDResponse{
 		ID:        post.ID,
 		Title:     post.Title,
@@ -49,7 +49,7 @@ type PostListResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func NewPostListResponse(posts []*domain.Post) []*PostListResponse {
+func NewPostListResponse(posts []*domain2.Post) []*PostListResponse {
 	var listPost []*PostListResponse
 	for _, post := range posts {
 		listPost = append(listPost, &PostListResponse{
@@ -71,7 +71,7 @@ type PostGetCommentsByIDResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func NewPostGetCommentsByIDResponse(comments []*domain.Comment) []*PostGetCommentsByIDResponse {
+func NewPostGetCommentsByIDResponse(comments []*domain2.Comment) []*PostGetCommentsByIDResponse {
 	var listComment []*PostGetCommentsByIDResponse
 	for _, comment := range comments {
 		listComment = append(listComment, &PostGetCommentsByIDResponse{
@@ -93,7 +93,7 @@ type PostUpdateResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func NewPostUpdateResponse(post *domain.Post) *PostUpdateResponse {
+func NewPostUpdateResponse(post *domain2.Post) *PostUpdateResponse {
 	return &PostUpdateResponse{
 		ID:        post.ID,
 		Title:     post.Title,

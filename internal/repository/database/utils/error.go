@@ -2,7 +2,7 @@ package utils
 
 import (
 	"github.com/pkg/errors"
-	"samsamoohooh-go-api/internal/domain"
+	"samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/repository/database/ent"
 )
 

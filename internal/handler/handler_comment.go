@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"samsamoohooh-go-api/internal/domain"
-	"samsamoohooh-go-api/internal/handler/utils"
+	domain2 "samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/handler/utils"
 	"samsamoohooh-go-api/internal/infra/middleware"
 	"samsamoohooh-go-api/internal/infra/presenter"
 
@@ -10,19 +10,19 @@ import (
 )
 
 type CommentHandler struct {
-	commentService domain.CommentService
+	commentService domain2.CommentService
 }
 
-func NewCommentHandler(commentService domain.CommentService) *CommentHandler {
+func NewCommentHandler(commentService domain2.CommentService) *CommentHandler {
 	return &CommentHandler{commentService: commentService}
 }
 
 func (h *CommentHandler) Route(r fiber.Router, guard *middleware.GuardMiddleware) {
-	r.Post("/", guard.RequireAccess(domain.UserRoleAdmin), h.Create)
-	r.Get("/", h.List, guard.RequireAccess(domain.UserRoleAdmin))
-	r.Get("/:id", h.GetByID, guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest))
-	r.Put("/:id", h.Update, guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest))
-	r.Delete("/:id", h.Delete, guard.RequireAccess(domain.UserRoleAdmin))
+	r.Post("/", guard.RequireAccess(domain2.UserRoleAdmin), h.Create)
+	r.Get("/", h.List, guard.RequireAccess(domain2.UserRoleAdmin))
+	r.Get("/:id", h.GetByID, guard.RequireAccess(domain2.UserRoleAdmin, domain2.UserRoleGuest))
+	r.Put("/:id", h.Update, guard.RequireAccess(domain2.UserRoleAdmin, domain2.UserRoleGuest))
+	r.Delete("/:id", h.Delete, guard.RequireAccess(domain2.UserRoleAdmin))
 }
 
 func (h *CommentHandler) Create(c *fiber.Ctx) error {

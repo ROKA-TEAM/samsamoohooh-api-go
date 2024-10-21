@@ -1,7 +1,7 @@
 package kakao
 
 import (
-	"samsamoohooh-go-api/internal/domain"
+	"samsamoohooh-go-api/internal/application/domain"
 	"strconv"
 	"time"
 )

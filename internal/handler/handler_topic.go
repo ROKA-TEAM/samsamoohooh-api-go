@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"samsamoohooh-go-api/internal/domain"
-	"samsamoohooh-go-api/internal/handler/utils"
+	domain2 "samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/handler/utils"
 	"samsamoohooh-go-api/internal/infra/middleware"
 	"samsamoohooh-go-api/internal/infra/presenter"
 
@@ -10,19 +10,19 @@ import (
 )
 
 type TopicHandler struct {
-	topicService domain.TopicService
+	topicService domain2.TopicService
 }
 
-func NewTopicHandler(topicService domain.TopicService) *TopicHandler {
+func NewTopicHandler(topicService domain2.TopicService) *TopicHandler {
 	return &TopicHandler{topicService: topicService}
 }
 
 func (h *TopicHandler) Route(router fiber.Router, guard *middleware.GuardMiddleware) {
-	router.Post("/", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.Create)
-	router.Get("/", guard.RequireAccess(domain.UserRoleAdmin), h.List)
-	router.Get("/:id", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.GetByID)
-	router.Put("/:id", guard.RequireAccess(domain.UserRoleAdmin, domain.UserRoleGuest), h.Update)
-	router.Delete("/:id", guard.RequireAccess(domain.UserRoleAdmin), h.Delete)
+	router.Post("/", guard.RequireAccess(domain2.UserRoleAdmin, domain2.UserRoleGuest), h.Create)
+	router.Get("/", guard.RequireAccess(domain2.UserRoleAdmin), h.List)
+	router.Get("/:id", guard.RequireAccess(domain2.UserRoleAdmin, domain2.UserRoleGuest), h.GetByID)
+	router.Put("/:id", guard.RequireAccess(domain2.UserRoleAdmin, domain2.UserRoleGuest), h.Update)
+	router.Delete("/:id", guard.RequireAccess(domain2.UserRoleAdmin), h.Delete)
 }
 
 func (h *TopicHandler) Create(c *fiber.Ctx) error {

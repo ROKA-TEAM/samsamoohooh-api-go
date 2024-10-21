@@ -2,13 +2,13 @@ package repository
 
 import (
 	"context"
-	"samsamoohooh-go-api/internal/domain"
+	domain2 "samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/repository/database"
 	enttask "samsamoohooh-go-api/internal/repository/database/ent/task"
 	"samsamoohooh-go-api/internal/repository/database/utils"
 )
 
-var _ domain.TaskRepository = (*TaskRepository)(nil)
+var _ domain2.TaskRepository = (*TaskRepository)(nil)
 
 type TaskRepository struct {
 	database *database.Database
@@ -18,7 +18,7 @@ func NewTaskRepository(database *database.Database) *TaskRepository {
 	return &TaskRepository{database: database}
 }
 
-func (r *TaskRepository) Create(ctx context.Context, groupID int, task *domain.Task) (*domain.Task, error) {
+func (r *TaskRepository) Create(ctx context.Context, groupID int, task *domain2.Task) (*domain2.Task, error) {
 	createdTask, err := r.database.Task.
 		Create().
 		SetDeadline(task.Deadline).
@@ -32,7 +32,7 @@ func (r *TaskRepository) Create(ctx context.Context, groupID int, task *domain.T
 
 	return utils.ConvertDomainTask(createdTask), nil
 }
-func (r *TaskRepository) List(ctx context.Context, offset, limit int) ([]*domain.Task, error) {
+func (r *TaskRepository) List(ctx context.Context, offset, limit int) ([]*domain2.Task, error) {
 	listTask, err := r.database.Task.
 		Query().
 		Offset(offset).
@@ -45,7 +45,7 @@ func (r *TaskRepository) List(ctx context.Context, offset, limit int) ([]*domain
 
 	return utils.ConvertDomainTasks(listTask), nil
 }
-func (r *TaskRepository) GetByID(ctx context.Context, id int) (*domain.Task, error) {
+func (r *TaskRepository) GetByID(ctx context.Context, id int) (*domain2.Task, error) {
 	gotTask, err := r.database.Task.
 		Get(ctx, id)
 
@@ -56,7 +56,7 @@ func (r *TaskRepository) GetByID(ctx context.Context, id int) (*domain.Task, err
 	return utils.ConvertDomainTask(gotTask), nil
 }
 
-func (r *TaskRepository) GetTopicsByID(ctx context.Context, id, offset, limit int) ([]*domain.Topic, error) {
+func (r *TaskRepository) GetTopicsByID(ctx context.Context, id, offset, limit int) ([]*domain2.Topic, error) {
 	listTopics, err := r.database.Task.
 		Query().
 		Where(enttask.IDEQ(id)).
@@ -72,7 +72,7 @@ func (r *TaskRepository) GetTopicsByID(ctx context.Context, id, offset, limit in
 	return utils.ConvertDomainTopics(listTopics), nil
 }
 
-func (r *TaskRepository) Updated(ctx context.Context, id int, task *domain.Task) (*domain.Task, error) {
+func (r *TaskRepository) Updated(ctx context.Context, id int, task *domain2.Task) (*domain2.Task, error) {
 	updateBuilder := r.database.Task.
 		UpdateOneID(id)
 

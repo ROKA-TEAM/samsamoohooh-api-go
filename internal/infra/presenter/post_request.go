@@ -1,6 +1,8 @@
 package presenter
 
-import "samsamoohooh-go-api/internal/domain"
+import (
+	"samsamoohooh-go-api/internal/application/domain"
+)
 
 type PostCreateRequest struct {
 	Title   string `json:"title" validate:"min=1,max=24"`

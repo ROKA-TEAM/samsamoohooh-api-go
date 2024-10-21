@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"samsamoohooh-go-api/internal/domain"
-	"samsamoohooh-go-api/internal/handler/utils"
+	domain2 "samsamoohooh-go-api/internal/application/domain"
+	utils2 "samsamoohooh-go-api/internal/application/handler/utils"
 	"samsamoohooh-go-api/internal/infra/presenter"
 	"time"
 
@@ -17,15 +17,15 @@ var store = session.New(session.Config{
 })
 
 type AuthHandler struct {
-	kakaoOauthService  domain.OauthAuthorizationGrantService
-	googleOauthService domain.OauthAuthorizationGrantService
-	tokenService       domain.TokenService
+	kakaoOauthService  domain2.OauthAuthorizationGrantService
+	googleOauthService domain2.OauthAuthorizationGrantService
+	tokenService       domain2.TokenService
 }
 
 func NewAuthHandler(
-	googleOauthService domain.OauthAuthorizationGrantService,
-	kakaoOauthService domain.OauthAuthorizationGrantService,
-	tokenService domain.TokenService,
+	googleOauthService domain2.OauthAuthorizationGrantService,
+	kakaoOauthService domain2.OauthAuthorizationGrantService,
+	tokenService domain2.TokenService,
 ) *AuthHandler {
 	return &AuthHandler{
 		googleOauthService: googleOauthService,
@@ -47,7 +47,7 @@ func (h *AuthHandler) Route(router fiber.Router) {
 
 func (h *AuthHandler) Validation(c *fiber.Ctx) error {
 	body := new(presenter.AuthValidationRequest)
-	if err := utils.ParseAndVerify(c, body); err != nil {
+	if err := utils2.ParseAndVerify(c, body); err != nil {
 		return err
 	}
 
@@ -74,7 +74,7 @@ func (h *AuthHandler) Validation(c *fiber.Ctx) error {
 
 func (h *AuthHandler) Refresh(c *fiber.Ctx) error {
 	body := new(presenter.AuthRefreshRequest)
-	if err := utils.ParseAndVerify(c, body); err != nil {
+	if err := utils2.ParseAndVerify(c, body); err != nil {
 		return err
 	}
 
@@ -104,7 +104,7 @@ func (h *AuthHandler) GetLoginURLOfGoogle(c *fiber.Ctx) error {
 		return err
 	}
 
-	state := utils.GenerateState()
+	state := utils2.GenerateState()
 	sess.Set("state", state)
 	err = sess.Save()
 	if err != nil {
@@ -129,7 +129,7 @@ func (h *AuthHandler) GoogleCallback(c *fiber.Ctx) error {
 	}
 
 	if state != c.FormValue("state") {
-		return errors.Wrap(domain.ErrNotMatchState, "invalid state")
+		return errors.Wrap(domain2.ErrNotMatchState, "invalid state")
 	}
 
 	accessToken, refreshToken, err := h.googleOauthService.AuthenticateOrRegister(c.Context(), c.FormValue("code"))
@@ -149,7 +149,7 @@ func (h *AuthHandler) GetLoginURLOfKakao(c *fiber.Ctx) error {
 		return err
 	}
 
-	state := utils.GenerateState()
+	state := utils2.GenerateState()
 	sess.Set("state", state)
 	err = sess.Save()
 	if err != nil {
@@ -174,7 +174,7 @@ func (h *AuthHandler) KaKaoCallback(c *fiber.Ctx) error {
 	}
 
 	if state != c.FormValue("state") {
-		return errors.Wrap(domain.ErrNotMatchState, "invalid state")
+		return errors.Wrap(domain2.ErrNotMatchState, "invalid state")
 	}
 
 	accessToken, refreshToken, err := h.kakaoOauthService.AuthenticateOrRegister(c.Context(), c.FormValue("code"))

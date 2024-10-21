@@ -2,13 +2,13 @@ package repository
 
 import (
 	"context"
-	"samsamoohooh-go-api/internal/domain"
+	domain2 "samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/repository/database"
 	entpost "samsamoohooh-go-api/internal/repository/database/ent/post"
 	"samsamoohooh-go-api/internal/repository/database/utils"
 )
 
-var _ domain.PostRepository = (*PostRepository)(nil)
+var _ domain2.PostRepository = (*PostRepository)(nil)
 
 type PostRepository struct {
 	database *database.Database
@@ -18,7 +18,7 @@ func NewPostRepository(database *database.Database) *PostRepository {
 	return &PostRepository{database: database}
 }
 
-func (r PostRepository) Create(ctx context.Context, groupID int, post *domain.Post) (*domain.Post, error) {
+func (r PostRepository) Create(ctx context.Context, groupID int, post *domain2.Post) (*domain2.Post, error) {
 	createdPost, err := r.database.Post.
 		Create().
 		SetTitle(post.Title).
@@ -33,7 +33,7 @@ func (r PostRepository) Create(ctx context.Context, groupID int, post *domain.Po
 	return utils.ConvertDomainPost(createdPost), nil
 }
 
-func (r PostRepository) List(ctx context.Context, offset, limit int) ([]*domain.Post, error) {
+func (r PostRepository) List(ctx context.Context, offset, limit int) ([]*domain2.Post, error) {
 	listPost, err := r.database.Post.
 		Query().
 		Offset(offset).
@@ -46,7 +46,7 @@ func (r PostRepository) List(ctx context.Context, offset, limit int) ([]*domain.
 	return utils.ConvertDomainPosts(listPost), nil
 }
 
-func (r PostRepository) GetByID(ctx context.Context, id int) (*domain.Post, error) {
+func (r PostRepository) GetByID(ctx context.Context, id int) (*domain2.Post, error) {
 	gotPost, err := r.database.Post.
 		Get(ctx, id)
 	if err != nil {
@@ -56,7 +56,7 @@ func (r PostRepository) GetByID(ctx context.Context, id int) (*domain.Post, erro
 	return utils.ConvertDomainPost(gotPost), nil
 }
 
-func (r PostRepository) GetCommentsByID(ctx context.Context, id, offset, limit int) ([]*domain.Comment, error) {
+func (r PostRepository) GetCommentsByID(ctx context.Context, id, offset, limit int) ([]*domain2.Comment, error) {
 	listPost, err := r.database.Post.
 		Query().
 		Where(entpost.IDEQ(id)).
@@ -72,7 +72,7 @@ func (r PostRepository) GetCommentsByID(ctx context.Context, id, offset, limit i
 	return utils.ConvertDomainComments(listPost), nil
 }
 
-func (r PostRepository) Update(ctx context.Context, id int, post *domain.Post) (*domain.Post, error) {
+func (r PostRepository) Update(ctx context.Context, id int, post *domain2.Post) (*domain2.Post, error) {
 	updateBuilder := r.database.Post.
 		UpdateOneID(id)
 

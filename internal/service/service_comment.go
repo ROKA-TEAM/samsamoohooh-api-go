@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"samsamoohooh-go-api/internal/domain"
+	"samsamoohooh-go-api/internal/application/domain"
 )
 
 type CommentService struct {

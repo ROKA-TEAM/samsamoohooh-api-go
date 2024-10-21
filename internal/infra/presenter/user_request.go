@@ -1,6 +1,8 @@
 package presenter
 
-import "samsamoohooh-go-api/internal/domain"
+import (
+	"samsamoohooh-go-api/internal/application/domain"
+)
 
 type UserCreateRequest struct {
 	Name       string `json:"name"  validate:"min=1,max=15"`

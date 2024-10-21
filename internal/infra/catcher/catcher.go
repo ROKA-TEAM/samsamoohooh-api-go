@@ -1,7 +1,7 @@
 package catcher
 
 import (
-	"samsamoohooh-go-api/internal/domain"
+	"samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/infra/logger"
 
 	"github.com/gofiber/fiber/v2"

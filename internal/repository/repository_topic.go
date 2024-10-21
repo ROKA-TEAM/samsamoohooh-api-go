@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"samsamoohooh-go-api/internal/domain"
+	"samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/repository/database"
 	"samsamoohooh-go-api/internal/repository/database/utils"
 )

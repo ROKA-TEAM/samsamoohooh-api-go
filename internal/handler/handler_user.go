@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"samsamoohooh-go-api/internal/domain"
-	"samsamoohooh-go-api/internal/handler/utils"
+	"samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/handler/utils"
 	"samsamoohooh-go-api/internal/infra/middleware"
 	"samsamoohooh-go-api/internal/infra/presenter"
 

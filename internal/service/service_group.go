@@ -2,49 +2,48 @@ package service
 
 import (
 	"context"
-	"samsamoohooh-go-api/internal/domain"
-
 	"github.com/pkg/errors"
+	domain2 "samsamoohooh-go-api/internal/application/domain"
 )
 
-var _ domain.GroupService = &GroupService{}
+var _ domain2.GroupService = &GroupService{}
 
 type GroupService struct {
-	groupRepository domain.GroupRepository
-	userService     domain.UserService
-	taskService     domain.TaskService
+	groupRepository domain2.GroupRepository
+	userService     domain2.UserService
+	taskService     domain2.TaskService
 }
 
-func NewGroupService(groupRepository domain.GroupRepository) *GroupService {
+func NewGroupService(groupRepository domain2.GroupRepository) *GroupService {
 	return &GroupService{
 		groupRepository: groupRepository,
 	}
 }
 
-func (s *GroupService) Create(ctx context.Context, group *domain.Group) (*domain.Group, error) {
-	token, ok := ctx.Value("token").(*domain.Token)
+func (s *GroupService) Create(ctx context.Context, group *domain2.Group) (*domain2.Group, error) {
+	token, ok := ctx.Value("token").(*domain2.Token)
 	if !ok {
-		return nil, errors.Wrap(domain.ErrInternal, "token value cannot be converted")
+		return nil, errors.Wrap(domain2.ErrInternal, "token value cannot be converted")
 	}
 	return s.groupRepository.Create(ctx, token.Subject, group)
 }
-func (s *GroupService) List(ctx context.Context, offset, limit int) ([]*domain.Group, error) {
+func (s *GroupService) List(ctx context.Context, offset, limit int) ([]*domain2.Group, error) {
 	return s.groupRepository.List(ctx, offset, limit)
 }
-func (s *GroupService) GetByID(ctx context.Context, id int) (*domain.Group, error) {
+func (s *GroupService) GetByID(ctx context.Context, id int) (*domain2.Group, error) {
 	return s.groupRepository.GetByID(ctx, id)
 }
 
-func (s *GroupService) GetUsersByID(ctx context.Context, id int, offset, limit int) ([]*domain.User, error) {
+func (s *GroupService) GetUsersByID(ctx context.Context, id int, offset, limit int) ([]*domain2.User, error) {
 	return s.groupRepository.GetUsersByID(ctx, id, offset, limit)
 }
-func (s *GroupService) GetPostsByID(ctx context.Context, id int, offset, limit int) ([]*domain.Post, error) {
+func (s *GroupService) GetPostsByID(ctx context.Context, id int, offset, limit int) ([]*domain2.Post, error) {
 	return s.groupRepository.GetPostsByID(ctx, id, offset, limit)
 }
-func (s *GroupService) GetTasksByID(ctx context.Context, id int, offset, limit int) ([]*domain.Task, error) {
+func (s *GroupService) GetTasksByID(ctx context.Context, id int, offset, limit int) ([]*domain2.Task, error) {
 	return s.groupRepository.GetTasksByID(ctx, id, offset, limit)
 }
-func (s *GroupService) Update(ctx context.Context, id int, group *domain.Group) (*domain.Group, error) {
+func (s *GroupService) Update(ctx context.Context, id int, group *domain2.Group) (*domain2.Group, error) {
 	return s.groupRepository.Update(ctx, id, group)
 }
 func (s *GroupService) Delete(ctx context.Context, id int) error {
@@ -52,15 +51,15 @@ func (s *GroupService) Delete(ctx context.Context, id int) error {
 }
 
 func (s *GroupService) StartDiscussion(ctx context.Context, groupID, taskID int) (topics []string, userNames []string, err error) {
-	token, ok := ctx.Value("token").(*domain.Token)
+	token, ok := ctx.Value("token").(*domain2.Token)
 	if !ok {
-		return nil, nil, errors.Wrap(domain.ErrInternal, "token value cannot be converted")
+		return nil, nil, errors.Wrap(domain2.ErrInternal, "token value cannot be converted")
 	}
 
 	// 요청한 사용자가 조회해도 되나?
 	_, err = s.userService.GetGroupsByID(ctx, token.Subject, 0, 10)
 	if err != nil {
-		return nil, nil, errors.Wrap(domain.ErrConstraint, "user cannot access the group")
+		return nil, nil, errors.Wrap(domain2.ErrConstraint, "user cannot access the group")
 	}
 
 	// topics 구하기
@@ -88,7 +87,7 @@ func (s *GroupService) StartDiscussion(ctx context.Context, groupID, taskID int)
 	}
 
 	// group bookmark 설정
-	_, err = s.groupRepository.Update(ctx, groupID, &domain.Group{
+	_, err = s.groupRepository.Update(ctx, groupID, &domain2.Group{
 		Bookmark: gotTask.Range,
 	})
 	if err != nil {

@@ -1,17 +1,17 @@
 package utils
 
 import (
-	"samsamoohooh-go-api/internal/domain"
+	domain2 "samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/repository/database/ent"
 )
 
-func ConvertDomainUser(user *ent.User) *domain.User {
-	return &domain.User{
+func ConvertDomainUser(user *ent.User) *domain2.User {
+	return &domain2.User{
 		ID:         user.ID,
 		Name:       user.Name,
 		Resolution: user.Resolution,
-		Role:       domain.UserRoleType(user.Role),
-		Social:     domain.UserSocialType(user.Social),
+		Role:       domain2.UserRoleType(user.Role),
+		Social:     domain2.UserSocialType(user.Social),
 		SocialSub:  user.SocialSub,
 		CreatedAt:  user.CreatedAt,
 		UpdatedAt:  user.UpdatedAt,
@@ -19,8 +19,8 @@ func ConvertDomainUser(user *ent.User) *domain.User {
 	}
 }
 
-func ConvertDomainUsers(users []*ent.User) []*domain.User {
-	var domainUsers []*domain.User
+func ConvertDomainUsers(users []*ent.User) []*domain2.User {
+	var domainUsers []*domain2.User
 	for _, user := range users {
 		domainUsers = append(domainUsers, ConvertDomainUser(user))
 	}
@@ -28,8 +28,8 @@ func ConvertDomainUsers(users []*ent.User) []*domain.User {
 	return domainUsers
 }
 
-func ConvertDomainGroup(group *ent.Group) *domain.Group {
-	return &domain.Group{
+func ConvertDomainGroup(group *ent.Group) *domain2.Group {
+	return &domain2.Group{
 		ID:          group.ID,
 		BookTitle:   group.BookTitle,
 		Author:      group.Author,
@@ -43,8 +43,8 @@ func ConvertDomainGroup(group *ent.Group) *domain.Group {
 	}
 }
 
-func ConvertDomainGroups(group []*ent.Group) []*domain.Group {
-	var domainGroups []*domain.Group
+func ConvertDomainGroups(group []*ent.Group) []*domain2.Group {
+	var domainGroups []*domain2.Group
 	for _, group := range group {
 		domainGroups = append(domainGroups, ConvertDomainGroup(group))
 	}
@@ -52,8 +52,8 @@ func ConvertDomainGroups(group []*ent.Group) []*domain.Group {
 	return domainGroups
 }
 
-func ConvertDomainPost(post *ent.Post) *domain.Post {
-	return &domain.Post{
+func ConvertDomainPost(post *ent.Post) *domain2.Post {
+	return &domain2.Post{
 		ID:        post.ID,
 		Title:     post.Title,
 		Content:   post.Content,
@@ -63,8 +63,8 @@ func ConvertDomainPost(post *ent.Post) *domain.Post {
 	}
 }
 
-func ConvertDomainPosts(posts []*ent.Post) []*domain.Post {
-	var domainPosts []*domain.Post
+func ConvertDomainPosts(posts []*ent.Post) []*domain2.Post {
+	var domainPosts []*domain2.Post
 	for _, post := range posts {
 		domainPosts = append(domainPosts, ConvertDomainPost(post))
 	}
@@ -72,8 +72,8 @@ func ConvertDomainPosts(posts []*ent.Post) []*domain.Post {
 	return domainPosts
 }
 
-func ConvertDomainComment(comment *ent.Comment) *domain.Comment {
-	return &domain.Comment{
+func ConvertDomainComment(comment *ent.Comment) *domain2.Comment {
+	return &domain2.Comment{
 		ID:        comment.ID,
 		Content:   comment.Content,
 		CreatedAt: comment.CreatedAt,
@@ -82,8 +82,8 @@ func ConvertDomainComment(comment *ent.Comment) *domain.Comment {
 	}
 }
 
-func ConvertDomainComments(comments []*ent.Comment) []*domain.Comment {
-	var domainComments []*domain.Comment
+func ConvertDomainComments(comments []*ent.Comment) []*domain2.Comment {
+	var domainComments []*domain2.Comment
 	for _, comment := range comments {
 		domainComments = append(domainComments, ConvertDomainComment(comment))
 	}
@@ -91,8 +91,8 @@ func ConvertDomainComments(comments []*ent.Comment) []*domain.Comment {
 	return domainComments
 }
 
-func ConvertDomainTask(task *ent.Task) *domain.Task {
-	return &domain.Task{
+func ConvertDomainTask(task *ent.Task) *domain2.Task {
+	return &domain2.Task{
 		ID:        task.ID,
 		Deadline:  task.Deadline,
 		Range:     task.Range,
@@ -102,8 +102,8 @@ func ConvertDomainTask(task *ent.Task) *domain.Task {
 	}
 }
 
-func ConvertDomainTasks(tasks []*ent.Task) []*domain.Task {
-	var domainTasks []*domain.Task
+func ConvertDomainTasks(tasks []*ent.Task) []*domain2.Task {
+	var domainTasks []*domain2.Task
 	for _, task := range tasks {
 		domainTasks = append(domainTasks, ConvertDomainTask(task))
 	}
@@ -111,8 +111,8 @@ func ConvertDomainTasks(tasks []*ent.Task) []*domain.Task {
 	return domainTasks
 }
 
-func ConvertDomainTopic(topic *ent.Topic) *domain.Topic {
-	return &domain.Topic{
+func ConvertDomainTopic(topic *ent.Topic) *domain2.Topic {
+	return &domain2.Topic{
 		ID:        topic.ID,
 		Topic:     topic.Topic,
 		Feeling:   topic.Feeling,
@@ -122,8 +122,8 @@ func ConvertDomainTopic(topic *ent.Topic) *domain.Topic {
 	}
 }
 
-func ConvertDomainTopics(topics []*ent.Topic) []*domain.Topic {
-	var domainTopics []*domain.Topic
+func ConvertDomainTopics(topics []*ent.Topic) []*domain2.Topic {
+	var domainTopics []*domain2.Topic
 	for _, topic := range topics {
 		domainTopics = append(domainTopics, ConvertDomainTopic(topic))
 	}

@@ -1,20 +1,20 @@
 package presenter
 
 import (
-	"samsamoohooh-go-api/internal/domain"
+	domain2 "samsamoohooh-go-api/internal/application/domain"
 	"time"
 )
 
 type UserCreateResponse struct {
-	ID         int                 `json:"id"`
-	Name       string              `json:"name"`
-	Resolution string              `json:"resolution"`
-	Role       domain.UserRoleType `json:"role"`
-	CreatedAt  time.Time           `json:"createdAt"`
-	UpdatedAt  time.Time           `json:"updatedAt"`
+	ID         int                  `json:"id"`
+	Name       string               `json:"name"`
+	Resolution string               `json:"resolution"`
+	Role       domain2.UserRoleType `json:"role"`
+	CreatedAt  time.Time            `json:"createdAt"`
+	UpdatedAt  time.Time            `json:"updatedAt"`
 }
 
-func NewUserCreateResponse(user *domain.User) *UserCreateResponse {
+func NewUserCreateResponse(user *domain2.User) *UserCreateResponse {
 	return &UserCreateResponse{
 		ID:         user.ID,
 		Name:       user.Name,
@@ -26,17 +26,17 @@ func NewUserCreateResponse(user *domain.User) *UserCreateResponse {
 }
 
 type UserListResponse struct {
-	ID         int                   `json:"id"`
-	Name       string                `json:"name"`
-	Resolution string                `json:"resolution"`
-	Role       domain.UserRoleType   `json:"role"`
-	Social     domain.UserSocialType `json:"social"`
-	SocialSub  string                `json:"socialSub"`
-	CreatedAt  time.Time             `json:"createdAt"`
-	UpdatedAt  time.Time             `json:"updatedAt"`
+	ID         int                    `json:"id"`
+	Name       string                 `json:"name"`
+	Resolution string                 `json:"resolution"`
+	Role       domain2.UserRoleType   `json:"role"`
+	Social     domain2.UserSocialType `json:"social"`
+	SocialSub  string                 `json:"socialSub"`
+	CreatedAt  time.Time              `json:"createdAt"`
+	UpdatedAt  time.Time              `json:"updatedAt"`
 }
 
-func NewListUserResponse(users []*domain.User) []*UserListResponse {
+func NewListUserResponse(users []*domain2.User) []*UserListResponse {
 	var listUser []*UserListResponse
 	for _, user := range users {
 		listUser = append(listUser, &UserListResponse{
@@ -55,17 +55,17 @@ func NewListUserResponse(users []*domain.User) []*UserListResponse {
 }
 
 type UserGetByIDResponse struct {
-	ID         int                   `json:"id"`
-	Name       string                `json:"name"`
-	Resolution string                `json:"resolution"`
-	Role       domain.UserRoleType   `json:"role"`
-	Social     domain.UserSocialType `json:"social"`
-	SocialSub  string                `json:"socialSub"`
-	CreatedAt  time.Time             `json:"createdAt"`
-	UpdatedAt  time.Time             `json:"updatedAt"`
+	ID         int                    `json:"id"`
+	Name       string                 `json:"name"`
+	Resolution string                 `json:"resolution"`
+	Role       domain2.UserRoleType   `json:"role"`
+	Social     domain2.UserSocialType `json:"social"`
+	SocialSub  string                 `json:"socialSub"`
+	CreatedAt  time.Time              `json:"createdAt"`
+	UpdatedAt  time.Time              `json:"updatedAt"`
 }
 
-func NewUserGetByIDResponse(user *domain.User) *UserGetByIDResponse {
+func NewUserGetByIDResponse(user *domain2.User) *UserGetByIDResponse {
 	return &UserGetByIDResponse{
 		ID:         user.ID,
 		Name:       user.Name,
@@ -90,7 +90,7 @@ type UserGetGroupsByIDResponse struct {
 	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
-func NewUserGetGroupsByIDResponse(groups []*domain.Group) []*UserGetGroupsByIDResponse {
+func NewUserGetGroupsByIDResponse(groups []*domain2.Group) []*UserGetGroupsByIDResponse {
 	var listGroup []*UserGetGroupsByIDResponse
 	for _, group := range groups {
 		listGroup = append(listGroup, &UserGetGroupsByIDResponse{
@@ -110,17 +110,17 @@ func NewUserGetGroupsByIDResponse(groups []*domain.Group) []*UserGetGroupsByIDRe
 }
 
 type UserUpdateResponse struct {
-	ID         int                   `json:"id"`
-	Name       string                `json:"name"`
-	Resolution string                `json:"resolution"`
-	Role       domain.UserRoleType   `json:"role"`
-	Social     domain.UserSocialType `json:"social"`
-	SocialSub  string                `json:"socialSub"`
-	CreatedAt  time.Time             `json:"createdAt"`
-	UpdatedAt  time.Time             `json:"updatedAt"`
+	ID         int                    `json:"id"`
+	Name       string                 `json:"name"`
+	Resolution string                 `json:"resolution"`
+	Role       domain2.UserRoleType   `json:"role"`
+	Social     domain2.UserSocialType `json:"social"`
+	SocialSub  string                 `json:"socialSub"`
+	CreatedAt  time.Time              `json:"createdAt"`
+	UpdatedAt  time.Time              `json:"updatedAt"`
 }
 
-func NewUserUpdateResponse(user *domain.User) *UserUpdateResponse {
+func NewUserUpdateResponse(user *domain2.User) *UserUpdateResponse {
 	return &UserUpdateResponse{
 		ID:         user.ID,
 		Name:       user.Name,

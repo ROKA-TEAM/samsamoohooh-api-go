@@ -1,6 +1,8 @@
 package presenter
 
-import "samsamoohooh-go-api/internal/domain"
+import (
+	"samsamoohooh-go-api/internal/application/domain"
+)
 
 type TopicCreateRequest struct {
 	Topic   string `json:"topic" validate:"min=1,max=24"`

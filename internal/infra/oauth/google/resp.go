@@ -1,6 +1,8 @@
 package google
 
-import "samsamoohooh-go-api/internal/domain"
+import (
+	"samsamoohooh-go-api/internal/application/domain"
+)
 
 type exchangeResponseBody struct {
 	Sub        string `json:"sub"`

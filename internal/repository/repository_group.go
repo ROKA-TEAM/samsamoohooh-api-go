@@ -2,13 +2,13 @@ package repository
 
 import (
 	"context"
-	"samsamoohooh-go-api/internal/domain"
+	domain2 "samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/repository/database"
 	groupent "samsamoohooh-go-api/internal/repository/database/ent/group"
 	"samsamoohooh-go-api/internal/repository/database/utils"
 )
 
-var _ domain.GroupRepository = (*GroupRepository)(nil)
+var _ domain2.GroupRepository = (*GroupRepository)(nil)
 
 type GroupRepository struct {
 	database *database.Database
@@ -18,7 +18,7 @@ func NewGroupRepository(database *database.Database) *GroupRepository {
 	return &GroupRepository{database: database}
 }
 
-func (r *GroupRepository) Create(ctx context.Context, userID int, group *domain.Group) (*domain.Group, error) {
+func (r *GroupRepository) Create(ctx context.Context, userID int, group *domain2.Group) (*domain2.Group, error) {
 	createdGroup, err := r.database.Client.Group.
 		Create().
 		SetBookTitle(group.BookTitle).
@@ -36,7 +36,7 @@ func (r *GroupRepository) Create(ctx context.Context, userID int, group *domain.
 
 	return utils.ConvertDomainGroup(createdGroup), nil
 }
-func (r *GroupRepository) List(ctx context.Context, offset, limit int) ([]*domain.Group, error) {
+func (r *GroupRepository) List(ctx context.Context, offset, limit int) ([]*domain2.Group, error) {
 	listGroups, err := r.database.Client.Group.
 		Query().
 		Offset(offset).
@@ -50,7 +50,7 @@ func (r *GroupRepository) List(ctx context.Context, offset, limit int) ([]*domai
 	return utils.ConvertDomainGroups(listGroups), nil
 }
 
-func (r *GroupRepository) GetByID(ctx context.Context, id int) (*domain.Group, error) {
+func (r *GroupRepository) GetByID(ctx context.Context, id int) (*domain2.Group, error) {
 	gotGroup, err := r.database.Client.
 		Group.Get(ctx, id)
 
@@ -60,7 +60,7 @@ func (r *GroupRepository) GetByID(ctx context.Context, id int) (*domain.Group, e
 
 	return utils.ConvertDomainGroup(gotGroup), nil
 }
-func (r *GroupRepository) GetUsersByID(ctx context.Context, id int, offset, limit int) ([]*domain.User, error) {
+func (r *GroupRepository) GetUsersByID(ctx context.Context, id int, offset, limit int) ([]*domain2.User, error) {
 	listUser, err := r.database.Client.Group.
 		Query().
 		Where(groupent.ID(id)).
@@ -75,7 +75,7 @@ func (r *GroupRepository) GetUsersByID(ctx context.Context, id int, offset, limi
 	return utils.ConvertDomainUsers(listUser), nil
 
 }
-func (r *GroupRepository) GetPostsByID(ctx context.Context, id int, offset, limit int) ([]*domain.Post, error) {
+func (r *GroupRepository) GetPostsByID(ctx context.Context, id int, offset, limit int) ([]*domain2.Post, error) {
 	listPost, err := r.database.Client.Group.
 		Query().Where(groupent.ID(id)).
 		QueryPosts().
@@ -89,7 +89,7 @@ func (r *GroupRepository) GetPostsByID(ctx context.Context, id int, offset, limi
 
 	return utils.ConvertDomainPosts(listPost), nil
 }
-func (r *GroupRepository) GetTasksByID(ctx context.Context, id int, offset, limit int) ([]*domain.Task, error) {
+func (r *GroupRepository) GetTasksByID(ctx context.Context, id int, offset, limit int) ([]*domain2.Task, error) {
 	listTask, err := r.database.Client.Group.
 		Query().
 		Where(groupent.ID(id)).
@@ -104,7 +104,7 @@ func (r *GroupRepository) GetTasksByID(ctx context.Context, id int, offset, limi
 
 	return utils.ConvertDomainTasks(listTask), nil
 }
-func (r *GroupRepository) Update(ctx context.Context, id int, group *domain.Group) (*domain.Group, error) {
+func (r *GroupRepository) Update(ctx context.Context, id int, group *domain2.Group) (*domain2.Group, error) {
 	updateBuilder := r.database.Group.
 		UpdateOneID(id)
 

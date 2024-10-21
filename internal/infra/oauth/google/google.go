@@ -3,7 +3,7 @@ package google
 import (
 	"context"
 	"encoding/json"
-	"samsamoohooh-go-api/internal/domain"
+	domain2 "samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/infra/config"
 
 	"github.com/pkg/errors"
@@ -12,7 +12,7 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
-var _ domain.OauthAuthorizationGrantService = (*OauthGoogleService)(nil)
+var _ domain2.OauthAuthorizationGrantService = (*OauthGoogleService)(nil)
 
 const (
 	scopeProfile = "https://www.googleapis.com/auth/userinfo.profile"
@@ -25,14 +25,14 @@ const (
 type OauthGoogleService struct {
 	config       *config.Config
 	oauthConfig  *oauth2.Config
-	userService  domain.UserService
-	tokenService domain.TokenService
+	userService  domain2.UserService
+	tokenService domain2.TokenService
 }
 
 func NewOauthGoogleService(
 	config *config.Config,
-	userService domain.UserService,
-	tokenService domain.TokenService,
+	userService domain2.UserService,
+	tokenService domain2.TokenService,
 ) *OauthGoogleService {
 	return &OauthGoogleService{
 		config: config,
@@ -52,26 +52,26 @@ func (s OauthGoogleService) GetLoginURL(state string) string {
 	return s.oauthConfig.AuthCodeURL(state)
 }
 
-func (s OauthGoogleService) Exchange(ctx context.Context, code string) (*domain.OauthPayload, error) {
+func (s OauthGoogleService) Exchange(ctx context.Context, code string) (*domain2.OauthPayload, error) {
 	token, err := s.oauthConfig.Exchange(ctx, code)
 	if err != nil {
-		return nil, errors.Wrap(domain.ErrInternal, err.Error())
+		return nil, errors.Wrap(domain2.ErrInternal, err.Error())
 	}
 
 	client := s.oauthConfig.Client(ctx, token)
 	resp, err := client.Get(userInfoAPI)
 	if err != nil {
-		return nil, errors.Wrap(domain.ErrInternal, err.Error())
+		return nil, errors.Wrap(domain2.ErrInternal, err.Error())
 	}
 
 	var respBody exchangeResponseBody
 	if err := json.NewDecoder(resp.Body).Decode(&respBody); err != nil {
-		return nil, errors.Wrap(domain.ErrInternal, err.Error())
+		return nil, errors.Wrap(domain2.ErrInternal, err.Error())
 	}
 
 	err = resp.Body.Close()
 	if err != nil {
-		return nil, errors.Wrap(domain.ErrInternal, err.Error())
+		return nil, errors.Wrap(domain2.ErrInternal, err.Error())
 	}
 
 	return respBody.toDomain(), nil
@@ -80,16 +80,16 @@ func (s OauthGoogleService) Exchange(ctx context.Context, code string) (*domain.
 func (s OauthGoogleService) AuthenticateOrRegister(ctx context.Context, code string) (string, string, error) {
 	payload, err := s.Exchange(ctx, code)
 	if err != nil {
-		return "", "", errors.Wrap(domain.ErrInternal, err.Error())
+		return "", "", errors.Wrap(domain2.ErrInternal, err.Error())
 	}
 
 	user, err := s.userService.GetBySub(ctx, payload.Sub)
 
-	if errors.Is(err, domain.ErrNotFound) {
-		createdUser, err := s.userService.Create(ctx, &domain.User{
+	if errors.Is(err, domain2.ErrNotFound) {
+		createdUser, err := s.userService.Create(ctx, &domain2.User{
 			Name:      payload.Name,
-			Role:      domain.UserRoleGuest,
-			Social:    domain.UserSocialGoogle,
+			Role:      domain2.UserRoleGuest,
+			Social:    domain2.UserSocialGoogle,
 			SocialSub: payload.Sub,
 		})
 		if err != nil {

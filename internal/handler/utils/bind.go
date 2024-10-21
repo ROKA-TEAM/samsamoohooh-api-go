@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"samsamoohooh-go-api/internal/domain"
+	"samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/infra/verifier"
 
 	"github.com/gofiber/fiber/v2"

@@ -2,20 +2,20 @@ package service
 
 import (
 	"context"
-	"samsamoohooh-go-api/internal/domain"
+	domain2 "samsamoohooh-go-api/internal/application/domain"
 )
 
-var _ domain.UserService = (*UserService)(nil)
+var _ domain2.UserService = (*UserService)(nil)
 
 type UserService struct {
-	userRepository domain.UserRepository
+	userRepository domain2.UserRepository
 }
 
-func NewUserService(userRepository domain.UserRepository) *UserService {
+func NewUserService(userRepository domain2.UserRepository) *UserService {
 	return &UserService{userRepository: userRepository}
 }
 
-func (s *UserService) Create(ctx context.Context, user *domain.User) (*domain.User, error) {
+func (s *UserService) Create(ctx context.Context, user *domain2.User) (*domain2.User, error) {
 	createdUser, err := s.userRepository.Create(ctx, user)
 	if err != nil {
 		return nil, err
@@ -24,7 +24,7 @@ func (s *UserService) Create(ctx context.Context, user *domain.User) (*domain.Us
 	return createdUser, nil
 }
 
-func (s *UserService) GetByID(ctx context.Context, id int) (*domain.User, error) {
+func (s *UserService) GetByID(ctx context.Context, id int) (*domain2.User, error) {
 	gotUser, err := s.userRepository.GetByID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func (s *UserService) GetByID(ctx context.Context, id int) (*domain.User, error)
 	return gotUser, nil
 }
 
-func (s *UserService) GetBySub(ctx context.Context, sub string) (*domain.User, error) {
+func (s *UserService) GetBySub(ctx context.Context, sub string) (*domain2.User, error) {
 	gotUser, err := s.userRepository.GetBySub(ctx, sub)
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func (s *UserService) GetBySub(ctx context.Context, sub string) (*domain.User, e
 	return gotUser, nil
 }
 
-func (s *UserService) GetGroupsByID(ctx context.Context, id int, limit, offset int) ([]*domain.Group, error) {
+func (s *UserService) GetGroupsByID(ctx context.Context, id int, limit, offset int) ([]*domain2.Group, error) {
 	gotGroups, err := s.userRepository.GetGroupsByID(ctx, id, limit, offset)
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func (s *UserService) GetGroupsByID(ctx context.Context, id int, limit, offset i
 	return gotGroups, nil
 }
 
-func (s *UserService) List(ctx context.Context, limit, offset int) ([]*domain.User, error) {
+func (s *UserService) List(ctx context.Context, limit, offset int) ([]*domain2.User, error) {
 	gotUsers, err := s.userRepository.List(ctx, limit, offset)
 	if err != nil {
 		return nil, err
@@ -60,7 +60,7 @@ func (s *UserService) List(ctx context.Context, limit, offset int) ([]*domain.Us
 	return gotUsers, nil
 }
 
-func (s *UserService) Update(ctx context.Context, id int, user *domain.User) (*domain.User, error) {
+func (s *UserService) Update(ctx context.Context, id int, user *domain2.User) (*domain2.User, error) {
 	updatedUser, err := s.userRepository.Update(ctx, id, user)
 	if err != nil {
 		return nil, err

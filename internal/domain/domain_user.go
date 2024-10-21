@@ -8,8 +8,10 @@ import (
 type UserRoleType string
 
 const (
-	UserRoleAdmin UserRoleType = "ADMIN"
-	UserRoleGuest UserRoleType = "GUEST"
+	UserRoleAdmin   UserRoleType = "ADMIN"
+	UserRoleMANAGER UserRoleType = "MANAGER"
+
+	UserRoleGuest UserRoleType = "USER"
 )
 
 type UserSocialType string

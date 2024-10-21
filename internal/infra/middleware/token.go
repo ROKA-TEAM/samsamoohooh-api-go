@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"samsamoohooh-go-api/internal/domain"
+	domain2 "samsamoohooh-go-api/internal/application/domain"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -10,17 +10,17 @@ import (
 )
 
 type GuardMiddleware struct {
-	tokenService domain.TokenService
+	tokenService domain2.TokenService
 }
 
-func NewGuardMiddleware(tokenService domain.TokenService) *GuardMiddleware {
+func NewGuardMiddleware(tokenService domain2.TokenService) *GuardMiddleware {
 	return &GuardMiddleware{tokenService: tokenService}
 }
 
 func (m GuardMiddleware) RequireAuthorization(c *fiber.Ctx) error {
 	tokenString := c.Get("Authorization")
 	if tokenString == "" {
-		return domain.ErrMissingAuthorizationHeader
+		return domain2.ErrMissingAuthorizationHeader
 	}
 
 	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
@@ -39,9 +39,9 @@ func (m GuardMiddleware) RequireAuthorization(c *fiber.Ctx) error {
 	return c.Next()
 }
 
-func (m GuardMiddleware) RequireAccess(accessibleRoles ...domain.UserRoleType) func(*fiber.Ctx) error {
+func (m GuardMiddleware) RequireAccess(accessibleRoles ...domain2.UserRoleType) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		token, ok := c.Locals("token").(*domain.Token)
+		token, ok := c.Locals("token").(*domain2.Token)
 		if !ok {
 			return fiber.ErrUnauthorized
 		}
@@ -56,7 +56,7 @@ func (m GuardMiddleware) RequireAccess(accessibleRoles ...domain.UserRoleType) f
 		}
 
 		if !isAccessible {
-			return errors.Wrap(domain.ErrForbidden, "you are in possession of an inaccessible coin.")
+			return errors.Wrap(domain2.ErrForbidden, "you are in possession of an inaccessible coin.")
 		}
 
 		return c.Next()

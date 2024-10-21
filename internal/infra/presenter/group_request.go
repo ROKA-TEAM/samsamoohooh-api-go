@@ -1,7 +1,7 @@
 package presenter
 
 import (
-	"samsamoohooh-go-api/internal/domain"
+	"samsamoohooh-go-api/internal/application/domain"
 )
 
 type GroupCreateReqeust struct {
