@@ -2,6 +2,7 @@ package guard
 
 import (
 	"samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/pkg/box"
 	"samsamoohooh-go-api/pkg/token"
 	"strings"
 
@@ -30,17 +31,17 @@ func NewMiddleware(
 func (m *Middleware) RequireAuthorization(c fiber.Ctx) error {
 	tokenString := c.Get("Authorization")
 	if tokenString == "" {
-		return fiber.NewError(fiber.StatusUnauthorized, "Missing Authorization header")
+		return box.Wrap(domain.ErrAuthorization, "Missing Authorization header")
 	}
 
 	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
 	isValid, err := m.tokenService.ValidateToken(tokenString)
 	if err != nil {
-		return fiber.NewError(fiber.StatusUnauthorized, "Not validation token"+err.Error())
+		return box.Wrap(domain.ErrAuthorization, "Not validation token"+err.Error())
 	}
 
 	if !isValid {
-		return fiber.NewError(fiber.StatusUnauthorized, "Invalid Authorization header")
+		return box.Wrap(domain.ErrAuthorization, "Invalid Authorization header")
 	}
 
 	parsedToken, err := m.tokenService.ParseToken(tokenString)
@@ -56,11 +57,11 @@ func (m *Middleware) AccessOnly(roleType domain.UserRoleType) func(c fiber.Ctx) 
 	return func(c fiber.Ctx) error {
 		t, ok := c.Locals(TokenKey).(*token.Token)
 		if !ok {
-			return fiber.NewError(fiber.StatusUnauthorized, "unable to get token")
+			return box.Wrap(domain.ErrAuthorization, "unable to get token")
 		}
 
 		if !(strings.Compare(t.Role, string(roleType)) == 0) {
-			return fiber.NewError(fiber.StatusUnauthorized, "invalid role")
+			return box.Wrap(domain.ErrAuthorization, "invalid role")
 		}
 
 		return c.Next()
@@ -70,7 +71,7 @@ func (m *Middleware) AccessOnly(roleType domain.UserRoleType) func(c fiber.Ctx) 
 func (m *Middleware) CheckGroupAccess(c fiber.Ctx) error {
 	t, ok := c.Locals(TokenKey).(*token.Token)
 	if !ok {
-		return fiber.NewError(fiber.StatusUnauthorized, "unable to get token")
+		return box.Wrap(domain.ErrAuthorization, "unable to get token")
 	}
 
 	gid := fiber.Params[int](c, "gid", -1)
@@ -84,7 +85,7 @@ func (m *Middleware) CheckGroupAccess(c fiber.Ctx) error {
 		}
 
 		if body.GroupID < 1 {
-			return fiber.NewError(fiber.StatusUnauthorized, "empty gid")
+			return box.Wrap(domain.ErrAuthorization, "invalid group id")
 		}
 
 		gid = body.GroupID
@@ -92,11 +93,11 @@ func (m *Middleware) CheckGroupAccess(c fiber.Ctx) error {
 
 	isValid, err := m.userService.IsUserInGroup(c.Context(), t.Subject, gid)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		return err
 	}
 
 	if !isValid {
-		return fiber.NewError(fiber.StatusForbidden, "requested user is not in the group")
+		return box.Wrap(domain.ErrForbidden, "requested user is not in the group")
 	}
 
 	return c.Next()
