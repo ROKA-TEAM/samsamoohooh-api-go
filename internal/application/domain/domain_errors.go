@@ -15,4 +15,5 @@ var (
 	ErrAuthorization = box.NewError("authorization error", http.StatusUnauthorized)
 	ErrForbidden     = box.NewError("forbidden", http.StatusForbidden)
 	ErrInternal      = box.NewError("internal error", http.StatusInternalServerError)
+	ErrBadRequest    = box.NewError("bad request", http.StatusBadRequest)
 )

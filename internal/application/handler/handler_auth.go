@@ -52,14 +52,14 @@ func (h *AuthHandler) Validation(c fiber.Ctx) error {
 	if body.AccessToken != "" {
 		_, err := h.tokenService.ValidateToken(body.AccessToken)
 		if err != nil {
-			return box.Wrap(domain.ErrAuthorization, err.Error())
+			return err
 		}
 	}
 
 	if body.RefreshToken != "" {
 		_, err := h.tokenService.ValidateToken(body.RefreshToken)
 		if err != nil {
-			return box.Wrap(domain.ErrAuthorization, err.Error())
+			return err
 		}
 	}
 
@@ -123,12 +123,12 @@ func (h *AuthHandler) GoogleCallback(c fiber.Ctx) error {
 	}
 
 	if state != c.FormValue(stateKey) {
-		return fiber.NewError(fiber.StatusBadRequest, "invalid state")
+		return box.Wrap(domain.ErrBadRequest, "invalid state")
 	}
 
 	accessToken, refreshToken, err := h.googleOauthService.AuthenticateOrRegister(c.Context(), c.FormValue("code"))
 	if err != nil {
-		return err
+		return box.Wrap(domain.ErrBadRequest, err.Error())
 	}
 
 	return c.Status(fiber.StatusOK).JSON(&presenter.GoogleCallbackResponse{
@@ -168,7 +168,7 @@ func (h *AuthHandler) KaKaoCallback(c fiber.Ctx) error {
 	}
 
 	if state != c.FormValue(stateKey) {
-		return fiber.NewError(fiber.StatusBadRequest, "invalid state")
+		return box.Wrap(domain.ErrBadRequest, "invalid state")
 	}
 
 	accessToken, refreshToken, err := h.kakaoOauthService.AuthenticateOrRegister(c.Context(), c.FormValue("code"))
@@ -180,5 +180,4 @@ func (h *AuthHandler) KaKaoCallback(c fiber.Ctx) error {
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	})
-
 }
