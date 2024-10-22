@@ -17,6 +17,13 @@ func NewCommentHandler(
 	return &CommentHandler{commentService: commentService}
 }
 
+func (h *CommentHandler) Route(router fiber.Router) {
+	router.Post("/", h.CreateComment)
+	router.Get("/:cid", h.GetByCommentID)
+	router.Put("/:cid", h.UpdateComment)
+	router.Delete("/:cid", h.DeleteComment)
+}
+
 func (h *CommentHandler) CreateComment(c fiber.Ctx) error {
 	body := new(presenter.CommentCreateRequest)
 	if err := c.Bind().JSON(body); err != nil {

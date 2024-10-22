@@ -20,6 +20,20 @@ func NewGroupHandler(groupService domain.GroupService) *GroupHandler {
 	}
 }
 
+func (h *GroupHandler) Route(router fiber.Router) {
+	router.Post("/", h.CreateGroup)
+	router.Get("/:gid", h.GetByGroupID)
+	router.Get("/:gid/users", h.GetUsersByGroupID)
+	router.Get("/:gid/posts", h.GetPostsByGroupID)
+	router.Get("/:gid/tasks", h.GetTasksByGroupID)
+	router.Put("/:gid", h.UpdateGroup)
+	router.Post("/:gid/tasks/:tid/discussion/start", h.StartDiscussion)
+
+	router.Post("/:gid/join-code/generate", h.GenerateJoinCode)
+	router.Post("/join/:code", h.JoinGroup)
+	router.Post("/:gid/leave", h.LeaveGroup)
+}
+
 func (h *GroupHandler) CreateGroup(c fiber.Ctx) error {
 	token, err := utils.GetToken(c)
 	if err != nil {

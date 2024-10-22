@@ -17,6 +17,13 @@ func NewPostHandler(
 	return &PostHandler{postService: postService}
 }
 
+func (h *PostHandler) Route(router fiber.Router) {
+	router.Post("/", h.CreatePost)
+	router.Get("/:pid/comments", h.GetCommentsByPostID)
+	router.Put("/:pid", h.UpdatePost)
+	router.Delete("/:pid", h.DeletePost)
+}
+
 func (h *PostHandler) CreatePost(c fiber.Ctx) error {
 	body := new(presenter.PostCreateRequest)
 	if err := c.Bind().JSON(body); err != nil {

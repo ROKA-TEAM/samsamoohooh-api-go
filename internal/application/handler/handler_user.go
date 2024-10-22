@@ -5,6 +5,7 @@ import (
 	"samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/application/handler/utils"
 	"samsamoohooh-go-api/internal/application/presenter"
+	"samsamoohooh-go-api/internal/infra/middleware/guard"
 )
 
 type UserHandler struct {
@@ -15,6 +16,16 @@ func NewUserHandler(
 	userService domain.UserService,
 ) *UserHandler {
 	return &UserHandler{userService: userService}
+}
+
+func (h *UserHandler) Route(router fiber.Router, guard *guard.Middleware) {
+	me := router.Group("/me", guard.RequireAuthorization, guard.AccessOnly(domain.UserRoleUser))
+	{
+		me.Get("/", h.GetByMe)
+		me.Get("/groups", h.GetGroupsByMe)
+		me.Put("/", h.UpdateMe)
+		me.Delete("/", h.DeleteMe)
+	}
 }
 
 func (h *UserHandler) GetByMe(c fiber.Ctx) error {

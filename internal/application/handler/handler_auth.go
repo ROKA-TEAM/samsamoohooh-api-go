@@ -37,6 +37,17 @@ func NewAuthHandler(
 		tokenService:       tokenService,
 	}
 }
+func (h *AuthHandler) Route(router fiber.Router) {
+	token := router.Group("/token")
+	{
+		token.Post("/refresh", h.Refresh)
+		token.Post("/validation", h.Validation)
+	}
+	router.Get("/google", h.GetLoginURLOfGoogle)
+	router.Get("/google/callback", h.GoogleCallback)
+	router.Get("/kakao", h.GetLoginURLOfKakao)
+	router.Get("/kakao/callback", h.KaKaoCallback)
+}
 
 func (h *AuthHandler) Validation(c fiber.Ctx) error {
 	body := new(presenter.AuthValidationRequest)

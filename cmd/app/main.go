@@ -2,6 +2,9 @@ package main
 
 import (
 	"context"
+	"github.com/gofiber/fiber/v3/middleware/helmet"
+	"github.com/gofiber/fiber/v3/middleware/logger"
+	recoverer "github.com/gofiber/fiber/v3/middleware/recover"
 	"log"
 	"samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/application/handler"
@@ -89,6 +92,12 @@ func main() {
 		StructValidator: validator.New(),
 	})
 
+	app.Use(recoverer.New())
+	app.Use(helmet.New())
+	app.Use(logger.New(logger.Config{
+		Format: "${pid} ${locals:requestid} ${status} - ${method} ${path}\n",
+	}))
+
 	v1 := app.Group("v1")
 	{
 		api := v1.Group("/api")
@@ -96,76 +105,38 @@ func main() {
 
 			auth := api.Group("/auth")
 			{
-				token := auth.Group("/token")
-				{
-					token.Post("/refresh", authHandler.Refresh)
-					token.Post("/validation", authHandler.Validation)
-				}
-
-				auth.Get("/google", authHandler.GetLoginURLOfGoogle)
-				auth.Get("/google/callback", authHandler.GoogleCallback)
-				auth.Get("/kakao", authHandler.GetLoginURLOfKakao)
-				auth.Get("/kakao/callback", authHandler.KaKaoCallback)
+				authHandler.Route(auth)
 			}
 
 			users := api.Group("/users")
 			{
-				me := users.Group("/me", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
-				{
-					me.Get("/", userHandler.GetByMe)
-					me.Get("/groups", userHandler.GetGroupsByMe)
-					me.Put("/", userHandler.UpdateMe)
-					me.Delete("/", userHandler.DeleteMe)
-				}
+				userHandler.Route(users, guardMiddleware)
 			}
 
 			groups := api.Group("/groups", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
 			{
-				groups.Post("/", groupHandler.CreateGroup)
-				groups.Get("/:gid", groupHandler.GetByGroupID)
-				groups.Get("/:gid/users", groupHandler.GetUsersByGroupID)
-				groups.Get("/:gid/posts", groupHandler.GetPostsByGroupID)
-				groups.Get("/:gid/tasks", groupHandler.GetTasksByGroupID)
-				groups.Put("/:gid", groupHandler.UpdateGroup)
-				groups.Post("/:gid/tasks/:tid/discussion/start", groupHandler.StartDiscussion)
-
-				groups.Post("/:gid/join-code/generate", groupHandler.GenerateJoinCode)
-				groups.Post("/join/:code", groupHandler.JoinGroup)
-				groups.Post("/:gid/leave", groupHandler.LeaveGroup)
+				groupHandler.Route(groups)
 			}
 
 			posts := api.Group("/posts", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
 			{
-				posts.Post("/", postHandler.CreatePost)
-				posts.Get("/:pid/comments", postHandler.GetCommentsByPostID)
-				posts.Put("/:pid", postHandler.UpdatePost)
-				posts.Delete("/:pid", postHandler.DeletePost)
+				postHandler.Route(posts)
 			}
 
-			comments := api.Group("/comments", guardMiddleware.RequireAuthorization)
+			comments := api.Group("/comments", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
 			{
-				comments.Post("/", commentHandler.CreateComment)
-				comments.Get("/:cid", commentHandler.GetByCommentID)
-				comments.Put("/:cid", commentHandler.UpdateComment)
-				comments.Delete("/:cid", commentHandler.DeleteComment)
+				commentHandler.Route(comments)
 			}
 
 			tasks := api.Group("/tasks", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
 			{
-				tasks.Post("/", taskHandler.CreateTask)
-				tasks.Get("/:tid/topics", taskHandler.GetTopicsByTaskID)
-				tasks.Put("/:tid", taskHandler.UpdateTask)
-				tasks.Delete("/:tid", taskHandler.DeleteTask)
+				taskHandler.Route(tasks)
 			}
 
 			topics := api.Group("/topics", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
 			{
-				topics.Post("/", topicHandler.CreateTopic)
-				topics.Get("/:tid", topicHandler.GetByTopicID)
-				topics.Put("/:tid", topicHandler.UpdateTopic)
-				topics.Delete("/:tid", topicHandler.Delete)
+				topicHandler.Route(topics)
 			}
-
 		}
 	}
 

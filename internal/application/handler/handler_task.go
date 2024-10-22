@@ -17,6 +17,13 @@ func NewTaskHandler(
 	return &TaskHandler{taskService: taskService}
 }
 
+func (h *TaskHandler) Route(router fiber.Router) {
+	router.Post("/", h.CreateTask)
+	router.Get("/:tid/topics", h.GetTopicsByTaskID)
+	router.Put("/:tid", h.UpdateTask)
+	router.Delete("/:tid", h.DeleteTask)
+}
+
 func (h *TaskHandler) CreateTask(c fiber.Ctx) error {
 	body := new(presenter.TaskCreateRequest)
 

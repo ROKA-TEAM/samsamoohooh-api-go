@@ -17,6 +17,13 @@ func NewTopicHandler(
 	return &TopicHandler{topicService: topicService}
 }
 
+func (h *TopicHandler) Route(router fiber.Router) {
+	router.Post("/", h.CreateTopic)
+	router.Get("/:tid", h.GetByTopicID)
+	router.Put("/:tid", h.UpdateTopic)
+	router.Delete("/:tid", h.Delete)
+}
+
 func (h *TopicHandler) CreateTopic(c fiber.Ctx) error {
 	body := new(presenter.TopicCreateRequest)
 	if err := c.Bind().JSON(body); err != nil {
