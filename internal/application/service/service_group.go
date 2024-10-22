@@ -2,26 +2,38 @@ package service
 
 import (
 	"context"
+	"errors"
 	"samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/pkg/redis"
+	"time"
+
+	"github.com/google/uuid"
 )
 
 var _ domain.GroupService = (*GroupService)(nil)
 
+const (
+	JoinCodeExpireTime = time.Second * 60 * 24 * 2 // 2day
+)
+
 type GroupService struct {
-	groupRepository domain.GroupRepository
-	userService     domain.UserService
-	taskService     domain.TaskService
+	groupRepository    domain.GroupRepository
+	userService        domain.UserService
+	taskService        domain.TaskService
+	keyValueRepository redis.KeyValueStore
 }
 
 func NewGroupService(
 	groupRepository domain.GroupRepository,
+	keyValueRepository redis.KeyValueStore,
 	userService domain.UserService,
 	taskService domain.TaskService,
 ) *GroupService {
 	return &GroupService{
-		groupRepository: groupRepository,
-		userService:     userService,
-		taskService:     taskService,
+		groupRepository:    groupRepository,
+		keyValueRepository: keyValueRepository,
+		userService:        userService,
+		taskService:        taskService,
 	}
 }
 
@@ -141,4 +153,61 @@ func (s *GroupService) StartDiscussion(ctx context.Context, groupID, taskID int)
 	}
 
 	return topics, userNames, nil
+}
+
+func (s *GroupService) GenerateJoinCode(ctx context.Context, groupID int) (string, error) {
+	joinCode := uuid.New().String()
+
+	err := s.keyValueRepository.Set(ctx, joinCode, groupID, JoinCodeExpireTime)
+	if err != nil {
+		return "", err
+	}
+
+	return joinCode, nil
+}
+
+func (s *GroupService) JoinGroupByCode(ctx context.Context, userID int, code string) error {
+	groupID, err := s.keyValueRepository.GetInt(ctx, code)
+	if err != nil {
+		return err
+	}
+
+	// 이미 참가한 사용자인지 확인
+	isIn, err := s.userService.IsUserInGroup(ctx, userID, groupID)
+	if err != nil {
+		return err
+	}
+
+	if isIn {
+		return errors.New("already joined")
+	}
+
+	err = s.groupRepository.AddUser(ctx, groupID, userID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *GroupService) LeaveGroup(ctx context.Context, userID, groupID int) error {
+	err := s.groupRepository.RemoveUser(ctx, groupID, userID)
+	if err != nil {
+		return err
+	}
+
+	usersLen, err := s.groupRepository.GetUsersLenByGroupID(ctx, groupID)
+	if err != nil {
+		return err
+	}
+
+	// 모임을 삭제하는 경우
+	if usersLen == 0 {
+		err := s.groupRepository.DeleteGroup(ctx, groupID)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

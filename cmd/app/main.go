@@ -13,6 +13,7 @@ import (
 	"samsamoohooh-go-api/internal/infra/validator"
 	"samsamoohooh-go-api/pkg/oauth/google"
 	"samsamoohooh-go-api/pkg/oauth/kakao"
+	"samsamoohooh-go-api/pkg/redis"
 	"samsamoohooh-go-api/pkg/token/jwt"
 
 	"github.com/gofiber/fiber/v3"
@@ -39,6 +40,18 @@ func main() {
 		}
 	}(db)
 
+	// TODO: set time out
+	rds, err := redis.NewRedis(context.Background(), cfg)
+	if err != nil {
+		log.Panicf("failed to connect to redis: %v\n", err)
+	}
+	defer func(rds *redis.Redis) {
+		err := rds.Close()
+		if err != nil {
+			log.Panicf("failed to close redis connection: %v\n", err)
+		}
+	}(rds)
+
 	userRepository := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepository)
 	userHandler := handler.NewUserHandler(userService)
@@ -52,7 +65,7 @@ func main() {
 	topicHandler := handler.NewTopicHandler(topicService)
 
 	groupRepository := repository.NewGroupRepository(db)
-	groupService := service.NewGroupService(groupRepository, userService, taskService)
+	groupService := service.NewGroupService(groupRepository, rds, userService, taskService)
 	groupHandler := handler.NewGroupHandler(groupService)
 
 	postRepository := repository.NewPostRepository(db)
@@ -113,6 +126,10 @@ func main() {
 				groups.Get("/:gid/tasks", groupHandler.GetTasksByGroupID)
 				groups.Put("/:gid", groupHandler.UpdateGroup)
 				groups.Post("/:gid/tasks/:tid/discussion/start", groupHandler.StartDiscussion)
+
+				groups.Post("/:gid/join-code/generate", groupHandler.GenerateJoinCode)
+				groups.Post("/join/:code", groupHandler.JoinGroup)
+				groups.Post("/:gid/leave", groupHandler.LeaveGroup)
 			}
 
 			posts := api.Group("/posts", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))
