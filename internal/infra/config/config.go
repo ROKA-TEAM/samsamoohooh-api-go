@@ -48,6 +48,13 @@ type Config struct {
 		Database string
 	}
 
+	Redis struct {
+		Addr     string
+		Password string
+		DB       int
+		Protocol int
+	}
+
 	Token struct {
 		Issuer    string
 		SecretKey string
