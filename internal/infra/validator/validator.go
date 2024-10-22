@@ -1,13 +1,23 @@
 package validator
 
-import stdvalidator "github.com/go-playground/validator/v10"
+import (
+	"samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/pkg/box"
+
+	stdvalidator "github.com/go-playground/validator/v10"
+)
 
 type Validator struct {
 	engine *stdvalidator.Validate
 }
 
 func (v Validator) Validate(out any) error {
-	return v.engine.Struct(out)
+	err := v.engine.Struct(out)
+	if err != nil {
+		return box.Wrap(domain.ErrValidation, err.Error())
+	}
+
+	return nil
 }
 
 func New() *Validator {
