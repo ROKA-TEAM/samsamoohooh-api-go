@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	"samsamoohooh-go-api/internal/infra/config"
+	"samsamoohooh-go-api/pkg/redis/utils"
 	"strconv"
 	"time"
 
@@ -33,7 +34,7 @@ func NewRedis(ctx context.Context, config *config.Config) (*Redis, error) {
 	})
 
 	if _, err := client.Ping(ctx).Result(); err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return &Redis{
@@ -42,28 +43,28 @@ func NewRedis(ctx context.Context, config *config.Config) (*Redis, error) {
 }
 
 func (r *Redis) Set(ctx context.Context, key string, value any, ttl time.Duration) error {
-	return r.client.Set(ctx, key, value, ttl).Err()
+	return utils.Wrap(r.client.Set(ctx, key, value, ttl).Err())
 }
 
 func (r *Redis) GetBytes(ctx context.Context, key string) ([]byte, error) {
 	res, err := r.client.Get(ctx, key).Result()
 	bytes := []byte(res)
-	return bytes, err
+	return bytes, utils.Wrap(err)
 }
 
 func (r *Redis) GetInt(ctx context.Context, key string) (int, error) {
 	res, err := r.client.Get(ctx, key).Result()
 	if err != nil {
-		return 0, err
+		return 0, utils.Wrap(err)
 	}
 
 	return strconv.Atoi(res)
 }
 
 func (r *Redis) Delete(ctx context.Context, key string) error {
-	return r.client.Del(ctx, key).Err()
+	return utils.Wrap(r.client.Del(ctx, key).Err())
 }
 
 func (r *Redis) Close() error {
-	return r.client.Close()
+	return utils.Wrap(r.client.Close())
 }

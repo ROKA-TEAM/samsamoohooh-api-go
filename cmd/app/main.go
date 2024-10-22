@@ -11,6 +11,7 @@ import (
 	"samsamoohooh-go-api/internal/infra/config"
 	"samsamoohooh-go-api/internal/infra/middleware/guard"
 	"samsamoohooh-go-api/internal/infra/validator"
+	"samsamoohooh-go-api/pkg/box"
 	"samsamoohooh-go-api/pkg/oauth/google"
 	"samsamoohooh-go-api/pkg/oauth/kakao"
 	"samsamoohooh-go-api/pkg/redis"
@@ -84,6 +85,7 @@ func main() {
 	authHandler := handler.NewAuthHandler(kakaoOauthService, googleOauthService, jwtService)
 
 	app := fiber.New(fiber.Config{
+		ErrorHandler:    box.GetFiberErrorHandler(),
 		StructValidator: validator.New(),
 	})
 

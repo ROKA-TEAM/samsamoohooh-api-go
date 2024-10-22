@@ -170,7 +170,7 @@ func (s *GroupService) GenerateJoinCode(ctx context.Context, groupID int) (strin
 func (s *GroupService) JoinGroupByCode(ctx context.Context, userID int, code string) error {
 	groupID, err := s.keyValueRepository.GetInt(ctx, code)
 	if err != nil {
-		return err
+		return box.AppendMsg(err, "invalid code")
 	}
 
 	// 이미 참가한 사용자인지 확인
