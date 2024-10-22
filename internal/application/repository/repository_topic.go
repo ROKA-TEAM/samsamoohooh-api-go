@@ -26,7 +26,7 @@ func (r *TopicRepository) CreateTopic(ctx context.Context, taskID int, topic *do
 		Save(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainTopic(createdTopic), nil
@@ -39,7 +39,7 @@ func (r *TopicRepository) GetTopics(ctx context.Context, offset, limit int) ([]*
 		All(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainTopics(listTopic), nil
@@ -49,7 +49,7 @@ func (r *TopicRepository) GetByTopicID(ctx context.Context, id int) (*domain.Top
 	gotTopic, err := r.database.Topic.
 		Get(ctx, id)
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainTopic(gotTopic), nil
@@ -69,7 +69,7 @@ func (r *TopicRepository) UpdateTopic(ctx context.Context, id int, topic *domain
 
 	updatedTopic, err := updateBuilder.Save(ctx)
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainTopic(updatedTopic), nil
@@ -80,7 +80,7 @@ func (r *TopicRepository) DeleteTopic(ctx context.Context, id int) error {
 		DeleteOneID(id).
 		Exec(ctx)
 	if err != nil {
-		return err
+		return utils.Wrap(err)
 	}
 
 	return nil

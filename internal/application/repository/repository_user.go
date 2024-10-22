@@ -30,7 +30,7 @@ func (r *UserRepository) CreateUser(ctx context.Context, user *domain.User) (*do
 		Save(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainUser(createdUser), nil
@@ -40,7 +40,7 @@ func (r *UserRepository) GetByUserID(ctx context.Context, id int) (*domain.User,
 	gotUser, err := r.database.User.
 		Get(ctx, id)
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainUser(gotUser), nil
@@ -51,7 +51,7 @@ func (r *UserRepository) GetByUserSub(ctx context.Context, sub string) (*domain.
 		Where(entuser.SocialSubEQ(sub)).
 		First(ctx)
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainUser(gotUser), nil
@@ -67,7 +67,7 @@ func (r *UserRepository) GetGroupsByUserID(ctx context.Context, id int, limit, o
 		All(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainGroups(gotGroups), nil
@@ -80,7 +80,7 @@ func (r *UserRepository) GetUsers(ctx context.Context, limit, offset int) ([]*do
 		Offset(offset).
 		All(ctx)
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainUsers(gotUsers), nil
@@ -112,7 +112,7 @@ func (r *UserRepository) UpdateUser(ctx context.Context, id int, user *domain.Us
 
 	updatedUser, err := updateBuilder.Save(ctx)
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainUser(updatedUser), nil
@@ -124,7 +124,7 @@ func (r *UserRepository) DeleteUser(ctx context.Context, id int) error {
 		Exec(ctx)
 
 	if err != nil {
-		return err
+		return utils.Wrap(err)
 	}
 
 	return nil
@@ -139,7 +139,7 @@ func (r *UserRepository) IsUserInGroup(ctx context.Context, userID, groupID int)
 		Count(ctx)
 
 	if err != nil {
-		return false, err
+		return false, utils.Wrap(err)
 	}
 
 	return cnt > 0, nil

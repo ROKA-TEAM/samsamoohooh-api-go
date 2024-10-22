@@ -27,7 +27,7 @@ func (r PostRepository) CreatePost(ctx context.Context, groupID int, post *domai
 		Save(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainPost(createdPost), nil
@@ -40,7 +40,7 @@ func (r PostRepository) GetPosts(ctx context.Context, offset, limit int) ([]*dom
 		Limit(limit).
 		All(ctx)
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainPosts(listPost), nil
@@ -50,7 +50,7 @@ func (r PostRepository) GetByPostID(ctx context.Context, id int) (*domain.Post, 
 	gotPost, err := r.database.Post.
 		Get(ctx, id)
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainPost(gotPost), nil
@@ -66,7 +66,7 @@ func (r PostRepository) GetCommentsByPostID(ctx context.Context, id, offset, lim
 		All(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainComments(listPost), nil
@@ -88,7 +88,7 @@ func (r PostRepository) UpdatePost(ctx context.Context, id int, post *domain.Pos
 		Save(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainPost(updatedPost), nil
@@ -99,7 +99,7 @@ func (r PostRepository) DeletePost(ctx context.Context, id int) error {
 		DeleteOneID(id).
 		Exec(ctx)
 	if err != nil {
-		return err
+		return utils.Wrap(err)
 	}
 
 	return nil
