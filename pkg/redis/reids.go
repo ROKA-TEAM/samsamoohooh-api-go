@@ -8,6 +8,13 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
+type KeyValueStore interface {
+	Set(ctx context.Context, key string, value []byte, ttl time.Duration) error
+	Get(ctx context.Context, key string) ([]byte, error)
+	Delete(ctx context.Context, key string) error
+	Close() error
+}
+
 type Redis struct {
 	client *redis.Client
 }
