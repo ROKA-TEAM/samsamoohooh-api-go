@@ -34,6 +34,7 @@ type GroupRepository interface {
 	DeleteGroup(ctx context.Context, id int) error
 	GetUsersLenByGroupID(ctx context.Context, id int) (int, error)
 	GetTasksLenByGroupID(ctx context.Context, id int) (int, error)
+	AddUser(ctx context.Context, groupID, userID int) error
 }
 
 type GroupService interface {
@@ -46,4 +47,11 @@ type GroupService interface {
 	UpdateGroup(ctx context.Context, id int, group *Group) (*Group, error)
 	DeleteGroup(ctx context.Context, id int) error
 	StartDiscussion(ctx context.Context, groupID, taskID int) (topics []string, userNames []string, err error)
+
+	GroupInviteService
+}
+
+type GroupInviteService interface {
+	GenerateJoinCode(ctx context.Context, groupID int) (string, error)
+	JoinGroupByCode(ctx context.Context, userID int, code string) error
 }

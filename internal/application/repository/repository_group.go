@@ -176,3 +176,16 @@ func (r *GroupRepository) GetTasksLenByGroupID(ctx context.Context, id int) (int
 
 	return cnt, nil
 }
+
+func (r *GroupRepository) AddUser(ctx context.Context, groupID, userID int) error {
+	_, err := r.database.Client.Group.
+		UpdateOneID(groupID).
+		AddUserIDs(userID).
+		Save(ctx)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

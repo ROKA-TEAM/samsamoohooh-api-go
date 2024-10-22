@@ -1,10 +1,13 @@
 package handler
 
 import (
-	"github.com/gofiber/fiber/v3"
-	domain "samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/application/handler/utils"
 	"samsamoohooh-go-api/internal/application/presenter"
+	"samsamoohooh-go-api/internal/infra/middleware/guard"
+	"samsamoohooh-go-api/pkg/token"
+
+	"github.com/gofiber/fiber/v3"
 )
 
 type GroupHandler struct {
@@ -112,4 +115,27 @@ func (h *GroupHandler) StartDiscussion(c fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(presenter.NewGroupStartDiscussionResponse(topics, userNames))
+}
+
+func (h *GroupHandler) GenerateJoinCode(c fiber.Ctx) error {
+	gid := fiber.Params[int](c, "gid")
+
+	joinCode, err := h.groupService.GenerateJoinCode(c.Context(), gid)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(presenter.NewGroupGenerateJoinCodeResponse(joinCode))
+}
+
+func (h *GroupHandler) JoinGroup(c fiber.Ctx) error {
+	token := fiber.Locals[*token.Token](c, guard.TokenKey)
+	code := fiber.Params[string](c, "code")
+
+	err := h.groupService.JoinGroupByCode(c.Context(), token.Subject, code)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(nil)
 }

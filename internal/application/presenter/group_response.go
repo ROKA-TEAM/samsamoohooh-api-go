@@ -191,3 +191,13 @@ func NewGroupStartDiscussionResponse(topics []string, users []string) *GroupStar
 		Users:  users,
 	}
 }
+
+type GroupGenerateJoinCodeResponse struct {
+	JoinCode string `json:"joinCode"`
+}
+
+func NewGroupGenerateJoinCodeResponse(joinCode string) *GroupGenerateJoinCodeResponse {
+	return &GroupGenerateJoinCodeResponse{
+		JoinCode: joinCode,
+	}
+}
