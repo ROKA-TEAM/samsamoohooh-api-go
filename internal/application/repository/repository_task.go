@@ -27,7 +27,7 @@ func (r *TaskRepository) CreateTask(ctx context.Context, groupID int, task *doma
 		Save(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainTask(createdTask), nil
@@ -40,7 +40,7 @@ func (r *TaskRepository) GetTasks(ctx context.Context, offset, limit int) ([]*do
 		All(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainTasks(listTask), nil
@@ -50,7 +50,7 @@ func (r *TaskRepository) GetByTaskID(ctx context.Context, id int) (*domain.Task,
 		Get(ctx, id)
 
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainTask(gotTask), nil
@@ -66,7 +66,7 @@ func (r *TaskRepository) GetTopicsByTaskID(ctx context.Context, id, offset, limi
 		All(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainTopics(listTopics), nil
@@ -86,7 +86,7 @@ func (r *TaskRepository) UpdateTask(ctx context.Context, id int, task *domain.Ta
 
 	updatedTask, err := updateBuilder.Save(ctx)
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainTask(updatedTask), nil
@@ -97,7 +97,7 @@ func (r *TaskRepository) DeleteTask(ctx context.Context, id int) error {
 		DeleteOneID(id).
 		Exec(ctx)
 	if err != nil {
-		return err
+		return utils.Wrap(err)
 	}
 
 	return nil
@@ -111,7 +111,7 @@ func (r *TaskRepository) GetTopicsLenByTaskID(ctx context.Context, id int) (int,
 		Count(ctx)
 
 	if err != nil {
-		return 0, err
+		return 0, utils.Wrap(err)
 	}
 
 	return cnt, nil

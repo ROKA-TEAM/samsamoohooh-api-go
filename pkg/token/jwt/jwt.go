@@ -1,10 +1,12 @@
 package jwt
 
 import (
-	"github.com/golang-jwt/jwt/v5"
 	"samsamoohooh-go-api/internal/infra/config"
 	"samsamoohooh-go-api/pkg/token"
+	"samsamoohooh-go-api/pkg/token/utils"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 var _ token.Service = (*Service)(nil)
@@ -37,7 +39,7 @@ func (s *Service) GenerateAccessTokenString(subject int, role string) (string, e
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := t.SignedString([]byte(s.config.Token.SecretKey))
 	if err != nil {
-		return "", err
+		return "", utils.Wrap(err)
 	}
 
 	return tokenString, nil
@@ -64,7 +66,7 @@ func (s *Service) GenerateRefreshTokenString(subject int, role string) (string, 
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := t.SignedString([]byte(s.config.Token.SecretKey))
 	if err != nil {
-		return "", err
+		return "", utils.Wrap(err)
 	}
 
 	return tokenString, nil
@@ -75,23 +77,23 @@ func (s *Service) ValidateToken(tokenString string) (bool, error) {
 		return []byte(s.config.Token.SecretKey), nil
 	})
 	if err != nil {
-		return false, err
+		return false, utils.Wrap(err)
 	}
 	now := time.Now()
 
 	// 해석한 토큰의 issure가 일치하는가?
 	if customClaims.Issuer != s.config.Token.Issuer {
-		return false, token.ErrInvalidTokenIssuer
+		return false, utils.Wrap(token.ErrInvalidTokenIssuer)
 	}
 
 	// 해석한 토큰의 expiresAt이 유효한가? (현재 시간이 expiresAt보다 앞서 있다면)
 	if now.After(customClaims.ExpiresAt.Time) {
-		return false, token.ErrTokenExpired
+		return false, utils.Wrap(token.ErrTokenExpired)
 	}
 
 	// 해석한 토큰의 notBefore가 유효한가? (현재 시간이 notBefore보다 않다면)
 	if now.Before(customClaims.NotBefore.Time) {
-		return false, token.ErrTokenNotActiveYet
+		return false, utils.Wrap(token.ErrTokenNotActiveYet)
 	}
 
 	return true, nil
@@ -104,7 +106,7 @@ func (s *Service) ParseToken(tokenString string) (*token.Token, error) {
 	})
 
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return customClaims.ToToken(), nil

@@ -2,8 +2,9 @@ package service
 
 import (
 	"context"
-	"errors"
+
 	"samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/pkg/box"
 	"samsamoohooh-go-api/pkg/redis"
 	"time"
 
@@ -169,7 +170,7 @@ func (s *GroupService) GenerateJoinCode(ctx context.Context, groupID int) (strin
 func (s *GroupService) JoinGroupByCode(ctx context.Context, userID int, code string) error {
 	groupID, err := s.keyValueRepository.GetInt(ctx, code)
 	if err != nil {
-		return err
+		return box.AppendMsg(err, "invalid code")
 	}
 
 	// 이미 참가한 사용자인지 확인
@@ -179,7 +180,7 @@ func (s *GroupService) JoinGroupByCode(ctx context.Context, userID int, code str
 	}
 
 	if isIn {
-		return errors.New("already joined")
+		return box.Wrap(domain.ErrForbidden, "already joined")
 	}
 
 	err = s.groupRepository.AddUser(ctx, groupID, userID)

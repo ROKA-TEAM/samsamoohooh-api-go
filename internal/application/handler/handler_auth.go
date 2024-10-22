@@ -1,8 +1,10 @@
 package handler
 
 import (
+	domain "samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/application/handler/utils"
 	"samsamoohooh-go-api/internal/application/presenter"
+	"samsamoohooh-go-api/pkg/box"
 	"samsamoohooh-go-api/pkg/oauth"
 	"samsamoohooh-go-api/pkg/token"
 	"time"
@@ -44,7 +46,7 @@ func (h *AuthHandler) Validation(c fiber.Ctx) error {
 	}
 
 	if body.AccessToken == "" && body.RefreshToken == "" {
-		return c.Status(fiber.StatusUnauthorized).SendString("request body is empty")
+		return box.Wrap(domain.ErrAuthorization, "request body is empty")
 	}
 
 	if body.AccessToken != "" {
@@ -121,12 +123,12 @@ func (h *AuthHandler) GoogleCallback(c fiber.Ctx) error {
 	}
 
 	if state != c.FormValue(stateKey) {
-		return fiber.NewError(fiber.StatusBadRequest, "invalid state")
+		return box.Wrap(domain.ErrBadRequest, "invalid state")
 	}
 
 	accessToken, refreshToken, err := h.googleOauthService.AuthenticateOrRegister(c.Context(), c.FormValue("code"))
 	if err != nil {
-		return err
+		return box.Wrap(domain.ErrBadRequest, err.Error())
 	}
 
 	return c.Status(fiber.StatusOK).JSON(&presenter.GoogleCallbackResponse{
@@ -166,7 +168,7 @@ func (h *AuthHandler) KaKaoCallback(c fiber.Ctx) error {
 	}
 
 	if state != c.FormValue(stateKey) {
-		return fiber.NewError(fiber.StatusBadRequest, "invalid state")
+		return box.Wrap(domain.ErrBadRequest, "invalid state")
 	}
 
 	accessToken, refreshToken, err := h.kakaoOauthService.AuthenticateOrRegister(c.Context(), c.FormValue("code"))
@@ -178,5 +180,4 @@ func (h *AuthHandler) KaKaoCallback(c fiber.Ctx) error {
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	})
-
 }

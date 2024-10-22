@@ -31,7 +31,7 @@ func (r *GroupRepository) CreateGroup(ctx context.Context, userID int, group *do
 		Save(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainGroup(createdGroup), nil
@@ -44,7 +44,7 @@ func (r *GroupRepository) GetGroups(ctx context.Context, offset, limit int) ([]*
 		All(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainGroups(listGroups), nil
@@ -55,7 +55,7 @@ func (r *GroupRepository) GetByGroupID(ctx context.Context, id int) (*domain.Gro
 		Group.Get(ctx, id)
 
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainGroup(gotGroup), nil
@@ -69,7 +69,7 @@ func (r *GroupRepository) GetUsersByGroupID(ctx context.Context, id int, offset,
 		Limit(limit).
 		All(ctx)
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainUsers(listUser), nil
@@ -83,7 +83,7 @@ func (r *GroupRepository) GetPostsByGroupID(ctx context.Context, id int, offset,
 		Offset(offset).
 		All(ctx)
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainPosts(listPost), nil
@@ -98,7 +98,7 @@ func (r *GroupRepository) GetTasksByGroupID(ctx context.Context, id int, offset,
 		All(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainTasks(listTask), nil
@@ -133,7 +133,7 @@ func (r *GroupRepository) UpdateGroup(ctx context.Context, id int, group *domain
 
 	updatedGroup, err := updateBuilder.Save(ctx)
 	if err != nil {
-		return nil, err
+		return nil, utils.Wrap(err)
 	}
 
 	return utils.ConvertDomainGroup(updatedGroup), nil
@@ -144,7 +144,7 @@ func (r *GroupRepository) DeleteGroup(ctx context.Context, id int) error {
 		Exec(ctx)
 
 	if err != nil {
-		return err
+		return utils.Wrap(err)
 	}
 
 	return nil
@@ -158,7 +158,7 @@ func (r *GroupRepository) GetUsersLenByGroupID(ctx context.Context, id int) (int
 		Count(ctx)
 
 	if err != nil {
-		return 0, err
+		return 0, utils.Wrap(err)
 	}
 
 	return cnt, nil
@@ -171,7 +171,7 @@ func (r *GroupRepository) GetTasksLenByGroupID(ctx context.Context, id int) (int
 		QueryTasks().
 		Count(ctx)
 	if err != nil {
-		return 0, err
+		return 0, utils.Wrap(err)
 	}
 
 	return cnt, nil
@@ -184,7 +184,7 @@ func (r *GroupRepository) AddUser(ctx context.Context, groupID, userID int) erro
 		Save(ctx)
 
 	if err != nil {
-		return err
+		return utils.Wrap(err)
 	}
 
 	return nil
@@ -197,7 +197,7 @@ func (r *GroupRepository) RemoveUser(ctx context.Context, groupID, userID int) e
 		Save(ctx)
 
 	if err != nil {
-		return err
+		return utils.Wrap(err)
 	}
 
 	return nil

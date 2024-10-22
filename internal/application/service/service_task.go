@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	domain "samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/domain"
 )
 
 var _ domain.TaskService = (*TaskService)(nil)
