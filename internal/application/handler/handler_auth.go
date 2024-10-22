@@ -1,8 +1,10 @@
 package handler
 
 import (
+	domain "samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/internal/application/handler/utils"
 	"samsamoohooh-go-api/internal/application/presenter"
+	"samsamoohooh-go-api/pkg/box"
 	"samsamoohooh-go-api/pkg/oauth"
 	"samsamoohooh-go-api/pkg/token"
 	"time"
@@ -44,20 +46,20 @@ func (h *AuthHandler) Validation(c fiber.Ctx) error {
 	}
 
 	if body.AccessToken == "" && body.RefreshToken == "" {
-		return c.Status(fiber.StatusUnauthorized).SendString("request body is empty")
+		return box.Wrap(domain.ErrAuthorization, "request body is empty")
 	}
 
 	if body.AccessToken != "" {
 		_, err := h.tokenService.ValidateToken(body.AccessToken)
 		if err != nil {
-			return err
+			return box.Wrap(domain.ErrAuthorization, err.Error())
 		}
 	}
 
 	if body.RefreshToken != "" {
 		_, err := h.tokenService.ValidateToken(body.RefreshToken)
 		if err != nil {
-			return err
+			return box.Wrap(domain.ErrAuthorization, err.Error())
 		}
 	}
 

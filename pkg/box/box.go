@@ -18,3 +18,7 @@ func GetStatus(err error) int {
 func Wrap(err error, msg string) error {
 	return errors.Wrap(err, msg)
 }
+
+func Equal(err, target error) bool {
+	return errors.Is(err, target)
+}

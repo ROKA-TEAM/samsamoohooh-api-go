@@ -19,8 +19,10 @@ func Wrap(err error) error {
 		domainErr = domain.ErrNotSingular
 	case ent.IsValidationError(err):
 		domainErr = domain.ErrValidation
-	default:
+	case err == nil:
 		return nil
+	default:
+		domainErr = domain.ErrInternal
 	}
 	return box.Wrap(domainErr, err.Error())
 }
