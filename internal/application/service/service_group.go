@@ -189,3 +189,25 @@ func (s *GroupService) JoinGroupByCode(ctx context.Context, userID int, code str
 
 	return nil
 }
+
+func (s *GroupService) LeaveGroup(ctx context.Context, userID, groupID int) error {
+	err := s.groupRepository.RemoveUser(ctx, groupID, userID)
+	if err != nil {
+		return err
+	}
+
+	usersLen, err := s.groupRepository.GetUsersLenByGroupID(ctx, groupID)
+	if err != nil {
+		return err
+	}
+
+	// 모임을 삭제하는 경우
+	if usersLen == 0 {
+		err := s.groupRepository.DeleteGroup(ctx, groupID)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}

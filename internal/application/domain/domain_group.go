@@ -35,6 +35,7 @@ type GroupRepository interface {
 	GetUsersLenByGroupID(ctx context.Context, id int) (int, error)
 	GetTasksLenByGroupID(ctx context.Context, id int) (int, error)
 	AddUser(ctx context.Context, groupID, userID int) error
+	RemoveUser(ctx context.Context, groupID, userID int) error
 }
 
 type GroupService interface {
@@ -47,7 +48,7 @@ type GroupService interface {
 	UpdateGroup(ctx context.Context, id int, group *Group) (*Group, error)
 	DeleteGroup(ctx context.Context, id int) error
 	StartDiscussion(ctx context.Context, groupID, taskID int) (topics []string, userNames []string, err error)
-
+	LeaveGroup(ctx context.Context, groupID, userID int) error
 	GroupInviteService
 }
 

@@ -1,10 +1,11 @@
 package guard
 
 import (
-	"github.com/gofiber/fiber/v3"
 	"samsamoohooh-go-api/internal/application/domain"
 	"samsamoohooh-go-api/pkg/token"
 	"strings"
+
+	"github.com/gofiber/fiber/v3"
 )
 
 const (
@@ -100,27 +101,3 @@ func (m *Middleware) CheckGroupAccess(c fiber.Ctx) error {
 
 	return c.Next()
 }
-
-//func (m GuardMiddleware) RequireAccess(accessibleRoles ...domain2.UserRoleType) func(*fiber.Ctx) error {
-//	return func(c *fiber.Ctx) error {
-//		token, ok := c.Locals("token").(*domain2.Token)
-//		if !ok {
-//			return fiber.ErrUnauthorized
-//		}
-//
-//		// only admin
-//		isAccessible := false
-//		for _, role := range accessibleRoles {
-//			if token.Role == role {
-//				isAccessible = true
-//				break
-//			}
-//		}
-//
-//		if !isAccessible {
-//			return errors.Wrap(domain2.ErrForbidden, "you are in possession of an inaccessible coin.")
-//		}
-//
-//		return c.Next()
-//	}
-//}

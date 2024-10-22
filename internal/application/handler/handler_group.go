@@ -139,3 +139,15 @@ func (h *GroupHandler) JoinGroup(c fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(nil)
 }
+
+func (h *GroupHandler) LeaveGroup(c fiber.Ctx) error {
+	gid := fiber.Params[int](c, "gid")
+	token := fiber.Locals[*token.Token](c, guard.TokenKey)
+
+	err := h.groupService.LeaveGroup(c.Context(), gid, token.Subject)
+	if err != nil {
+		return err
+	}
+	return c.SendStatus(fiber.StatusNoContent)
+
+}

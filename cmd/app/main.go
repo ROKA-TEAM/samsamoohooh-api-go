@@ -129,6 +129,7 @@ func main() {
 
 				groups.Post("/:gid/join-code/generate", groupHandler.GenerateJoinCode)
 				groups.Post("/join/:code", groupHandler.JoinGroup)
+				groups.Post("/:gid/leave", groupHandler.LeaveGroup)
 			}
 
 			posts := api.Group("/posts", guardMiddleware.RequireAuthorization, guardMiddleware.AccessOnly(domain.UserRoleUser))

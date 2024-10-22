@@ -189,3 +189,16 @@ func (r *GroupRepository) AddUser(ctx context.Context, groupID, userID int) erro
 
 	return nil
 }
+
+func (r *GroupRepository) RemoveUser(ctx context.Context, groupID, userID int) error {
+	_, err := r.database.Client.Group.
+		UpdateOneID(userID).
+		RemoveUserIDs(groupID).
+		Save(ctx)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
