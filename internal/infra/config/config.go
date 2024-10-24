@@ -8,9 +8,8 @@ import (
 
 type Config struct {
 	HTTP struct {
-		Development bool
-		Port        string
-		TLS         struct {
+		Port string
+		TLS  struct {
 			CertFilePath string
 			KeyFilePath  string
 		}
