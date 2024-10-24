@@ -11,6 +11,10 @@ import (
 type ErrorHandler struct {
 }
 
+func NewErrorHandler() *ErrorHandler {
+	return &ErrorHandler{}
+}
+
 func (h ErrorHandler) HandleError() func(c fiber.Ctx, err error) error {
 	return func(c fiber.Ctx, err error) error {
 		var excep *exception.Exception
