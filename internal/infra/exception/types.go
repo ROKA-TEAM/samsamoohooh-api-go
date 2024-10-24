@@ -51,10 +51,12 @@ const (
 
 	// Redis 관련 에러 (REDIS_)
 	ErrRedisConnection   = "REDIS_CONNECTION_FAILED" // Redis 연결 실패
+	ErrRedisSetFailed    = "REDIS_SET_FAILED"        // 데이터 저장 실패
+	ErrRedisGetFailed    = "REDIS_GET_FAILED"        // 데이터 조회 실패
+	ErrRedisDeleteFailed = "REDIS_DELETE_FAILED"     // 데이터 삭제 실패
 	ErrRedisTimeout      = "REDIS_TIMEOUT"           // Redis 작업 타임아웃
 	ErrRedisKeyNotFound  = "REDIS_KEY_NOT_FOUND"     // 키를 찾을 수 없음
 	ErrRedisLockFailed   = "REDIS_LOCK_FAILED"       // 락 획득 실패
-	ErrRedisScriptFailed = "REDIS_SCRIPT_FAILED"     // Lua 스크립트 실행 실패
 
 	// 유효성 검사 에러 (VAL_)
 	ErrValidation         = "VAL_INVALID_INPUT"    // 일반적인 입력값 오류
