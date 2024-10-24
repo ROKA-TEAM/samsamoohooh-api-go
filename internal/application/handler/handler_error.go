@@ -5,7 +5,7 @@ import (
 	"samsamoohooh-go-api/internal/application/presenter"
 	"samsamoohooh-go-api/internal/infra/exception"
 
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v3"
 )
 
 type ErrorHandler struct {

@@ -7,7 +7,7 @@ import (
 )
 
 type Config struct {
-	HTTP struct {
+	Server struct {
 		Port string
 		TLS  struct {
 			CertFilePath string
