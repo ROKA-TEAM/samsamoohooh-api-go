@@ -13,10 +13,14 @@ const (
 	ErrAuthForbidden    = "AUTH_FORBIDDEN"           // 권한 없음
 
 	// JWT 관련 에러 (JWT_)
-	ErrJWTInvalid   = "JWT_INVALID_TOKEN"     // 유효하지 않은 JWT
-	ErrJWTExpired   = "JWT_TOKEN_EXPIRED"     // JWT 만료
-	ErrJWTMalformed = "JWT_MALFORMED"         // JWT 형식 오류
-	ErrJWTSignature = "JWT_INVALID_SIGNATURE" // JWT 서명 불일치
+	ErrJWTInvalid       = "JWT_INVALID_TOKEN"      // 유효하지 않은 JWT
+	ErrJWTExpired       = "JWT_TOKEN_EXPIRED"      // JWT 만료
+	ErrJWTParseFailed   = "JWT_TOKEN_PARSE_FAILED" // JWT 파싱 실패
+	ErrJWTInvalidIssuer = "JWT_INVALID_ISSUER"     // JWT 발급자 불일치
+	ErrJWTTokenExpired  = "JWT_TOKEN_EXPIRED"      // 토큰 만료
+	ErrJWTNotActiveYet  = "JWT_NOT_ACTIVE_YET"     // 토큰 활성화 전
+	ErrJWTMalformed     = "JWT_MALFORMED"          // JWT 형식 오류
+	ErrJWTSignature     = "JWT_INVALID_SIGNATURE"  // JWT 서명 불일치
 
 	// OAuth 공통 에러 (OAUTH_)
 	ErrOAuthInvalid = "OAUTH_INVALID_REQUEST" // 잘못된 OAuth 요청

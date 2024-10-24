@@ -3,6 +3,7 @@ package main
 import (
 	"samsamoohooh-go-api/internal/application/handler"
 	"samsamoohooh-go-api/internal/application/port"
+	"samsamoohooh-go-api/internal/infra/authentication/token/jwt"
 	"samsamoohooh-go-api/internal/infra/config"
 	"samsamoohooh-go-api/internal/infra/storage/mysql"
 	"samsamoohooh-go-api/internal/infra/storage/redis"
@@ -21,10 +22,16 @@ func main() {
 			// database
 			mysql.NewMySQL,
 
-			// repository
+			// repositories
 			fx.Annotate(
 				redis.NewRedis,
 				fx.As(new(port.RedisRepository)),
+			),
+
+			// services
+			fx.Annotate(
+				jwt.NewJWTService,
+				fx.As(new(port.TokenService)),
 			),
 
 			// handlers

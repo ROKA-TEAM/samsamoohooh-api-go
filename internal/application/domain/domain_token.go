@@ -5,8 +5,8 @@ import "time"
 type TokenType string
 
 const (
-	Access  TokenType = "ACCESS"
-	Refresh TokenType = "REFRESH"
+	TokenTypeAccess  TokenType = "ACCESS"
+	TokenTypeRefresh TokenType = "REFRESH"
 )
 
 type Token struct {
@@ -16,6 +16,6 @@ type Token struct {
 	IssuedAt  time.Time // 토큰이 발행된 시간, 토큰이 언제 생성되었는지를 나타냄
 
 	ID   int
-	Role string    // 사용자에게 할당된 역할 (예: 관리자, 일반 사용자)
-	Type TokenType // 사용자에게 할당된 타입 (예: ACCESS, REFRESH)
+	Role UserRoleType // 사용자에게 할당된 역할 (예: 관리자, 일반 사용자)
+	Type TokenType    // 사용자에게 할당된 타입 (예: ACCESS, REFRESH)
 }

@@ -5,6 +5,7 @@ go 1.23.2
 require (
 	entgo.io/ent v0.14.1
 	github.com/gofiber/fiber/v3 v3.0.0-beta.3
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/pelletier/go-toml/v2 v2.2.3
 	github.com/redis/go-redis/v9 v9.7.0
 	go.uber.org/fx v1.23.0
