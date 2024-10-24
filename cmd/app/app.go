@@ -2,7 +2,10 @@ package main
 
 import (
 	"samsamoohooh-go-api/internal/application/handler"
+	"samsamoohooh-go-api/internal/application/port"
 	"samsamoohooh-go-api/internal/infra/config"
+	"samsamoohooh-go-api/internal/infra/storage/mysql"
+	"samsamoohooh-go-api/internal/infra/storage/redis"
 	"samsamoohooh-go-api/internal/router"
 
 	"go.uber.org/fx"
@@ -14,6 +17,15 @@ func main() {
 		fx.Provide(
 			config.NewConfig,
 			router.NewRouter,
+
+			// database
+			mysql.NewMySQL,
+
+			// repository
+			fx.Annotate(
+				redis.NewRedis,
+				fx.As(new(port.RedisRepository)),
+			),
 
 			// handlers
 			handler.NewErrorHandler,
