@@ -29,7 +29,7 @@ func (h *OauthHandler) Route(c fiber.Router) {
 
 func (h *OauthHandler) GoogleLogin(c fiber.Ctx) error {
 	req := new(presenter.OauthGoogleLoginRequest)
-	if err := c.Bind().JSON(&req); err != nil {
+	if err := c.Bind().JSON(req); err != nil {
 		return err
 	}
 
@@ -44,7 +44,7 @@ func (h *OauthHandler) GoogleLogin(c fiber.Ctx) error {
 
 func (h *OauthHandler) KakaoLogin(c fiber.Ctx) error {
 	req := new(presenter.OauthKakaoLoginRequest)
-	if err := c.Bind().JSON(&req); err != nil {
+	if err := c.Bind().JSON(req); err != nil {
 		return err
 	}
 

@@ -58,6 +58,7 @@ const (
 
 	// groups
 	ErrBizGroupAlreadyJoined = "BIZ_GROUP_ALREADY_JOINED" // 이미 가입한 그룹
+	
 
 	// 서버 에러 (SRV_)
 	ErrServerInternal = "SRV_INTERNAL_ERROR" // 내부 서버 에러
