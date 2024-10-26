@@ -15,6 +15,7 @@ type Router struct {
 
 	// handlers
 	oauthHandler *handler.OauthHandler
+	authHandler  *handler.AuthHandler
 }
 
 func NewRouter(
@@ -24,11 +25,13 @@ func NewRouter(
 	// handler dependency
 	errorHandler *handler.ErrorHandler,
 	oauthHandler *handler.OauthHandler,
+	authHandler *handler.AuthHandler,
 ) *Router {
 	r := &Router{
 		config: config,
 		// handlers
 		oauthHandler: oauthHandler,
+		authHandler:  authHandler,
 
 		// init fiber app
 		app: fiber.New(fiber.Config{
@@ -65,6 +68,11 @@ func (r *Router) Route() {
 			oauth := app.Group("/oauth")
 			{
 				r.oauthHandler.Route(oauth)
+			}
+
+			auth := app.Group("/auth")
+			{
+				r.oauthHandler.Route(auth)
 			}
 		}
 	}
