@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// var _ domain.GroupService = (*GroupService)(nil)
+var _ port.GroupService = (*GroupService)(nil)
 
 const (
 	JoinCodeExpireTime = time.Second * 60 * 24 * 2 // 2day
