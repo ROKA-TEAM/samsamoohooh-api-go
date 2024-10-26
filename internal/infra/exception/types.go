@@ -56,9 +56,12 @@ const (
 	ErrBizConflict      = "BIZ_CONFLICT"          // 비즈니스 규칙 충돌
 	ErrBizLimitExceeded = "BIZ_LIMIT_EXCEEDED"    // 제한 초과
 
-	// groups
+	// in groups service
 	ErrBizGroupAlreadyJoined = "BIZ_GROUP_ALREADY_JOINED" // 이미 가입한 그룹
-	
+
+	// 미들웨어 에러 (MIDDLEWARE_)
+	// in guard
+	ErrMiddlewareGuardAuthorizatioHeaderMissing = "MIDDLEWARE_GUARD_AUTHORIZATION_HEADER_MISSING" // Authorization 헤더 누락
 
 	// 서버 에러 (SRV_)
 	ErrServerInternal = "SRV_INTERNAL_ERROR" // 내부 서버 에러

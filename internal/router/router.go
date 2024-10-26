@@ -4,6 +4,7 @@ import (
 	"context"
 	"samsamoohooh-go-api/internal/application/handler"
 	"samsamoohooh-go-api/internal/infra/config"
+	"samsamoohooh-go-api/internal/infra/middleware/guard"
 
 	"github.com/gofiber/fiber/v3"
 	"go.uber.org/fx"
@@ -16,6 +17,10 @@ type Router struct {
 	// handlers
 	oauthHandler *handler.OauthHandler
 	authHandler  *handler.AuthHandler
+	userHandler  *handler.UserHandler
+
+	// middleware
+	guardMiddleware *guard.GuardMiddleware
 }
 
 func NewRouter(
@@ -26,12 +31,20 @@ func NewRouter(
 	errorHandler *handler.ErrorHandler,
 	oauthHandler *handler.OauthHandler,
 	authHandler *handler.AuthHandler,
+	userHandler *handler.UserHandler,
+
+	// middleware
+	guardMiddleware *guard.GuardMiddleware,
 ) *Router {
 	r := &Router{
 		config: config,
 		// handlers
 		oauthHandler: oauthHandler,
 		authHandler:  authHandler,
+		userHandler:  userHandler,
+
+		// middleware
+		guardMiddleware: guardMiddleware,
 
 		// init fiber app
 		app: fiber.New(fiber.Config{
@@ -73,6 +86,11 @@ func (r *Router) Route() {
 			auth := app.Group("/auth")
 			{
 				r.oauthHandler.Route(auth)
+			}
+
+			users := app.Group("/users", r.guardMiddleware.Authenticate)
+			{
+				r.userHandler.Route(users)
 			}
 		}
 	}
