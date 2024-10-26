@@ -55,6 +55,9 @@ const (
 	ErrBizConflict      = "BIZ_CONFLICT"          // 비즈니스 규칙 충돌
 	ErrBizLimitExceeded = "BIZ_LIMIT_EXCEEDED"    // 제한 초과
 
+	// groups
+	ErrBizGroupAlreadyJoined = "BIZ_GROUP_ALREADY_JOINED" // 이미 가입한 그룹
+
 	// 서버 에러 (SRV_)
 	ErrServerInternal = "SRV_INTERNAL_ERROR" // 내부 서버 에러
 	ErrServerOverload = "SRV_OVERLOADED"     // 서버 과부하
