@@ -10,7 +10,7 @@ import (
 	"github.com/carlmjohnson/requests"
 )
 
-var _ port.ImplictGrantService = (*GoogleOauthService)(nil)
+var _ port.OauthImplictGrantService = (*GoogleOauthService)(nil)
 
 type GoogleOauthService struct {
 	config         *config.Config

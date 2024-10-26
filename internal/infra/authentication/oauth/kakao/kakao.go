@@ -12,7 +12,7 @@ import (
 	"github.com/carlmjohnson/requests"
 )
 
-var _ port.ImplictGrantService = (*KakaoOauthService)(nil)
+var _ port.OauthImplictGrantService = (*KakaoOauthService)(nil)
 
 type KakaoOauthService struct {
 	config         *config.Config

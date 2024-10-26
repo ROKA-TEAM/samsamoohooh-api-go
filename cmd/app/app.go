@@ -50,13 +50,13 @@ func main() {
 
 			fx.Annotate(
 				google.NewGoogleOauthService,
-				fx.As(new(port.ImplictGrantService)),
+				fx.As(new(port.OauthImplictGrantService)),
 				fx.ResultTags(`name:"google"`),
 			),
 
 			fx.Annotate(
 				kakao.NewKakaoOauthService,
-				fx.As(new(port.ImplictGrantService)),
+				fx.As(new(port.OauthImplictGrantService)),
 				fx.ResultTags(`name:"kakao"`),
 			),
 			handler.NewErrorHandler,

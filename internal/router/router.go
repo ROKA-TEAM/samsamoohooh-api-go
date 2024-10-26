@@ -11,8 +11,10 @@ import (
 
 type Router struct {
 	config *config.Config
+	app    *fiber.App
 
-	app *fiber.App
+	// handlers
+	oauthHandler *handler.OauthHandler
 }
 
 func NewRouter(
@@ -21,9 +23,12 @@ func NewRouter(
 
 	// handler dependency
 	errorHandler *handler.ErrorHandler,
+	oauthHandler *handler.OauthHandler,
 ) *Router {
 	r := &Router{
 		config: config,
+		// handlers
+		oauthHandler: oauthHandler,
 
 		// init fiber app
 		app: fiber.New(fiber.Config{
@@ -53,7 +58,16 @@ func NewRouter(
 }
 
 func (r *Router) Route() {
-
+	v1 := r.app.Group("/v1")
+	{
+		app := v1.Group("/app")
+		{
+			oauth := app.Group("/oauth")
+			{
+				r.oauthHandler.Route(oauth)
+			}
+		}
+	}
 }
 
 func (r *Router) Start() error {
