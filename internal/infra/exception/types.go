@@ -23,25 +23,7 @@ const (
 	ErrJWTSignature     = "JWT_INVALID_SIGNATURE"  // JWT 서명 불일치
 
 	// OAuth 공통 에러 (OAUTH_)
-	ErrOAuthInvalid = "OAUTH_INVALID_REQUEST" // 잘못된 OAuth 요청
-	ErrOAuthState   = "OAUTH_INVALID_STATE"   // OAuth state 불일치
-	ErrOAuthScope   = "OAUTH_INVALID_SCOPE"   // 잘못된 스코프
-
-	// Kakao OAuth 에러 (OAUTH_KAKAO_)
-	ErrKakaoToken   = "OAUTH_KAKAO_TOKEN_INVALID"  // 카카오 토큰 오류
-	ErrKakaoProfile = "OAUTH_KAKAO_PROFILE_FAILED" // 프로필 조회 실패
-	ErrKakaoRevoke  = "OAUTH_KAKAO_REVOKE_FAILED"  // 토큰 취소 실패
-
-	// Google OAuth 에러 (OAUTH_GOOGLE_)
-	ErrGoogleToken   = "OAUTH_GOOGLE_TOKEN_INVALID"  // 구글 토큰 오류
-	ErrGoogleProfile = "OAUTH_GOOGLE_PROFILE_FAILED" // 프로필 조회 실패
-	ErrGoogleRevoke  = "OAUTH_GOOGLE_REVOKE_FAILED"  // 토큰 취소 실패
-
-	// Apple OAuth 에러 (OAUTH_APPLE_)
-	ErrAppleToken   = "OAUTH_APPLE_TOKEN_INVALID"  // 애플 토큰 오류
-	ErrAppleProfile = "OAUTH_APPLE_PROFILE_FAILED" // 프로필 조회 실패
-	ErrAppleRevoke  = "OAUTH_APPLE_REVOKE_FAILED"  // 토큰 취소 실패
-	ErrAppleJWT     = "OAUTH_APPLE_JWT_FAILED"     // 애플 JWT 검증 실패
+	ErrOauthRequestFailed = "OAUTH_REQUEST_FAILED" // OAuth 요청 실패
 
 	// MySQL 관련 에러 (MYSQL_)
 	ErrMysqlInternal    = "MYSQL_INTERNAL_ERROR"       // 내부 MySQL 에러

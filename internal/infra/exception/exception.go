@@ -52,3 +52,12 @@ func WithData(data any) ExceptionOption {
 func (e Exception) Error() string {
 	return e.Err.Error()
 }
+
+func Is(err error, _type string) bool {
+	exception, ok := err.(*Exception)
+	if !ok {
+		return false
+	}
+
+	return exception.Type == _type
+}

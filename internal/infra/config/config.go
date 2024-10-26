@@ -40,14 +40,10 @@ type Config struct {
 
 	Oauth struct {
 		Google struct {
-			ClientID     string
-			ClientSecret string
-			RedirectURL  string
+			GetUserInfoURL string
 		}
 		Kakao struct {
-			ClientID     string
-			ClientSecret string
-			RedirectURL  string
+			GetUserInfoURL string
 		}
 	}
 }

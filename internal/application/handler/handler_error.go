@@ -20,7 +20,7 @@ func (h ErrorHandler) HandleError() func(c fiber.Ctx, err error) error {
 		var excep *exception.Exception
 		if errors.As(err, &excep) {
 			// internal server error
-			if excep.Status == fiber.StatusInternalServerError {
+			if excep.Status == exception.StatusInternalServerError {
 				excep.Err = errors.New("hides information because an internal server error occurred.")
 			}
 
@@ -39,7 +39,7 @@ func (h ErrorHandler) HandleError() func(c fiber.Ctx, err error) error {
 		}
 
 		// it's fiber error
-		code := fiber.StatusInternalServerError
+		code := exception.StatusInternalServerError
 		var fiberErr *fiber.Error
 		if errors.As(err, &fiberErr) {
 			code = fiberErr.Code
@@ -49,7 +49,6 @@ func (h ErrorHandler) HandleError() func(c fiber.Ctx, err error) error {
 			Type:    exception.ErrWebServerInternal,
 			Message: fiberErr.Message,
 			Status:  code,
-			// Detail:  err,
 		})
 	}
 }
