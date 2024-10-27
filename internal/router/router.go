@@ -19,6 +19,7 @@ type Router struct {
 	authHandler  *handler.AuthHandler
 	userHandler  *handler.UserHandler
 	groupHandler *handler.GroupHandler
+	postHandler  *handler.PostHandler
 
 	// middleware
 	guardMiddleware *guard.GuardMiddleware
@@ -34,6 +35,7 @@ func NewRouter(
 	authHandler *handler.AuthHandler,
 	userHandler *handler.UserHandler,
 	groupHandler *handler.GroupHandler,
+	postHandler *handler.PostHandler,
 
 	// middleware
 	guardMiddleware *guard.GuardMiddleware,
@@ -45,6 +47,7 @@ func NewRouter(
 		authHandler:  authHandler,
 		userHandler:  userHandler,
 		groupHandler: groupHandler,
+		postHandler:  postHandler,
 
 		// middleware
 		guardMiddleware: guardMiddleware,
@@ -99,6 +102,11 @@ func (r *Router) Route() {
 			groups := app.Group("/groups", r.guardMiddleware.Authenticate)
 			{
 				r.groupHandler.Route(groups)
+			}
+
+			posts := app.Group("/posts", r.guardMiddleware.Authenticate)
+			{
+				r.postHandler.Route(posts)
 			}
 		}
 	}
