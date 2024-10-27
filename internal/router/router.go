@@ -15,11 +15,12 @@ type Router struct {
 	app    *fiber.App
 
 	// handlers
-	oauthHandler *handler.OauthHandler
-	authHandler  *handler.AuthHandler
-	userHandler  *handler.UserHandler
-	groupHandler *handler.GroupHandler
-	postHandler  *handler.PostHandler
+	oauthHandler   *handler.OauthHandler
+	authHandler    *handler.AuthHandler
+	userHandler    *handler.UserHandler
+	groupHandler   *handler.GroupHandler
+	postHandler    *handler.PostHandler
+	commentHandler *handler.CommentHandler
 
 	// middleware
 	guardMiddleware *guard.GuardMiddleware
@@ -36,6 +37,7 @@ func NewRouter(
 	userHandler *handler.UserHandler,
 	groupHandler *handler.GroupHandler,
 	postHandler *handler.PostHandler,
+	commentHandler *handler.CommentHandler,
 
 	// middleware
 	guardMiddleware *guard.GuardMiddleware,
@@ -43,11 +45,12 @@ func NewRouter(
 	r := &Router{
 		config: config,
 		// handlers
-		oauthHandler: oauthHandler,
-		authHandler:  authHandler,
-		userHandler:  userHandler,
-		groupHandler: groupHandler,
-		postHandler:  postHandler,
+		oauthHandler:   oauthHandler,
+		authHandler:    authHandler,
+		userHandler:    userHandler,
+		groupHandler:   groupHandler,
+		postHandler:    postHandler,
+		commentHandler: commentHandler,
 
 		// middleware
 		guardMiddleware: guardMiddleware,
@@ -107,6 +110,11 @@ func (r *Router) Route() {
 			posts := app.Group("/posts", r.guardMiddleware.Authenticate)
 			{
 				r.postHandler.Route(posts)
+			}
+
+			comments := app.Group("/comments", r.guardMiddleware.Authenticate)
+			{
+				r.commentHandler.Route(comments)
 			}
 		}
 	}
