@@ -9,6 +9,7 @@ import (
 	"samsamoohooh-go-api/internal/infra/middleware/guard"
 	"samsamoohooh-go-api/internal/infra/storage/mysql"
 	"samsamoohooh-go-api/internal/infra/storage/redis"
+	"samsamoohooh-go-api/internal/infra/validator"
 
 	"go.uber.org/fx"
 )
@@ -56,5 +57,12 @@ var AuthenticationModule = fx.Module(
 			fx.As(new(port.OauthImplictGrantService)),
 			fx.ResultTags(`name:"kakao"`),
 		),
+	),
+)
+
+var ValidatorModule = fx.Module(
+	"validator-module",
+	fx.Provide(
+		validator.NewValidator,
 	),
 )

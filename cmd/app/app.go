@@ -19,6 +19,7 @@ func main() {
 		infra.StorageModule,
 		infra.AuthenticationModule,
 		infra.MiddlewareModule,
+		infra.ValidatorModule,
 
 		application.RepositoryModule,
 		application.ServiceModule,

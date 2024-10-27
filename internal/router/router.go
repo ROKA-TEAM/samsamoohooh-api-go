@@ -5,6 +5,7 @@ import (
 	"samsamoohooh-go-api/internal/application/handler"
 	"samsamoohooh-go-api/internal/infra/config"
 	"samsamoohooh-go-api/internal/infra/middleware/guard"
+	"samsamoohooh-go-api/internal/infra/validator"
 
 	"github.com/gofiber/fiber/v3"
 	"go.uber.org/fx"
@@ -26,6 +27,9 @@ type Router struct {
 
 	// middleware
 	guardMiddleware *guard.GuardMiddleware
+
+	// validator
+	validator *validator.Validator
 }
 
 func NewRouter(
@@ -45,6 +49,9 @@ func NewRouter(
 
 	// middleware
 	guardMiddleware *guard.GuardMiddleware,
+
+	// validator
+	validator *validator.Validator,
 ) *Router {
 	r := &Router{
 		config: config,
@@ -61,9 +68,13 @@ func NewRouter(
 		// middleware
 		guardMiddleware: guardMiddleware,
 
+		// validator
+		validator: validator,
+
 		// init fiber app
 		app: fiber.New(fiber.Config{
-			ErrorHandler: errorHandler.HandleError(),
+			ErrorHandler:    errorHandler.HandleError(),
+			StructValidator: validator,
 		}),
 	}
 
