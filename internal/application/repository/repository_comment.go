@@ -3,17 +3,18 @@ package repository
 import (
 	"context"
 	"samsamoohooh-go-api/internal/application/domain"
-	"samsamoohooh-go-api/internal/application/repository/database"
-	"samsamoohooh-go-api/internal/application/repository/database/utils"
+	"samsamoohooh-go-api/internal/application/port"
+	"samsamoohooh-go-api/internal/application/repository/utils"
+	"samsamoohooh-go-api/internal/infra/storage/mysql"
 )
 
-var _ domain.CommentRepository = (*CommentRepository)(nil)
+var _ port.CommentRepository = (*CommentRepository)(nil)
 
 type CommentRepository struct {
-	database *database.Database
+	database *mysql.MySQL
 }
 
-func NewCommentRepository(database *database.Database) *CommentRepository {
+func NewCommentRepository(database *mysql.MySQL) *CommentRepository {
 	return &CommentRepository{database: database}
 }
 

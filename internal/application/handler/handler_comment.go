@@ -1,74 +1,70 @@
 package handler
 
 import (
-	domain "samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/port"
 	"samsamoohooh-go-api/internal/application/presenter"
 
 	"github.com/gofiber/fiber/v3"
 )
 
 type CommentHandler struct {
-	commentService domain.CommentService
+	commentService port.CommentService
 }
 
-func NewCommentHandler(
-	commentService domain.CommentService,
-) *CommentHandler {
-	return &CommentHandler{commentService: commentService}
+func NewCommentHandler(commentService port.CommentService) *CommentHandler {
+	return &CommentHandler{
+		commentService: commentService,
+	}
 }
 
 func (h *CommentHandler) Route(router fiber.Router) {
-	router.Post("/", h.CreateComment)
-	router.Get("/:cid", h.GetByCommentID)
-	router.Put("/:cid", h.UpdateComment)
-	router.Delete("/:cid", h.DeleteComment)
+	router.Post("", h.CreatePost)
+	router.Put("/:id", h.UpdatePost)
+	router.Delete("/:id", h.DeletePost)
 }
 
-func (h *CommentHandler) CreateComment(c fiber.Ctx) error {
-	body := new(presenter.CommentCreateRequest)
-	if err := c.Bind().JSON(body); err != nil {
+func (h *CommentHandler) CreatePost(c fiber.Ctx) error {
+	req := new(presenter.CommentCreateRequest)
+
+	if err := c.Bind().JSON(req); err != nil {
 		return err
 	}
 
-	createdComment, err := h.commentService.CreateComment(c.Context(), body.PostID, body.ToDomain())
+	createdComment, err := h.commentService.CreateComment(c.Context(), req.PostID, req.ToDomain())
 	if err != nil {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(presenter.NewCommentCreateResponse(createdComment))
+	return c.Status(fiber.StatusCreated).JSON(presenter.NewCommentCreateResponse(createdComment))
 }
 
-func (h *CommentHandler) GetByCommentID(c fiber.Ctx) error {
-	cid := fiber.Params[int](c, "cid")
+func (h *CommentHandler) UpdatePost(c fiber.Ctx) error {
+	req := new(presenter.CommentUpdateRequest)
 
-	gotComment, err := h.commentService.GetByCommentID(c.Context(), cid)
+	if err := c.Bind().JSON(req); err != nil {
+		return err
+	}
+
+	if err := c.Bind().URI(req); err != nil {
+		return err
+	}
+
+	updatdComment, err := h.commentService.UpdateComment(c.Context(), req.ID, req.ToDomain())
 	if err != nil {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(presenter.NewCommentGetByCommentIDResponse(gotComment))
+	return c.Status(fiber.StatusOK).JSON(presenter.NewCommentUpdateResponse(updatdComment))
 }
 
-func (h *CommentHandler) UpdateComment(c fiber.Ctx) error {
-	cid := fiber.Params[int](c, "cid")
+func (h *CommentHandler) DeletePost(c fiber.Ctx) error {
+	req := new(presenter.CommentDeleteRequest)
 
-	body := new(presenter.CommentUpdateRequest)
-	if err := c.Bind().JSON(body); err != nil {
+	if err := c.Bind().URI(req); err != nil {
 		return err
 	}
 
-	updatedComment, err := h.commentService.UpdateComment(c.Context(), cid, body.ToDomain())
-	if err != nil {
-		return err
-	}
-
-	return c.Status(fiber.StatusOK).JSON(presenter.NewCommentUpdateResponse(updatedComment))
-}
-
-func (h *CommentHandler) DeleteComment(c fiber.Ctx) error {
-	cid := fiber.Params[int](c, "cid")
-
-	err := h.commentService.DeleteComment(c.Context(), cid)
+	err := h.commentService.DeleteComment(c.Context(), req.ID)
 	if err != nil {
 		return err
 	}

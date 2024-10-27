@@ -3,20 +3,23 @@ package repository
 import (
 	"context"
 	"samsamoohooh-go-api/internal/application/domain"
-	"samsamoohooh-go-api/internal/application/repository/database"
-	entgroup "samsamoohooh-go-api/internal/application/repository/database/ent/group"
-	entuser "samsamoohooh-go-api/internal/application/repository/database/ent/user"
-	"samsamoohooh-go-api/internal/application/repository/database/utils"
+	"samsamoohooh-go-api/internal/application/port"
+	"samsamoohooh-go-api/internal/application/repository/utils"
+	"samsamoohooh-go-api/internal/infra/storage/mysql"
+	entgroup "samsamoohooh-go-api/internal/infra/storage/mysql/ent/group"
+	entuser "samsamoohooh-go-api/internal/infra/storage/mysql/ent/user"
 )
 
-var _ domain.UserRepository = (*UserRepository)(nil)
+var _ port.UserRepository = (*UserRepository)(nil)
 
 type UserRepository struct {
-	database *database.Database
+	database *mysql.MySQL
 }
 
-func NewUserRepository(database *database.Database) *UserRepository {
-	return &UserRepository{database: database}
+func NewUserRepository(database *mysql.MySQL) *UserRepository {
+	return &UserRepository{
+		database: database,
+	}
 }
 
 func (r *UserRepository) CreateUser(ctx context.Context, user *domain.User) (*domain.User, error) {
@@ -45,6 +48,7 @@ func (r *UserRepository) GetByUserID(ctx context.Context, id int) (*domain.User,
 
 	return utils.ConvertDomainUser(gotUser), nil
 }
+
 func (r *UserRepository) GetByUserSub(ctx context.Context, sub string) (*domain.User, error) {
 	gotUser, err := r.database.User.
 		Query().

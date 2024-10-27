@@ -1,87 +1,87 @@
 package handler
 
 import (
-	domain "samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/port"
 	"samsamoohooh-go-api/internal/application/presenter"
 
 	"github.com/gofiber/fiber/v3"
 )
 
 type TaskHandler struct {
-	taskService domain.TaskService
+	taskService port.TaskService
 }
 
-func NewTaskHandler(
-	taskService domain.TaskService,
-) *TaskHandler {
-	return &TaskHandler{taskService: taskService}
+func NewTaskHandler(taskService port.TaskService) *TaskHandler {
+	return &TaskHandler{
+		taskService: taskService,
+	}
 }
 
 func (h *TaskHandler) Route(router fiber.Router) {
+	router.Get("/:id/topics", h.GetTopicsByTaskID)
 	router.Post("/", h.CreateTask)
-	router.Get("/:tid/topics", h.GetTopicsByTaskID)
-	router.Put("/:tid", h.UpdateTask)
-	router.Delete("/:tid", h.DeleteTask)
+	router.Put("/:id", h.UpdateTask)
+	router.Delete("/:id", h.DeleteTask)
 }
 
 func (h *TaskHandler) CreateTask(c fiber.Ctx) error {
-	body := new(presenter.TaskCreateRequest)
+	req := new(presenter.TaskCreateRequest)
 
-	if err := c.Bind().JSON(body); err != nil {
+	if err := c.Bind().JSON(req); err != nil {
 		return err
 	}
 
-	createdTask, err := h.taskService.CreateTask(c.Context(), body.GroupID, body.ToDomain())
+	createdTask, err := h.taskService.CreateTask(c.Context(), req.GroupID, req.ToDomain())
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(presenter.NewTaskCreateResponse(createdTask))
+	return c.Status(fiber.StatusCreated).JSON(presenter.NewTaskCreateResponse(createdTask))
 }
 
 func (h *TaskHandler) GetTopicsByTaskID(c fiber.Ctx) error {
-	tid := fiber.Params[int](c, "tid")
-	limit := fiber.Query[int](c, "limit", DefaultLimit)
-	offset := fiber.Query[int](c, "offset", DefaultOffset)
+	req := new(presenter.TaskGetTopicsByTaskIDRequest)
 
-	topics, err := h.taskService.GetTopicsByTaskID(c.Context(), tid, offset, limit)
+	if err := c.Bind().URI(req); err != nil {
+		return err
+	}
+
+	topics, err := h.taskService.GetTopicsByTaskID(c.Context(), req.ID, req.Offset, req.Limit)
 	if err != nil {
 		return err
 	}
+
 	return c.Status(fiber.StatusOK).JSON(presenter.NewTaskGetTopicsByIDResponse(topics))
 }
 
-func (h *TaskHandler) GetByTaskID(c fiber.Ctx) error {
-	tid := fiber.Params[int](c, "tid")
-
-	task, err := h.taskService.GetByTaskID(c.Context(), tid)
-	if err != nil {
-		return err
-	}
-
-	return c.JSON(presenter.NewTaskGetByTaskIDResponse(task))
-}
-
 func (h *TaskHandler) UpdateTask(c fiber.Ctx) error {
-	tid := fiber.Params[int](c, "tid")
-	body := new(presenter.TaskUpdateRequest)
+	req := new(presenter.TaskUpdateRequest)
 
-	if err := c.Bind().JSON(body); err != nil {
+	if err := c.Bind().JSON(req); err != nil {
 		return err
 	}
 
-	updatedTask, err := h.taskService.UpdateTask(c.Context(), tid, body.ToDomain())
+	if err := c.Bind().URI(req); err != nil {
+		return err
+	}
+
+	updatedTask, err := h.taskService.UpdateTask(c.Context(), req.ID, req.ToDomain())
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(presenter.NewTaskUpdateResponse(updatedTask))
+	return c.Status(fiber.StatusOK).JSON(presenter.NewTaskUpdateResponse(updatedTask))
 }
 
 func (h *TaskHandler) DeleteTask(c fiber.Ctx) error {
-	tid := fiber.Params[int](c, "tid")
+	req := new(presenter.TaskDeleteRequest)
 
-	if err := h.taskService.DeleteTask(c.Context(), tid); err != nil {
+	if err := c.Bind().URI(req); err != nil {
+		return err
+	}
+
+	err := h.taskService.DeleteTask(c.Context(), req.ID)
+	if err != nil {
 		return err
 	}
 

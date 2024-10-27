@@ -1,36 +1,36 @@
 package handler
 
 import (
-	domain "samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/port"
 	"samsamoohooh-go-api/internal/application/presenter"
 
 	"github.com/gofiber/fiber/v3"
 )
 
 type TopicHandler struct {
-	topicService domain.TopicService
+	topicService port.TopicService
 }
 
-func NewTopicHandler(
-	topicService domain.TopicService,
-) *TopicHandler {
-	return &TopicHandler{topicService: topicService}
+func NewTopicHandler(topicService port.TopicService) *TopicHandler {
+	return &TopicHandler{
+		topicService: topicService,
+	}
 }
 
 func (h *TopicHandler) Route(router fiber.Router) {
 	router.Post("/", h.CreateTopic)
-	router.Get("/:tid", h.GetByTopicID)
-	router.Put("/:tid", h.UpdateTopic)
-	router.Delete("/:tid", h.Delete)
+	router.Put("/:id", h.UpdateTopic)
+	router.Delete("/:id", h.DeleteTopic)
 }
 
 func (h *TopicHandler) CreateTopic(c fiber.Ctx) error {
-	body := new(presenter.TopicCreateRequest)
-	if err := c.Bind().JSON(body); err != nil {
+	req := new(presenter.TopicCreateRequest)
+
+	if err := c.Bind().JSON(req); err != nil {
 		return err
 	}
 
-	createdTopic, err := h.topicService.CreateTopic(c.Context(), body.TaskID, body.ToDomain())
+	createdTopic, err := h.topicService.CreateTopic(c.Context(), req.TaskID, req.ToDomain())
 	if err != nil {
 		return err
 	}
@@ -38,40 +38,35 @@ func (h *TopicHandler) CreateTopic(c fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(presenter.NewTopicCreateResponse(createdTopic))
 }
 
-func (h *TopicHandler) GetByTopicID(c fiber.Ctx) error {
-	tid := fiber.Params[int](c, "tid")
-
-	gotTopic, err := h.topicService.GetByTopicID(c.Context(), tid)
-	if err != nil {
-		return err
-	}
-
-	return c.Status(fiber.StatusOK).JSON(presenter.NewTopicGetByIDResponse(gotTopic))
-}
-
 func (h *TopicHandler) UpdateTopic(c fiber.Ctx) error {
-	tid := fiber.Params[int](c, "tid")
+	req := new(presenter.TopicUpdateRequest)
 
-	body := new(presenter.TopicUpdateRequest)
-	if err := c.Bind().JSON(body); err != nil {
+	if err := c.Bind().JSON(req); err != nil {
 		return err
 	}
 
-	updatedTopic, err := h.topicService.UpdateTopic(c.Context(), tid, body.ToDomain())
+	if err := c.Bind().URI(req); err != nil {
+		return err
+	}
+
+	updatedTopic, err := h.topicService.UpdateTopic(c.Context(), req.ID, req.ToDomain())
 	if err != nil {
 		return err
 	}
 
 	return c.Status(fiber.StatusOK).JSON(presenter.NewTopicUpdateResponse(updatedTopic))
-
 }
 
-func (h *TopicHandler) Delete(c fiber.Ctx) error {
-	tid := fiber.Params[int](c, "tid")
+func (h *TopicHandler) DeleteTopic(c fiber.Ctx) error {
+	req := new(presenter.TopicDeleteRequest)
 
-	if err := h.topicService.DeleteTopic(c.Context(), tid); err != nil {
+	if err := c.Bind().URI(req); err != nil {
 		return err
 	}
 
-	return c.SendStatus(fiber.StatusNoContent)
+	if err := h.topicService.DeleteTopic(c.Context(), req.ID); err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusNoContent).Send(nil)
 }

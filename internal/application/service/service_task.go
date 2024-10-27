@@ -3,16 +3,17 @@ package service
 import (
 	"context"
 	"samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/port"
 )
 
-var _ domain.TaskService = (*TaskService)(nil)
+var _ port.TaskRepository = (*TaskService)(nil)
 
 type TaskService struct {
-	taskRepository domain.TaskRepository
+	taskRepository port.TaskRepository
 }
 
 func NewTaskService(
-	taskRepository domain.TaskRepository,
+	taskRepository port.TaskRepository,
 ) *TaskService {
 	return &TaskService{taskRepository: taskRepository}
 }

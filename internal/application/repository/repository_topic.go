@@ -3,17 +3,18 @@ package repository
 import (
 	"context"
 	"samsamoohooh-go-api/internal/application/domain"
-	"samsamoohooh-go-api/internal/application/repository/database"
-	"samsamoohooh-go-api/internal/application/repository/database/utils"
+	"samsamoohooh-go-api/internal/application/port"
+	"samsamoohooh-go-api/internal/application/repository/utils"
+	"samsamoohooh-go-api/internal/infra/storage/mysql"
 )
 
-var _ domain.TopicRepository = (*TopicRepository)(nil)
+var _ port.TopicRepository = (*TopicRepository)(nil)
 
 type TopicRepository struct {
-	database *database.Database
+	database *mysql.MySQL
 }
 
-func NewTopicRepository(database *database.Database) *TopicRepository {
+func NewTopicRepository(database *mysql.MySQL) *TopicRepository {
 	return &TopicRepository{database: database}
 }
 

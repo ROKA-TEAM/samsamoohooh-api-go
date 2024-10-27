@@ -1,36 +1,37 @@
 package handler
 
 import (
-	domain "samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/port"
 	"samsamoohooh-go-api/internal/application/presenter"
 
 	"github.com/gofiber/fiber/v3"
 )
 
 type PostHandler struct {
-	postService domain.PostService
+	postService port.PostService
 }
 
-func NewPostHandler(
-	postService domain.PostService,
-) *PostHandler {
-	return &PostHandler{postService: postService}
+func NewPostHandler(postService port.PostService) *PostHandler {
+	return &PostHandler{
+		postService: postService,
+	}
 }
 
 func (h *PostHandler) Route(router fiber.Router) {
 	router.Post("/", h.CreatePost)
-	router.Get("/:pid/comments", h.GetCommentsByPostID)
-	router.Put("/:pid", h.UpdatePost)
-	router.Delete("/:pid", h.DeletePost)
+	router.Get("/:id/comments", h.GetCommentsByPostID)
+	router.Put("/:id", h.UpdatePost)
+	router.Delete("/:id", h.DeletePost)
 }
 
 func (h *PostHandler) CreatePost(c fiber.Ctx) error {
-	body := new(presenter.PostCreateRequest)
-	if err := c.Bind().JSON(body); err != nil {
+	req := new(presenter.PostCreateRequest)
+
+	if err := c.Bind().JSON(req); err != nil {
 		return err
 	}
 
-	createdPost, err := h.postService.CreatePost(c.Context(), body.GroupID, body.ToDomain())
+	createdPost, err := h.postService.CreatePost(c.Context(), req.GroupID, req.ToDomain())
 	if err != nil {
 		return err
 	}
@@ -39,26 +40,36 @@ func (h *PostHandler) CreatePost(c fiber.Ctx) error {
 }
 
 func (h *PostHandler) GetCommentsByPostID(c fiber.Ctx) error {
-	pid := fiber.Params[int](c, "pid")
-	limit := fiber.Query[int](c, "limit", DefaultLimit)
-	offset := fiber.Query[int](c, "offset", DefaultOffset)
+	req := new(presenter.PostGetCommentsByPostIDRequest)
 
-	listComment, err := h.postService.GetCommentsByPostID(c.Context(), pid, offset, limit)
+	if err := c.Bind().URI(req); err != nil {
+		return err
+	}
+
+	if err := c.Bind().Query(req); err != nil {
+		return err
+	}
+
+	gotComments, err := h.postService.GetCommentsByPostID(c.Context(), req.ID, req.Limit, req.Offset)
 	if err != nil {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(presenter.NewPostGetCommentsByIDResponse(listComment))
+	return c.Status(fiber.StatusOK).JSON(presenter.NewPostGetCommentsByIDResponse(gotComments))
 }
 
 func (h *PostHandler) UpdatePost(c fiber.Ctx) error {
-	pid := fiber.Params[int](c, "pid")
-	body := new(presenter.PostUpdateRequest)
-	if err := c.Bind().JSON(body); err != nil {
+	req := new(presenter.PostUpdateRequest)
+
+	if err := c.Bind().JSON(req); err != nil {
 		return err
 	}
 
-	updatedPost, err := h.postService.UpdatePost(c.Context(), pid, body.ToDomain())
+	if err := c.Bind().URI(req); err != nil {
+		return err
+	}
+
+	updatedPost, err := h.postService.UpdatePost(c.Context(), req.ID, req.ToDomain())
 	if err != nil {
 		return err
 	}
@@ -67,9 +78,13 @@ func (h *PostHandler) UpdatePost(c fiber.Ctx) error {
 }
 
 func (h *PostHandler) DeletePost(c fiber.Ctx) error {
-	pid := fiber.Params[int](c, "pid")
+	req := new(presenter.PostDeleteRequest)
 
-	err := h.postService.DeletePost(c.Context(), pid)
+	if err := c.Bind().URI(req); err != nil {
+		return err
+	}
+
+	err := h.postService.DeletePost(c.Context(), req.ID)
 	if err != nil {
 		return err
 	}

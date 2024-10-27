@@ -2,40 +2,14 @@ package config
 
 import (
 	"os"
-	"time"
 
 	"github.com/pelletier/go-toml/v2"
 )
 
-type customDuration time.Duration
-
-func (d *customDuration) UnmarshalText(b []byte) error {
-	duration, err := time.ParseDuration(string(b))
-	if err != nil {
-		return err
-	}
-
-	*d = customDuration(duration)
-	return nil
-}
-
-// TokenValidity defines the validity period and activation delay for tokens
-type Duration struct {
-	ValidityPeriod  customDuration // 토큰의 유효 기간
-	ActivationDelay customDuration // 토큰이 유효해지기까지의 지연 시간
-}
-
-type OauthAuthorizationCodeGrantInfo struct {
-	ClientID     string
-	ClientSecret string
-	CallbackURL  string
-}
-
 type Config struct {
-	HTTP struct {
-		Development bool
-		Port        string
-		TLS         struct {
+	Server struct {
+		Port string
+		TLS  struct {
 			CertFilePath string
 			KeyFilePath  string
 		}
@@ -65,12 +39,12 @@ type Config struct {
 	}
 
 	Oauth struct {
-		Google OauthAuthorizationCodeGrantInfo
-		Kakao  OauthAuthorizationCodeGrantInfo
-	}
-
-	Logger struct {
-		Encoding string
+		Google struct {
+			GetUserInfoURL string
+		}
+		Kakao struct {
+			GetUserInfoURL string
+		}
 	}
 }
 

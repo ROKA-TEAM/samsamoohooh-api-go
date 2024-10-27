@@ -3,18 +3,19 @@ package repository
 import (
 	"context"
 	"samsamoohooh-go-api/internal/application/domain"
-	"samsamoohooh-go-api/internal/application/repository/database"
-	groupent "samsamoohooh-go-api/internal/application/repository/database/ent/group"
-	"samsamoohooh-go-api/internal/application/repository/database/utils"
+	"samsamoohooh-go-api/internal/application/port"
+	"samsamoohooh-go-api/internal/application/repository/utils"
+	"samsamoohooh-go-api/internal/infra/storage/mysql"
+	entgroup "samsamoohooh-go-api/internal/infra/storage/mysql/ent/group"
 )
 
-var _ domain.GroupRepository = (*GroupRepository)(nil)
+var _ port.GroupRepository = (*GroupRepository)(nil)
 
 type GroupRepository struct {
-	database *database.Database
+	database *mysql.MySQL
 }
 
-func NewGroupRepository(database *database.Database) *GroupRepository {
+func NewGroupRepository(database *mysql.MySQL) *GroupRepository {
 	return &GroupRepository{database: database}
 }
 
@@ -63,7 +64,7 @@ func (r *GroupRepository) GetByGroupID(ctx context.Context, id int) (*domain.Gro
 func (r *GroupRepository) GetUsersByGroupID(ctx context.Context, id int, offset, limit int) ([]*domain.User, error) {
 	listUser, err := r.database.Client.Group.
 		Query().
-		Where(groupent.ID(id)).
+		Where(entgroup.ID(id)).
 		QueryUsers().
 		Offset(offset).
 		Limit(limit).
@@ -77,7 +78,7 @@ func (r *GroupRepository) GetUsersByGroupID(ctx context.Context, id int, offset,
 }
 func (r *GroupRepository) GetPostsByGroupID(ctx context.Context, id int, offset, limit int) ([]*domain.Post, error) {
 	listPost, err := r.database.Client.Group.
-		Query().Where(groupent.ID(id)).
+		Query().Where(entgroup.ID(id)).
 		QueryPosts().
 		Limit(limit).
 		Offset(offset).
@@ -91,7 +92,7 @@ func (r *GroupRepository) GetPostsByGroupID(ctx context.Context, id int, offset,
 func (r *GroupRepository) GetTasksByGroupID(ctx context.Context, id int, offset, limit int) ([]*domain.Task, error) {
 	listTask, err := r.database.Client.Group.
 		Query().
-		Where(groupent.ID(id)).
+		Where(entgroup.ID(id)).
 		QueryTasks().
 		Offset(offset).
 		Limit(limit).
@@ -153,7 +154,7 @@ func (r *GroupRepository) DeleteGroup(ctx context.Context, id int) error {
 func (r *GroupRepository) GetUsersLenByGroupID(ctx context.Context, id int) (int, error) {
 	cnt, err := r.database.Client.Group.
 		Query().
-		Where(groupent.ID(id)).
+		Where(entgroup.ID(id)).
 		QueryUsers().
 		Count(ctx)
 
@@ -167,7 +168,7 @@ func (r *GroupRepository) GetUsersLenByGroupID(ctx context.Context, id int) (int
 func (r *GroupRepository) GetTasksLenByGroupID(ctx context.Context, id int) (int, error) {
 	cnt, err := r.database.Client.Group.
 		Query().
-		Where(groupent.ID(id)).
+		Where(entgroup.ID(id)).
 		QueryTasks().
 		Count(ctx)
 	if err != nil {

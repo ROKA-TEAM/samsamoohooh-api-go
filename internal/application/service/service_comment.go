@@ -3,16 +3,17 @@ package service
 import (
 	"context"
 	"samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/port"
 )
 
-var _ domain.CommentService = (*CommentService)(nil)
+var _ port.CommentRepository = (*CommentService)(nil)
 
 type CommentService struct {
-	commentRepository domain.CommentRepository
+	commentRepository port.CommentRepository
 }
 
 func NewCommentService(
-	commentRepository domain.CommentRepository,
+	commentRepository port.CommentRepository,
 ) *CommentService {
 	return &CommentService{commentRepository: commentRepository}
 }

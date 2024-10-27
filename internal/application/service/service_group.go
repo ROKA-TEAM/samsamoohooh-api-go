@@ -4,37 +4,37 @@ import (
 	"context"
 
 	"samsamoohooh-go-api/internal/application/domain"
-	"samsamoohooh-go-api/pkg/box"
-	"samsamoohooh-go-api/pkg/redis"
+	"samsamoohooh-go-api/internal/application/port"
+	"samsamoohooh-go-api/internal/infra/exception"
 	"time"
 
 	"github.com/google/uuid"
 )
 
-var _ domain.GroupService = (*GroupService)(nil)
+var _ port.GroupService = (*GroupService)(nil)
 
 const (
 	JoinCodeExpireTime = time.Second * 60 * 24 * 2 // 2day
 )
 
 type GroupService struct {
-	groupRepository    domain.GroupRepository
-	userService        domain.UserService
-	taskService        domain.TaskService
-	keyValueRepository redis.KeyValueStore
+	groupRepository port.GroupRepository
+	userService     port.UserService
+	taskService     port.TaskService
+	redisRepository port.RedisRepository
 }
 
 func NewGroupService(
-	groupRepository domain.GroupRepository,
-	keyValueRepository redis.KeyValueStore,
-	userService domain.UserService,
-	taskService domain.TaskService,
+	groupRepository port.GroupRepository,
+	userService port.UserService,
+	taskService port.TaskService,
+	keyValueRepository port.RedisRepository,
 ) *GroupService {
 	return &GroupService{
-		groupRepository:    groupRepository,
-		keyValueRepository: keyValueRepository,
-		userService:        userService,
-		taskService:        taskService,
+		groupRepository: groupRepository,
+		userService:     userService,
+		taskService:     taskService,
+		redisRepository: keyValueRepository,
 	}
 }
 
@@ -159,7 +159,7 @@ func (s *GroupService) StartDiscussion(ctx context.Context, groupID, taskID int)
 func (s *GroupService) GenerateJoinCode(ctx context.Context, groupID int) (string, error) {
 	joinCode := uuid.New().String()
 
-	err := s.keyValueRepository.Set(ctx, joinCode, groupID, JoinCodeExpireTime)
+	err := s.redisRepository.Set(ctx, joinCode, groupID, JoinCodeExpireTime)
 	if err != nil {
 		return "", err
 	}
@@ -168,9 +168,9 @@ func (s *GroupService) GenerateJoinCode(ctx context.Context, groupID int) (strin
 }
 
 func (s *GroupService) JoinGroupByCode(ctx context.Context, userID int, code string) error {
-	groupID, err := s.keyValueRepository.GetInt(ctx, code)
+	groupID, err := s.redisRepository.GetInt(ctx, code)
 	if err != nil {
-		return box.AppendMsg(err, "invalid code")
+		return err
 	}
 
 	// 이미 참가한 사용자인지 확인
@@ -180,7 +180,11 @@ func (s *GroupService) JoinGroupByCode(ctx context.Context, userID int, code str
 	}
 
 	if isIn {
-		return box.Wrap(domain.ErrForbidden, "already joined")
+		return exception.NewWithoutErr(
+			exception.ErrBizGroupAlreadyJoined,
+			exception.StatusForbidden,
+			"already joined",
+		)
 	}
 
 	err = s.groupRepository.AddUser(ctx, groupID, userID)

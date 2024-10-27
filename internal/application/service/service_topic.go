@@ -3,16 +3,17 @@ package service
 import (
 	"context"
 	"samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/port"
 )
 
-var _ domain.TopicService = (*TopicService)(nil)
+var _ port.TopicService = (*TopicService)(nil)
 
 type TopicService struct {
-	topicRepository domain.TopicRepository
+	topicRepository port.TopicService
 }
 
 func NewTopicService(
-	topicRepository domain.TopicRepository,
+	topicRepository port.TopicRepository,
 ) *TopicService {
 	return &TopicService{topicRepository: topicRepository}
 }

@@ -3,18 +3,19 @@ package repository
 import (
 	"context"
 	"samsamoohooh-go-api/internal/application/domain"
-	"samsamoohooh-go-api/internal/application/repository/database"
-	enttask "samsamoohooh-go-api/internal/application/repository/database/ent/task"
-	"samsamoohooh-go-api/internal/application/repository/database/utils"
+	"samsamoohooh-go-api/internal/application/port"
+	"samsamoohooh-go-api/internal/application/repository/utils"
+	"samsamoohooh-go-api/internal/infra/storage/mysql"
+	enttask "samsamoohooh-go-api/internal/infra/storage/mysql/ent/task"
 )
 
-var _ domain.TaskRepository = (*TaskRepository)(nil)
+var _ port.TaskRepository = (*TaskRepository)(nil)
 
 type TaskRepository struct {
-	database *database.Database
+	database *mysql.MySQL
 }
 
-func NewTaskRepository(database *database.Database) *TaskRepository {
+func NewTaskRepository(database *mysql.MySQL) *TaskRepository {
 	return &TaskRepository{database: database}
 }
 

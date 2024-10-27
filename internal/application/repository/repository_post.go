@@ -2,19 +2,20 @@ package repository
 
 import (
 	"context"
-	domain "samsamoohooh-go-api/internal/application/domain"
-	"samsamoohooh-go-api/internal/application/repository/database"
-	entpost "samsamoohooh-go-api/internal/application/repository/database/ent/post"
-	"samsamoohooh-go-api/internal/application/repository/database/utils"
+	"samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/port"
+	"samsamoohooh-go-api/internal/application/repository/utils"
+	"samsamoohooh-go-api/internal/infra/storage/mysql"
+	entpost "samsamoohooh-go-api/internal/infra/storage/mysql/ent/post"
 )
 
-var _ domain.PostRepository = (*PostRepository)(nil)
+var _ port.PostRepository = (*PostRepository)(nil)
 
 type PostRepository struct {
-	database *database.Database
+	database *mysql.MySQL
 }
 
-func NewPostRepository(database *database.Database) *PostRepository {
+func NewPostRepository(database *mysql.MySQL) *PostRepository {
 	return &PostRepository{database: database}
 }
 

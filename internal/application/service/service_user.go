@@ -3,18 +3,19 @@ package service
 import (
 	"context"
 	"samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/port"
 )
 
-var _ domain.UserService = (*UserService)(nil)
+var _ port.UserService = (*UserService)(nil)
 
 type UserService struct {
-	userRepository domain.UserRepository
+	userRepository port.UserRepository
 }
 
-func NewUserService(
-	userRepository domain.UserRepository,
-) *UserService {
-	return &UserService{userRepository: userRepository}
+func NewUserService(userRepository port.UserRepository) *UserService {
+	return &UserService{
+		userRepository: userRepository,
+	}
 }
 
 func (s *UserService) CreateUser(ctx context.Context, user *domain.User) (*domain.User, error) {

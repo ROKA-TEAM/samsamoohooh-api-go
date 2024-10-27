@@ -2,50 +2,44 @@ package handler
 
 import (
 	"samsamoohooh-go-api/internal/application/domain"
-	"samsamoohooh-go-api/internal/application/handler/utils"
+	"samsamoohooh-go-api/internal/application/port"
 	"samsamoohooh-go-api/internal/application/presenter"
 	"samsamoohooh-go-api/internal/infra/middleware/guard"
-	"samsamoohooh-go-api/pkg/token"
 
 	"github.com/gofiber/fiber/v3"
 )
 
 type GroupHandler struct {
-	groupService domain.GroupService
+	groupService port.GroupService
 }
 
-func NewGroupHandler(groupService domain.GroupService) *GroupHandler {
+func NewGroupHandler(groupService port.GroupService) *GroupHandler {
 	return &GroupHandler{
 		groupService: groupService,
 	}
 }
 
-func (h *GroupHandler) Route(router fiber.Router) {
-	router.Post("/", h.CreateGroup)
-	router.Get("/:gid", h.GetByGroupID)
-	router.Get("/:gid/users", h.GetUsersByGroupID)
-	router.Get("/:gid/posts", h.GetPostsByGroupID)
-	router.Get("/:gid/tasks", h.GetTasksByGroupID)
-	router.Put("/:gid", h.UpdateGroup)
-	router.Post("/:gid/tasks/:tid/discussion/start", h.StartDiscussion)
-
-	router.Post("/:gid/join-code/generate", h.GenerateJoinCode)
-	router.Post("/join/:code", h.JoinGroup)
-	router.Post("/:gid/leave", h.LeaveGroup)
+func (h *GroupHandler) Route(r fiber.Router) {
+	r.Post("/", h.CreateGroup)
+	r.Get("/:id/users", h.GetUsersByGroupID)
+	r.Get("/:id/posts", h.GetPostsByGroupID)
+	r.Get("/:id/tasks", h.GetTasksByGroupID)
+	r.Put("/:id", h.UpdateGroup)
+	r.Post("/:id/leave", h.GroupLeave)
+	r.Post("/:id/join-code/generate", h.GroupGenerateJoinCode)
+	r.Post("/join/:code", h.JoinGroupByCode)
+	r.Post(":id/discussion/start", h.StartDiscussion)
 }
 
 func (h *GroupHandler) CreateGroup(c fiber.Ctx) error {
-	token, err := utils.GetToken(c)
-	if err != nil {
+	token := fiber.Locals[*domain.Token](c, guard.TokenKey)
+
+	req := new(presenter.GroupCreateReqeust)
+	if err := c.Bind().JSON(req); err != nil {
 		return err
 	}
 
-	body := new(presenter.GroupCreateReqeust)
-	if err := c.Bind().JSON(body); err != nil {
-		return err
-	}
-
-	createdGroup, err := h.groupService.CreateGroup(c.Context(), token.Subject, body.ToDomain())
+	createdGroup, err := h.groupService.CreateGroup(c.Context(), token.ID, req.ToDomain())
 	if err != nil {
 		return err
 	}
@@ -53,65 +47,75 @@ func (h *GroupHandler) CreateGroup(c fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(presenter.NewGroupCreateResponse(createdGroup))
 }
 
-func (h *GroupHandler) GetByGroupID(c fiber.Ctx) error {
-	gid := fiber.Params[int](c, "gid")
-
-	gotGroup, err := h.groupService.GetByGroupID(c.Context(), gid)
-	if err != nil {
-		return err
-	}
-
-	return c.Status(fiber.StatusOK).JSON(presenter.NewGroupGetByIDResponse(gotGroup))
-}
-
 func (h *GroupHandler) GetUsersByGroupID(c fiber.Ctx) error {
-	gid := fiber.Params[int](c, "gid")
-	limit := fiber.Query[int](c, "limit", DefaultLimit)
-	offset := fiber.Query[int](c, "offset", DefaultOffset)
+	req := new(presenter.GroupGetUsersByGroupIDRequest)
 
-	users, err := h.groupService.GetUsersByGroupID(c.Context(), gid, offset, limit)
+	if err := c.Bind().Query(req); err != nil {
+		return err
+	}
+
+	if err := c.Bind().URI(req); err != nil {
+		return err
+	}
+
+	gotUsers, err := h.groupService.GetUsersByGroupID(c.Context(), req.ID, req.Limit, req.Offset)
 	if err != nil {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(presenter.NewGroupGetUsersByIDResponse(users))
+	return c.Status(fiber.StatusOK).JSON(presenter.NewGroupGetUsersByGroupIDResponse(gotUsers))
 }
 
 func (h *GroupHandler) GetPostsByGroupID(c fiber.Ctx) error {
-	gid := fiber.Params[int](c, "gid")
-	limit := fiber.Query[int](c, "limit", DefaultLimit)
-	offset := fiber.Query[int](c, "offset", DefaultOffset)
+	req := new(presenter.GroupGetPostsByGroupIDRequest)
 
-	listPost, err := h.groupService.GetPostsByGroupID(c.Context(), gid, offset, limit)
+	if err := c.Bind().Query(req); err != nil {
+		return err
+	}
+
+	if err := c.Bind().URI(req); err != nil {
+		return err
+	}
+
+	gotPosts, err := h.groupService.GetPostsByGroupID(c.Context(), req.ID, req.Limit, req.Offset)
 	if err != nil {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(presenter.NewGroupGetPostsByIDResponse(listPost))
+	return c.Status(fiber.StatusOK).JSON(presenter.NewGroupGetPostsByGroupIDResponse(gotPosts))
 }
 
 func (h *GroupHandler) GetTasksByGroupID(c fiber.Ctx) error {
-	gid := fiber.Params[int](c, "gid")
-	limit := fiber.Query[int](c, "limit", DefaultLimit)
-	offset := fiber.Query[int](c, "offset", DefaultOffset)
+	req := new(presenter.GroupGetTasksByGroupIDRequest)
 
-	listTask, err := h.groupService.GetTasksByGroupID(c.Context(), gid, offset, limit)
+	if err := c.Bind().Query(req); err != nil {
+		return err
+	}
+
+	if err := c.Bind().URI(req); err != nil {
+		return err
+	}
+
+	gotTasks, err := h.groupService.GetTasksByGroupID(c.Context(), req.ID, req.Limit, req.Offset)
 	if err != nil {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(presenter.NewGroupGetTasksByIDResponse(listTask))
+	return c.Status(fiber.StatusOK).JSON(presenter.NewGroupGetTasksByIDResponse(gotTasks))
 }
 
 func (h *GroupHandler) UpdateGroup(c fiber.Ctx) error {
-	gid := fiber.Params[int](c, "gid")
 
-	body := new(presenter.GroupUpdateRequest)
-	if err := c.Bind().JSON(body); err != nil {
+	req := new(presenter.GroupUpdateRequest)
+	if err := c.Bind().JSON(req); err != nil {
 		return err
 	}
 
-	updatedGroup, err := h.groupService.UpdateGroup(c.Context(), gid, body.ToDomain())
+	if err := c.Bind().URI(req); err != nil {
+		return err
+	}
+
+	updatedGroup, err := h.groupService.UpdateGroup(c.Context(), req.ID, req.ToDomain())
 	if err != nil {
 		return err
 	}
@@ -119,22 +123,30 @@ func (h *GroupHandler) UpdateGroup(c fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(presenter.NewGroupUpdateResponse(updatedGroup))
 }
 
-func (h *GroupHandler) StartDiscussion(c fiber.Ctx) error {
-	gid := fiber.Params[int](c, "gid")
-	tid := fiber.Params[int](c, "tid")
+func (h *GroupHandler) GroupLeave(c fiber.Ctx) error {
+	token := fiber.Locals[*domain.Token](c, guard.TokenKey)
 
-	topics, userNames, err := h.groupService.StartDiscussion(c.Context(), gid, tid)
+	req := new(presenter.GroupLeaveRequest)
+	if err := c.Bind().URI(req); err != nil {
+		return err
+	}
+
+	err := h.groupService.LeaveGroup(c.Context(), req.ID, token.ID)
 	if err != nil {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(presenter.NewGroupStartDiscussionResponse(topics, userNames))
+	return c.SendStatus(fiber.StatusNoContent)
 }
 
-func (h *GroupHandler) GenerateJoinCode(c fiber.Ctx) error {
-	gid := fiber.Params[int](c, "gid")
+func (h *GroupHandler) GroupGenerateJoinCode(c fiber.Ctx) error {
+	req := new(presenter.GroupGenerateJoinCodeRequest)
 
-	joinCode, err := h.groupService.GenerateJoinCode(c.Context(), gid)
+	if err := c.Bind().URI(req); err != nil {
+		return err
+	}
+
+	joinCode, err := h.groupService.GenerateJoinCode(c.Context(), req.ID)
 	if err != nil {
 		return err
 	}
@@ -142,26 +154,37 @@ func (h *GroupHandler) GenerateJoinCode(c fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(presenter.NewGroupGenerateJoinCodeResponse(joinCode))
 }
 
-func (h *GroupHandler) JoinGroup(c fiber.Ctx) error {
-	token := fiber.Locals[*token.Token](c, guard.TokenKey)
-	code := fiber.Params[string](c, "code")
+func (h *GroupHandler) JoinGroupByCode(c fiber.Ctx) error {
+	token := fiber.Locals[*domain.Token](c, guard.TokenKey)
 
-	err := h.groupService.JoinGroupByCode(c.Context(), token.Subject, code)
+	req := new(presenter.GroupJoinByCodeRequest)
+	if err := c.Bind().URI(req); err != nil {
+		return err
+	}
+
+	err := h.groupService.JoinGroupByCode(c.Context(), token.ID, req.Code)
 	if err != nil {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(nil)
+	return c.SendStatus(fiber.StatusNoContent)
 }
 
-func (h *GroupHandler) LeaveGroup(c fiber.Ctx) error {
-	gid := fiber.Params[int](c, "gid")
-	token := fiber.Locals[*token.Token](c, guard.TokenKey)
+func (h *GroupHandler) StartDiscussion(c fiber.Ctx) error {
+	req := new(presenter.GroupStartDiscussionRequest)
 
-	err := h.groupService.LeaveGroup(c.Context(), gid, token.Subject)
+	if err := c.Bind().URI(req); err != nil {
+		return err
+	}
+
+	if err := c.Bind().Body(req); err != nil {
+		return err
+	}
+
+	topics, names, err := h.groupService.StartDiscussion(c.Context(), req.ID, req.TaskID)
 	if err != nil {
 		return err
 	}
-	return c.SendStatus(fiber.StatusNoContent)
 
+	return c.Status(fiber.StatusOK).JSON(presenter.NewGroupStartDiscussionResponse(topics, names))
 }

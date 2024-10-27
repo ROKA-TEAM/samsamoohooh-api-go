@@ -3,16 +3,17 @@ package service
 import (
 	"context"
 	"samsamoohooh-go-api/internal/application/domain"
+	"samsamoohooh-go-api/internal/application/port"
 )
 
-var _ domain.PostService = (*PostService)(nil)
+var _ port.PostRepository = (*PostService)(nil)
 
 type PostService struct {
-	postRepository domain.PostRepository
+	postRepository port.PostRepository
 }
 
 func NewPostService(
-	postRepository domain.PostRepository,
+	postRepository port.PostRepository,
 ) *PostService {
 	return &PostService{postRepository: postRepository}
 }
