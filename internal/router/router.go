@@ -21,6 +21,8 @@ type Router struct {
 	groupHandler   *handler.GroupHandler
 	postHandler    *handler.PostHandler
 	commentHandler *handler.CommentHandler
+	taskHandler    *handler.TaskHandler
+	toicpHandler   *handler.TopicHandler
 
 	// middleware
 	guardMiddleware *guard.GuardMiddleware
@@ -38,6 +40,8 @@ func NewRouter(
 	groupHandler *handler.GroupHandler,
 	postHandler *handler.PostHandler,
 	commentHandler *handler.CommentHandler,
+	taskHandler *handler.TaskHandler,
+	toicpHandler *handler.TopicHandler,
 
 	// middleware
 	guardMiddleware *guard.GuardMiddleware,
@@ -51,6 +55,8 @@ func NewRouter(
 		groupHandler:   groupHandler,
 		postHandler:    postHandler,
 		commentHandler: commentHandler,
+		taskHandler:    taskHandler,
+		toicpHandler:   toicpHandler,
 
 		// middleware
 		guardMiddleware: guardMiddleware,
@@ -115,6 +121,16 @@ func (r *Router) Route() {
 			comments := app.Group("/comments", r.guardMiddleware.Authenticate)
 			{
 				r.commentHandler.Route(comments)
+			}
+
+			tasks := app.Group("/tasks", r.guardMiddleware.Authenticate)
+			{
+				r.taskHandler.Route(tasks)
+			}
+
+			topics := app.Group("/topics", r.guardMiddleware.Authenticate)
+			{
+				r.toicpHandler.Route(topics)
 			}
 		}
 	}
