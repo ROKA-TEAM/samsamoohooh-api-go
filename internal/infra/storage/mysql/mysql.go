@@ -5,6 +5,10 @@ import (
 	"fmt"
 	"samsamoohooh-go-api/internal/infra/config"
 	"samsamoohooh-go-api/internal/infra/storage/mysql/ent"
+
+	_ "samsamoohooh-go-api/internal/infra/storage/mysql/ent/runtime"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type MySQL struct {
