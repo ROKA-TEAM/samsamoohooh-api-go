@@ -1,10 +1,11 @@
 package schema
 
 import (
+	"time"
+
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
-	"time"
 )
 
 type TimeMixin struct {
@@ -17,9 +18,14 @@ func (TimeMixin) Fields() []ent.Field {
 	return []ent.Field{
 		field.Time("created_at").
 			Immutable().
-			Default(time.Now),
+			Default(timeNowUTC()),
+
 		field.Time("updated_at").
-			Default(time.Now).
+			Default(timeNowUTC()).
 			UpdateDefault(time.Now),
 	}
+}
+
+func timeNowUTC() time.Time {
+	return time.Now().UTC().Truncate(time.Second)
 }

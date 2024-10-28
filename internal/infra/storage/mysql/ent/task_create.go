@@ -132,11 +132,11 @@ func (tc *TaskCreate) ExecX(ctx context.Context) {
 // defaults sets the default values of the builder before save.
 func (tc *TaskCreate) defaults() {
 	if _, ok := tc.mutation.CreatedAt(); !ok {
-		v := task.DefaultCreatedAt()
+		v := task.DefaultCreatedAt
 		tc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := tc.mutation.UpdatedAt(); !ok {
-		v := task.DefaultUpdatedAt()
+		v := task.DefaultUpdatedAt
 		tc.mutation.SetUpdatedAt(v)
 	}
 }

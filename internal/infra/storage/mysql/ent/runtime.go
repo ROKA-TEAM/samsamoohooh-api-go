@@ -25,11 +25,11 @@ func init() {
 	// commentDescCreatedAt is the schema descriptor for created_at field.
 	commentDescCreatedAt := commentMixinFields0[0].Descriptor()
 	// comment.DefaultCreatedAt holds the default value on creation for the created_at field.
-	comment.DefaultCreatedAt = commentDescCreatedAt.Default.(func() time.Time)
+	comment.DefaultCreatedAt = commentDescCreatedAt.Default.(time.Time)
 	// commentDescUpdatedAt is the schema descriptor for updated_at field.
 	commentDescUpdatedAt := commentMixinFields0[1].Descriptor()
 	// comment.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	comment.DefaultUpdatedAt = commentDescUpdatedAt.Default.(func() time.Time)
+	comment.DefaultUpdatedAt = commentDescUpdatedAt.Default.(time.Time)
 	// comment.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	comment.UpdateDefaultUpdatedAt = commentDescUpdatedAt.UpdateDefault.(func() time.Time)
 	groupMixin := schema.Group{}.Mixin()
@@ -40,11 +40,11 @@ func init() {
 	// groupDescCreatedAt is the schema descriptor for created_at field.
 	groupDescCreatedAt := groupMixinFields0[0].Descriptor()
 	// group.DefaultCreatedAt holds the default value on creation for the created_at field.
-	group.DefaultCreatedAt = groupDescCreatedAt.Default.(func() time.Time)
+	group.DefaultCreatedAt = groupDescCreatedAt.Default.(time.Time)
 	// groupDescUpdatedAt is the schema descriptor for updated_at field.
 	groupDescUpdatedAt := groupMixinFields0[1].Descriptor()
 	// group.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	group.DefaultUpdatedAt = groupDescUpdatedAt.Default.(func() time.Time)
+	group.DefaultUpdatedAt = groupDescUpdatedAt.Default.(time.Time)
 	// group.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	group.UpdateDefaultUpdatedAt = groupDescUpdatedAt.UpdateDefault.(func() time.Time)
 	postMixin := schema.Post{}.Mixin()
@@ -55,11 +55,11 @@ func init() {
 	// postDescCreatedAt is the schema descriptor for created_at field.
 	postDescCreatedAt := postMixinFields0[0].Descriptor()
 	// post.DefaultCreatedAt holds the default value on creation for the created_at field.
-	post.DefaultCreatedAt = postDescCreatedAt.Default.(func() time.Time)
+	post.DefaultCreatedAt = postDescCreatedAt.Default.(time.Time)
 	// postDescUpdatedAt is the schema descriptor for updated_at field.
 	postDescUpdatedAt := postMixinFields0[1].Descriptor()
 	// post.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	post.DefaultUpdatedAt = postDescUpdatedAt.Default.(func() time.Time)
+	post.DefaultUpdatedAt = postDescUpdatedAt.Default.(time.Time)
 	// post.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	post.UpdateDefaultUpdatedAt = postDescUpdatedAt.UpdateDefault.(func() time.Time)
 	taskMixin := schema.Task{}.Mixin()
@@ -70,11 +70,11 @@ func init() {
 	// taskDescCreatedAt is the schema descriptor for created_at field.
 	taskDescCreatedAt := taskMixinFields0[0].Descriptor()
 	// task.DefaultCreatedAt holds the default value on creation for the created_at field.
-	task.DefaultCreatedAt = taskDescCreatedAt.Default.(func() time.Time)
+	task.DefaultCreatedAt = taskDescCreatedAt.Default.(time.Time)
 	// taskDescUpdatedAt is the schema descriptor for updated_at field.
 	taskDescUpdatedAt := taskMixinFields0[1].Descriptor()
 	// task.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	task.DefaultUpdatedAt = taskDescUpdatedAt.Default.(func() time.Time)
+	task.DefaultUpdatedAt = taskDescUpdatedAt.Default.(time.Time)
 	// task.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	task.UpdateDefaultUpdatedAt = taskDescUpdatedAt.UpdateDefault.(func() time.Time)
 	topicMixin := schema.Topic{}.Mixin()
@@ -85,11 +85,11 @@ func init() {
 	// topicDescCreatedAt is the schema descriptor for created_at field.
 	topicDescCreatedAt := topicMixinFields0[0].Descriptor()
 	// topic.DefaultCreatedAt holds the default value on creation for the created_at field.
-	topic.DefaultCreatedAt = topicDescCreatedAt.Default.(func() time.Time)
+	topic.DefaultCreatedAt = topicDescCreatedAt.Default.(time.Time)
 	// topicDescUpdatedAt is the schema descriptor for updated_at field.
 	topicDescUpdatedAt := topicMixinFields0[1].Descriptor()
 	// topic.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	topic.DefaultUpdatedAt = topicDescUpdatedAt.Default.(func() time.Time)
+	topic.DefaultUpdatedAt = topicDescUpdatedAt.Default.(time.Time)
 	// topic.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	topic.UpdateDefaultUpdatedAt = topicDescUpdatedAt.UpdateDefault.(func() time.Time)
 	userMixin := schema.User{}.Mixin()
@@ -100,11 +100,11 @@ func init() {
 	// userDescCreatedAt is the schema descriptor for created_at field.
 	userDescCreatedAt := userMixinFields0[0].Descriptor()
 	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
-	user.DefaultCreatedAt = userDescCreatedAt.Default.(func() time.Time)
+	user.DefaultCreatedAt = userDescCreatedAt.Default.(time.Time)
 	// userDescUpdatedAt is the schema descriptor for updated_at field.
 	userDescUpdatedAt := userMixinFields0[1].Descriptor()
 	// user.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	user.DefaultUpdatedAt = userDescUpdatedAt.Default.(func() time.Time)
+	user.DefaultUpdatedAt = userDescUpdatedAt.Default.(time.Time)
 	// user.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	user.UpdateDefaultUpdatedAt = userDescUpdatedAt.UpdateDefault.(func() time.Time)
 }

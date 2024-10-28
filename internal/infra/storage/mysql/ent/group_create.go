@@ -168,11 +168,11 @@ func (gc *GroupCreate) ExecX(ctx context.Context) {
 // defaults sets the default values of the builder before save.
 func (gc *GroupCreate) defaults() {
 	if _, ok := gc.mutation.CreatedAt(); !ok {
-		v := group.DefaultCreatedAt()
+		v := group.DefaultCreatedAt
 		gc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := gc.mutation.UpdatedAt(); !ok {
-		v := group.DefaultUpdatedAt()
+		v := group.DefaultUpdatedAt
 		gc.mutation.SetUpdatedAt(v)
 	}
 }

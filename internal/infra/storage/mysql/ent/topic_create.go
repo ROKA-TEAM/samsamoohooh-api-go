@@ -136,11 +136,11 @@ func (tc *TopicCreate) ExecX(ctx context.Context) {
 // defaults sets the default values of the builder before save.
 func (tc *TopicCreate) defaults() {
 	if _, ok := tc.mutation.CreatedAt(); !ok {
-		v := topic.DefaultCreatedAt()
+		v := topic.DefaultCreatedAt
 		tc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := tc.mutation.UpdatedAt(); !ok {
-		v := topic.DefaultUpdatedAt()
+		v := topic.DefaultUpdatedAt
 		tc.mutation.SetUpdatedAt(v)
 	}
 }
