@@ -8,6 +8,9 @@ import (
 	"samsamoohooh-go-api/internal/infra/validator"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/helmet"
+	recoverer "github.com/gofiber/fiber/v3/middleware/recover"
+
 	"go.uber.org/fx"
 )
 
@@ -148,6 +151,9 @@ func (r *Router) Route() {
 }
 
 func (r *Router) SetMiddleware() {
+	app := r.app
+	app.Use(recoverer.New)
+	app.Use(helmet.New)
 }
 
 func (r *Router) Start() error {

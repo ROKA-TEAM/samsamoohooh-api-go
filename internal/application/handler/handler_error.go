@@ -2,23 +2,23 @@ package handler
 
 import (
 	"errors"
-	"fmt"
 	"samsamoohooh-go-api/internal/application/presenter"
 	"samsamoohooh-go-api/internal/infra/exception"
+	"samsamoohooh-go-api/internal/infra/logger"
 
 	"github.com/gofiber/fiber/v3"
 	"go.uber.org/zap"
 )
 
 type ErrorHandler struct {
-	logger *zap.Logger
+	appLog *logger.AppLogger
 }
 
 func NewErrorHandler(
-	logger *zap.Logger,
+	log *logger.AppLogger,
 ) *ErrorHandler {
 	return &ErrorHandler{
-		logger: logger,
+		appLog: log,
 	}
 }
 
@@ -28,8 +28,7 @@ func (h ErrorHandler) HandleError() func(c fiber.Ctx, err error) error {
 		if errors.As(err, &excep) {
 			// logging (error)
 			if excep.Status == exception.StatusInternalServerError {
-				fmt.Print("print")
-				h.logger.Error(
+				h.appLog.Error(
 					"error occurred",
 					zap.String("type", excep.Type),
 					zap.Int("status", excep.Status),
@@ -38,8 +37,7 @@ func (h ErrorHandler) HandleError() func(c fiber.Ctx, err error) error {
 				)
 			} else if 400 <= excep.Status && excep.Status < 500 {
 				// logging (warn)
-				fmt.Print("print")
-				h.logger.Warn(
+				h.appLog.Warn(
 					"warn occurred",
 					zap.String("type", excep.Type),
 					zap.Int("status", excep.Status),

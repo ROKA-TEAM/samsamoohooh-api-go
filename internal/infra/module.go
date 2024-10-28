@@ -6,7 +6,7 @@ import (
 	"samsamoohooh-go-api/internal/infra/authentication/oauth/kakao"
 	"samsamoohooh-go-api/internal/infra/authentication/token/jwt"
 	"samsamoohooh-go-api/internal/infra/config"
-	"samsamoohooh-go-api/internal/infra/logger/zap"
+	"samsamoohooh-go-api/internal/infra/logger"
 	"samsamoohooh-go-api/internal/infra/middleware/guard"
 	"samsamoohooh-go-api/internal/infra/storage/mysql"
 	"samsamoohooh-go-api/internal/infra/storage/redis"
@@ -71,6 +71,6 @@ var ValidatorModule = fx.Module(
 var LoggerModule = fx.Module(
 	"logger-module",
 	fx.Provide(
-		zap.NewCustomZapLogger,
+		logger.NewAppLogger,
 	),
 )
