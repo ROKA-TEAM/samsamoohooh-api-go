@@ -130,11 +130,11 @@ func (cc *CommentCreate) ExecX(ctx context.Context) {
 // defaults sets the default values of the builder before save.
 func (cc *CommentCreate) defaults() {
 	if _, ok := cc.mutation.CreatedAt(); !ok {
-		v := comment.DefaultCreatedAt()
+		v := comment.DefaultCreatedAt
 		cc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := cc.mutation.UpdatedAt(); !ok {
-		v := comment.DefaultUpdatedAt()
+		v := comment.DefaultUpdatedAt
 		cc.mutation.SetUpdatedAt(v)
 	}
 }
