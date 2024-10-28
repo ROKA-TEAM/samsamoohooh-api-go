@@ -102,49 +102,52 @@ func NewRouter(
 func (r *Router) Route() {
 	v1 := r.app.Group("/v1")
 	{
-		app := v1.Group("/app")
+		api := v1.Group("/api")
 		{
-			oauth := app.Group("/oauth")
+			oauth := api.Group("/oauth")
 			{
 				r.oauthHandler.Route(oauth)
 			}
 
-			auth := app.Group("/auth")
+			auth := api.Group("/auth")
 			{
 				r.oauthHandler.Route(auth)
 			}
 
-			users := app.Group("/users", r.guardMiddleware.Authenticate)
+			users := api.Group("/users", r.guardMiddleware.Authenticate)
 			{
 				r.userHandler.Route(users)
 			}
 
-			groups := app.Group("/groups", r.guardMiddleware.Authenticate)
+			groups := api.Group("/groups", r.guardMiddleware.Authenticate)
 			{
 				r.groupHandler.Route(groups)
 			}
 
-			posts := app.Group("/posts", r.guardMiddleware.Authenticate)
+			posts := api.Group("/posts", r.guardMiddleware.Authenticate)
 			{
 				r.postHandler.Route(posts)
 			}
 
-			comments := app.Group("/comments", r.guardMiddleware.Authenticate)
+			comments := api.Group("/comments", r.guardMiddleware.Authenticate)
 			{
 				r.commentHandler.Route(comments)
 			}
 
-			tasks := app.Group("/tasks", r.guardMiddleware.Authenticate)
+			tasks := api.Group("/tasks", r.guardMiddleware.Authenticate)
 			{
 				r.taskHandler.Route(tasks)
 			}
 
-			topics := app.Group("/topics", r.guardMiddleware.Authenticate)
+			topics := api.Group("/topics", r.guardMiddleware.Authenticate)
 			{
 				r.toicpHandler.Route(topics)
 			}
 		}
 	}
+}
+
+func (r *Router) SetMiddleware() {
 }
 
 func (r *Router) Start() error {

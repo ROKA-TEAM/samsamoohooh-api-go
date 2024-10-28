@@ -20,6 +20,7 @@ func main() {
 		),
 
 		infra.ConfigModule,
+		infra.LoggerModule,
 		infra.StorageModule,
 		infra.AuthenticationModule,
 		infra.MiddlewareModule,

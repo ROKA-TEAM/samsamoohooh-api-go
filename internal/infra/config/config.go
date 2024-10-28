@@ -46,6 +46,24 @@ type Config struct {
 			GetUserInfoURL string
 		}
 	}
+
+	Logger struct {
+		Filename string
+
+		// DebugLevel = -1
+		// InfoLevel = 0
+		// WarnLevel = 1
+		// ErrorLevel = 2
+		// DPanicLevel = 3
+		// PanicLevel = 4
+		// FatalLevel = 5
+		Level int
+
+		MaxSize    int  // 최대 사이즈 (MB)
+		MaxBackups int  // 최대 백업 파일 수
+		MaxAge     int  // 최대 파일 유지 기간 (일)
+		Compress   bool //  압축 여부
+	}
 }
 
 func NewConfig(path string) (*Config, error) {
