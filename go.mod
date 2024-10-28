@@ -17,7 +17,6 @@ require (
 	go.uber.org/fx v1.23.0
 	go.uber.org/zap v1.26.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
-	gorm.io/gorm v1.25.12
 )
 
 require (
